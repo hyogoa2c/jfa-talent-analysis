@@ -185,6 +185,29 @@ Important limitation:
 
 This is still useful for Phase 1 because it provides season-level outcome variables once identity resolution is handled.
 
+## SFPR01 Season Availability Audit
+
+Season/league metadata can be audited with:
+
+```bash
+uv run python scripts/audit_sfpr01_season_availability.py \
+  --start-season 2005 \
+  --end-season 2016
+```
+
+Observed result from the 2005-2016 audit:
+
+| Season range | SFPR01 J1/J2 availability | Notes |
+|---|---|---|
+| 2005-2013 | Not available via current `createCompetitionFrames` flow | J1/J2 expected frame IDs were not returned. Backfill needs a separate source-availability audit or another source. |
+| 2014 | Available | J1, J2, and J3 each have one competition. |
+| 2015-2016 | Available | J1 has two competitions (`1st` and `2nd` stages); J2 and J3 each have one competition. |
+
+Implication:
+
+- The current automated SFPR01 pipeline should expand first across 2014 onward.
+- The 2005-2013 target period should be treated as a separate backfill problem instead of being forced through the current SFPR01 collector.
+
 ## 2014 J1 Season-League Sample
 
 Collector tested:

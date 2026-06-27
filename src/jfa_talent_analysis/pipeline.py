@@ -6,6 +6,11 @@ from pathlib import Path
 
 DEFAULT_LEAGUES = ("J1", "J2", "J3")
 J3_START_SEASON = 2014
+LEAGUE_FRAME_IDS = {
+    "J1": "1",
+    "J2": "2",
+    "J3": "3",
+}
 
 
 def leagues_for_season(season: int, requested_leagues: list[str] | None = None) -> list[str]:
