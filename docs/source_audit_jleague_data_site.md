@@ -121,3 +121,66 @@ Extracted fields:
 - `retrieved_at`
 
 This confirms that `SFIX03` can provide the base player identity universe. The next unresolved task is to connect these player IDs to season-level appearance records from `SFPR01`.
+
+## `SFPR01` Appearance Record PoC
+
+`SFPR01` uses dependent selectors:
+
+1. `/SFPR01/createCompetitionFrames` with `competition_year`.
+2. `/SFPR01/createCompetitions` with `competition_year` and `competition_frame_id`.
+3. `/SFPR01/createTeams` with `competition_id`.
+
+For 2014:
+
+| League | competition_frame_id | competition_id |
+|---|---:|---:|
+| J1 | 1 | 372 |
+| J2 | 2 | 373 |
+| J3 | 3 | 380 |
+
+`SFPR01/search` requires a team. Therefore appearance collection should run by:
+
+```text
+season x league x team
+```
+
+Command tested:
+
+```bash
+uv run python scripts/poc_sfpr01_appearance_records.py \
+  --season 2014 \
+  --league J1 \
+  --team-id 1 \
+  --team-name 鹿島 \
+  --limit 100
+```
+
+Observed result:
+
+- Parsed 31 player appearance records for 2014 J1 Kashima.
+- Wrote local sample to `data/interim/appearance_records_sample.csv`.
+- The generated CSV is local-only and gitignored.
+
+Extracted fields:
+
+- `season`
+- `competition_frame_id`
+- `competition_id`
+- `league`
+- `team_id`
+- `team_name`
+- `shirt_number`
+- `name_ja`
+- `appearances`
+- `minutes`
+- `goals`
+- `source_url`
+- `retrieved_at`
+
+Important limitation:
+
+- `SFPR01` does not expose player IDs in the appearance table.
+- It includes both Japanese and foreign players.
+- Joining to the Japanese player universe will require identity resolution using `name_ja`, team, season, and possibly additional profile/detail pages.
+
+This is still useful for Phase 1 because it provides season-level outcome variables once identity resolution is handled.

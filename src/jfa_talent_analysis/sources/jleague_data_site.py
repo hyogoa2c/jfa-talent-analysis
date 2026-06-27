@@ -17,6 +17,7 @@ BASE_URL = "https://data.j-league.or.jp/"
 DEFAULT_PAGES = ("SFIX02", "SFIX03", "SFPR01")
 USER_AGENT = "jfa-talent-analysis/0.1 source-audit"
 SFIX03_SEARCH_URL = urljoin(BASE_URL, "SFIX03/search")
+SFPR01_SEARCH_URL = urljoin(BASE_URL, "SFPR01/search")
 
 
 @dataclass
@@ -68,6 +69,31 @@ class PlayerUniverseRecord:
     birth_date: str
     height_cm: int | None
     weight_kg: int | None
+    source_url: str
+    retrieved_at: str
+
+
+@dataclass
+class CompetitionOption:
+    display_name: str
+    display_name_en: str | None
+    select_value: str
+    parent_value: str | None
+
+
+@dataclass
+class AppearanceRecord:
+    season: str
+    competition_frame_id: str
+    competition_id: str
+    league: str
+    team_id: str
+    team_name: str
+    shirt_number: str
+    name_ja: str
+    appearances: int | None
+    minutes: int | None
+    goals: int | None
     source_url: str
     retrieved_at: str
 
@@ -263,6 +289,11 @@ def post_form(url: str, form: dict[str, str], timeout: int = 30) -> tuple[int, s
         return response.status, response.headers.get("content-type"), content
 
 
+def post_json(path: str, form: dict[str, str], timeout: int = 30) -> dict[str, Any]:
+    _, _, content = post_form(urljoin(BASE_URL, path), form, timeout=timeout)
+    return json.loads(content)
+
+
 def sfix03_japanese_players_form() -> dict[str, str]:
     return {
         "team_year_id_ex": "",
@@ -298,7 +329,7 @@ def parse_height_weight(value: str) -> tuple[int | None, int | None]:
 
 
 def parse_int(value: str) -> int | None:
-    value = value.strip()
+    value = value.strip().replace(",", "")
     if not value or not value.isdigit():
         return None
     return int(value)
@@ -342,6 +373,183 @@ def write_player_universe_sample(
 ) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = list(PlayerUniverseRecord.__dataclass_fields__.keys())
+    with path.open("w", encoding="utf-8", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for record in records[:limit]:
+            writer.writerow(asdict(record))
+
+
+def create_competition_frames(season: str) -> list[CompetitionOption]:
+    payload = post_json(
+        "SFPR01/createCompetitionFrames",
+        {"competition_year": season, "selectFlag": "true"},
+    )
+    return options_from_payload(payload.get("competitionFrameList") or [])
+
+
+def create_competitions(season: str, competition_frame_id: str) -> list[CompetitionOption]:
+    payload = post_json(
+        "SFPR01/createCompetitions",
+        {
+            "competition_year": season,
+            "competition_frame_id": competition_frame_id,
+            "selectFlag": "true",
+        },
+    )
+    return options_from_payload(payload.get("competitionList") or [])
+
+
+def create_teams(competition_id: str) -> list[CompetitionOption]:
+    payload = post_json(
+        "SFPR01/createTeams",
+        {"competition_id": competition_id, "selectFlag": "true"},
+    )
+    return options_from_payload(payload.get("teamList") or [])
+
+
+def options_from_payload(items: list[dict[str, Any]]) -> list[CompetitionOption]:
+    output: list[CompetitionOption] = []
+    for item in items:
+        output.append(
+            CompetitionOption(
+                display_name=str(item.get("displayName") or ""),
+                display_name_en=item.get("displayNameEn"),
+                select_value=str(item.get("selectValue") or ""),
+                parent_value=str(item["parentValue"]) if item.get("parentValue") is not None else None,
+            )
+        )
+    return output
+
+
+def sfpr01_search_form(
+    *,
+    season: str,
+    competition_frame_id: str,
+    competition_id: str,
+    team_id: str,
+    league: str,
+    team_name: str,
+) -> dict[str, str]:
+    return {
+        "competition_year_ex": season,
+        "competition_frame_id_ex": competition_frame_id,
+        "competition_id_ex": competition_id,
+        "team_id_ex": team_id,
+        "selectedCompetitionName": league,
+        "selectedCompetitionSubName": "",
+        "selectedCompetitionYear": season,
+        "selectedTeamName": team_name,
+        "dataSize": "1",
+        "pageStartNo": "0",
+        "competition_year": season,
+        "competition_frame_id": competition_frame_id,
+        "competition_id": competition_id,
+        "team_id": team_id,
+    }
+
+
+def fetch_sfpr01_appearance_records(
+    *,
+    season: str,
+    competition_frame_id: str,
+    competition_id: str,
+    team_id: str,
+    league: str,
+    team_name: str,
+) -> str:
+    _, _, html = fetch_url(
+        sfpr01_search_url(
+            season=season,
+            competition_frame_id=competition_frame_id,
+            competition_id=competition_id,
+            team_id=team_id,
+            league=league,
+            team_name=team_name,
+        )
+    )
+    return html
+
+
+def sfpr01_search_url(
+    *,
+    season: str,
+    competition_frame_id: str,
+    competition_id: str,
+    team_id: str,
+    league: str,
+    team_name: str,
+) -> str:
+    query = urlencode(
+        sfpr01_search_form(
+            season=season,
+            competition_frame_id=competition_frame_id,
+            competition_id=competition_id,
+            team_id=team_id,
+            league=league,
+            team_name=team_name,
+        )
+    )
+    return f"{SFPR01_SEARCH_URL}?{query}"
+
+
+def parse_sfpr01_appearance_records(
+    html: str,
+    *,
+    season: str,
+    competition_frame_id: str,
+    competition_id: str,
+    league: str,
+    team_id: str,
+    team_name: str,
+    source_url: str | None = None,
+    retrieved_at: str | None = None,
+) -> list[AppearanceRecord]:
+    parser = Sfix03PlayerListParser()
+    parser.feed(html)
+    retrieved = retrieved_at or datetime.now(UTC).isoformat()
+    if not parser.tables:
+        return []
+
+    table = max(parser.tables, key=len)
+    header_index = find_appearance_header_index(table)
+    if header_index is None:
+        return []
+
+    records: list[AppearanceRecord] = []
+    for row in table[header_index + 1 :]:
+        if len(row) < 5 or not row[0] or not row[0].isdigit():
+            continue
+        records.append(
+            AppearanceRecord(
+                season=season,
+                competition_frame_id=competition_frame_id,
+                competition_id=competition_id,
+                league=league,
+                team_id=team_id,
+                team_name=team_name,
+                shirt_number=row[0],
+                name_ja=row[1],
+                appearances=parse_int(row[2]),
+                minutes=parse_int(row[3]),
+                goals=parse_int(row[4]),
+                source_url=source_url or SFPR01_SEARCH_URL,
+                retrieved_at=retrieved,
+            )
+        )
+    return records
+
+
+def find_appearance_header_index(table: list[list[str]]) -> int | None:
+    for index, row in enumerate(table):
+        if len(row) >= 5 and row[:5] == ["No.", "選手", "出場", "時間", "得点"]:
+            return index
+    return None
+
+
+def write_appearance_sample(path: Path, records: list[AppearanceRecord], limit: int) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames = list(AppearanceRecord.__dataclass_fields__.keys())
     with path.open("w", encoding="utf-8", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()

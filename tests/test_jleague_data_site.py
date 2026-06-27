@@ -1,6 +1,7 @@
 from jfa_talent_analysis.sources.jleague_data_site import (
     DataSiteParser,
     find_endpoint_hints,
+    parse_sfpr01_appearance_records,
     parse_height_weight,
     parse_sfix03_player_universe,
 )
@@ -82,3 +83,40 @@ def test_parse_sfix03_player_universe():
     assert records[0].height_cm == 169
     assert records[0].weight_kg == 67
     assert records[1].source_player_id == "6825"
+
+
+def test_parse_sfpr01_appearance_records():
+    html = """
+    <html><body>
+      <table>
+        <tr><td>鹿島アントラーズ</td><td>節</td><td>第１節</td></tr>
+        <tr><td></td><td>チーム合計</td><td>34</td><td>3,060</td></tr>
+        <tr>
+          <th>No.</th><th>選手</th><th>出場</th><th>時間</th><th>得点</th>
+          <th></th><th>90</th>
+        </tr>
+        <tr><td>1</td><td>佐藤 昭大</td><td>0</td><td>0</td><td>0</td><td></td><td>SUB</td></tr>
+        <tr><td>5</td><td>青木 剛</td><td>18</td><td>1,314</td><td>1</td><td></td><td>○</td></tr>
+      </table>
+    </body></html>
+    """
+
+    records = parse_sfpr01_appearance_records(
+        html,
+        season="2014",
+        competition_frame_id="1",
+        competition_id="372",
+        league="Ｊ１リーグ",
+        team_id="1",
+        team_name="鹿島",
+        retrieved_at="2026-06-26T00:00:00+00:00",
+    )
+
+    assert len(records) == 2
+    assert records[0].shirt_number == "1"
+    assert records[0].name_ja == "佐藤 昭大"
+    assert records[0].minutes == 0
+    assert records[1].shirt_number == "5"
+    assert records[1].appearances == 18
+    assert records[1].minutes == 1314
+    assert records[1].goals == 1
