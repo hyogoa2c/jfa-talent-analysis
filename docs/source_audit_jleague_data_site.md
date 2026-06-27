@@ -184,3 +184,50 @@ Important limitation:
 - Joining to the Japanese player universe will require identity resolution using `name_ja`, team, season, and possibly additional profile/detail pages.
 
 This is still useful for Phase 1 because it provides season-level outcome variables once identity resolution is handled.
+
+## 2014 J1 Season-League Sample
+
+Collector tested:
+
+```bash
+uv run python scripts/collect_appearance_records_sample.py \
+  --season 2014 \
+  --league J1 \
+  --sleep 0.5 \
+  --output data/interim/appearance_records_2014_J1.csv
+```
+
+Observed result:
+
+- Collected 555 appearance rows.
+- Covered all 18 J1 clubs in 2014.
+- Output is local-only and gitignored.
+
+Simple name match against the `SFIX03` Japanese player universe:
+
+```bash
+uv run python scripts/poc_sfix03_player_universe.py \
+  --limit 10000 \
+  --output data/interim/player_universe_sample.csv
+
+uv run python scripts/analyze_name_match_sample.py \
+  --players data/interim/player_universe_sample.csv \
+  --appearances data/interim/appearance_records_2014_J1.csv
+```
+
+Observed result:
+
+| Metric | Value |
+|---|---:|
+| appearance rows | 555 |
+| unique appearance names | 547 |
+| Japanese player universe names | 7,129 |
+| matched unique names | 460 |
+| simple name match rate | 0.841 |
+
+The unmatched sample is dominated by foreign players, which is expected because `SFPR01` returns all players while the `SFIX03` universe sample is filtered to Japanese players.
+
+Implication:
+
+- Name-based matching is good enough for a first-pass Japanese-player filter.
+- A later identity resolution layer is still required for duplicate names, name changes, and ambiguous records.
