@@ -1,0 +1,28 @@
+[project]
+name = "jfa-talent-analysis"
+version = "0.1.0"
+description = "Quantitative analysis of Japanese football talent-development pathways, coach networks, and player career outcomes."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pandas>=3.0.3",
+]
+
+[project.scripts]
+jfa-talent-analysis = "jfa_talent_analysis.cli:main"
+
+[tool.uv]
+package = true
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.15.20",
+]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
