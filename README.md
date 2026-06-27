@@ -68,6 +68,9 @@ Suggest identity overrides for ambiguous same-name players using SFIX04 profile 
 uv run python scripts/suggest_identity_overrides_from_profiles.py --appearance data/interim/appearance_records_2014_J1_J2_J3.csv --ambiguous data/interim/ambiguous_appearance_names_2014_J1_J2_J3.csv
 ```
 
+The ambiguous diagnostics include the unresolved appearance context, so zero-appearance
+roster rows can be distinguished from true unresolved appearance rows.
+
 ## Starting Point
 
 - [Research session note](docs/research_session_2026-06-26_jfa_talent_development.md)

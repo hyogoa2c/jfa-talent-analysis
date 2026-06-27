@@ -244,6 +244,34 @@ Remaining ambiguous rows in 2014-2015 were zero-appearance roster rows, so they 
 unresolved for now. The primary analysis population should distinguish true appearance rows
 from registered-but-zero-appearance rows.
 
+## 2017-2019 Collection and Disambiguation Pass
+
+SFPR01 availability audit for 2017-2019 found J1, J2, and J3 available in all three seasons,
+with one competition per league-season. Full collection completed successfully.
+
+Observed diagnostics after applying SFIX04-backed overrides:
+
+| Season | Appearance rows | Matched rows | Match rate | Ambiguous names |
+|---|---:|---:|---:|---:|
+| 2017 | 1,824 | 1,582 | 0.8673 | 2 |
+| 2018 | 1,875 | 1,618 | 0.8629 | 5 |
+| 2019 | 1,936 | 1,661 | 0.8580 | 6 |
+
+The 2017-2019 block produced:
+
+- 4,861 joined Japanese appearance rows.
+- 4,394 player-season feature rows.
+
+The combined 2014-2019 observation window produced:
+
+- 9,894 joined Japanese appearance rows.
+- 8,440 player-season feature rows.
+
+Remaining ambiguous appearance contexts in 2017-2019 were confirmed to be zero-appearance
+rows after SFIX04-backed overrides were applied. To make this easier to audit, ambiguous
+diagnostics now include season, league, team, shirt number, appearances, minutes, and goals
+for the unresolved appearance context, not just the ambiguous player name.
+
 ## 2014 J1 Season-League Sample
 
 Collector tested:
