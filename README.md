@@ -45,6 +45,17 @@ uv run python scripts/build_player_season_features.py
 The feature output includes midseason age, total minutes, J1 minutes, U21/U23 cumulative
 minutes within the input data, and first observed J1 season.
 
+Plan and run a small multi-season collection:
+
+```bash
+uv run python scripts/build_multi_season_dataset.py --start-season 2014 --end-season 2016 --dry-run
+uv run python scripts/build_multi_season_dataset.py --start-season 2014 --end-season 2016 --limit-teams 1 --sleep 0.5
+```
+
+The multi-season driver writes a diagnostics CSV with per-season appearance rows, matched
+rows, match rate, unmatched names, ambiguous names, league count, and team count. J3 is
+automatically excluded before 2014.
+
 ## Starting Point
 
 - [Research session note](docs/research_session_2026-06-26_jfa_talent_development.md)
