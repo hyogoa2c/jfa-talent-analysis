@@ -308,6 +308,45 @@ The combined 2014-2022 observation window produced:
 Remaining ambiguous appearance contexts in 2020-2022 were confirmed to be zero-appearance
 rows after SFIX04-backed overrides were applied.
 
+## 2023-2025 Recent-Period Collection and Disambiguation Pass
+
+SFPR01 availability audit for 2023-2026 found 2023-2025 available for J1, J2, and J3, with
+one competition per league-season. The 2026 season was not available through the current
+SFPR01 competition-frame flow at audit time, so it should be re-audited later.
+
+The collection completed successfully. The recent-period block has visible league-structure
+effects:
+
+- 2023 J1: 18 teams, J2: 22 teams, J3: 20 teams.
+- 2024 J1/J2/J3: 20 teams each.
+- 2025 J1/J2/J3: 20 teams each.
+- 2025 J3 includes both `栃木SC` and `栃木Ｃ`, plus `高知`.
+
+Observed diagnostics after applying SFIX04-backed overrides:
+
+| Season | Appearance rows | Matched rows | Match rate | Ambiguous names |
+|---|---:|---:|---:|---:|
+| 2023 | 2,085 | 1,855 | 0.8897 | 1 |
+| 2024 | 2,151 | 1,927 | 0.8959 | 3 |
+| 2025 | 2,218 | 1,939 | 0.8742 | 6 |
+
+The 2023-2025 block produced:
+
+- 5,721 joined Japanese appearance rows.
+- 5,314 player-season feature rows.
+
+The combined 2014-2025 observation window produced:
+
+- 20,651 joined Japanese appearance rows.
+- 18,519 player-season feature rows.
+- 4,037 unique players in the feature table.
+
+The 2023-2025 reappearance-candidate pass found 89 players who reappeared in the target
+window after at least two absent seasons in observed J.League appearances. This is useful
+for finding possible overseas-return cases, but it is not proof of overseas transfer because
+JFL, regional leagues, injuries, college/loan contexts, and other unobserved periods can
+create the same gap pattern.
+
 ## 2014 J1 Season-League Sample
 
 Collector tested:

@@ -258,6 +258,7 @@ Current implementation status:
 - `scripts/build_multi_season_features.py` combines joined season files over a year range and builds player-season features from the combined observation window.
 - `scripts/suggest_identity_overrides_from_profiles.py` uses SFIX04 season/team histories to suggest manual identity overrides for ambiguous same-name players.
 - Ambiguous diagnostics are written at unresolved appearance-context level, including season, league, team, shirt number, appearances, minutes, and goals.
+- `scripts/build_reappearance_candidates.py` flags players who reappear in a target window after an observed J.League appearance gap. This is useful for candidate discovery, but it is not proof of overseas transfer.
 - The collection script supports multiple competitions inside one league frame, which is needed for 2015 and 2016 J1 two-stage seasons.
 - J3 is automatically excluded before 2014 in the multi-season driver.
 - Current derived features are based only on seasons included in the input file, so first-observed season, first-J1 season, and cumulative U21/U23 minutes are observation-window measures until multi-season collection is run.

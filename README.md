@@ -71,6 +71,14 @@ uv run python scripts/suggest_identity_overrides_from_profiles.py --appearance d
 The ambiguous diagnostics include the unresolved appearance context, so zero-appearance
 roster rows can be distinguished from true unresolved appearance rows.
 
+Build observed J.League reappearance candidates after a multi-year gap:
+
+```bash
+uv run python scripts/build_reappearance_candidates.py --target-start-season 2023 --target-end-season 2025
+```
+
+This is a gap-based candidate list, not proof of overseas transfer.
+
 ## Starting Point
 
 - [Research session note](docs/research_session_2026-06-26_jfa_talent_development.md)
