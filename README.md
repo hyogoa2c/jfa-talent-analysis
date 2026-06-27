@@ -36,6 +36,15 @@ uv run python scripts/build_season_dataset.py --season 2014 --sleep 0.5
 
 This writes local, gitignored CSV files under `data/interim/` and `data/processed/`.
 
+Build player-season analytical features from the joined Japanese appearance sample:
+
+```bash
+uv run python scripts/build_player_season_features.py
+```
+
+The feature output includes midseason age, total minutes, J1 minutes, U21/U23 cumulative
+minutes within the input data, and first observed J1 season.
+
 ## Starting Point
 
 - [Research session note](docs/research_session_2026-06-26_jfa_talent_development.md)
