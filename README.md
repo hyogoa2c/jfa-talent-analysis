@@ -56,6 +56,12 @@ The multi-season driver writes a diagnostics CSV with per-season appearance rows
 rows, match rate, unmatched names, ambiguous names, league count, and team count. J3 is
 automatically excluded before 2014.
 
+Build player-season features after multi-season collection:
+
+```bash
+uv run python scripts/build_multi_season_features.py --start-season 2014 --end-season 2016
+```
+
 ## Starting Point
 
 - [Research session note](docs/research_session_2026-06-26_jfa_talent_development.md)
