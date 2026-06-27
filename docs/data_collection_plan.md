@@ -262,6 +262,7 @@ Current implementation status:
 - J3 is automatically excluded before 2014 in the multi-season driver.
 - Current derived features are based only on seasons included in the input file, so first-observed season, first-J1 season, and cumulative U21/U23 minutes are observation-window measures until multi-season collection is run.
 - A 2013 smoke attempt found no SFPR01 competition frames for that year, so 2005-2013 backfill requires a separate source-availability audit before large-scale collection.
+- 2020-2022 collection is available through SFPR01, but should be treated as a COVID-period block because league/team counts differ from surrounding seasons.
 
 ### Step 3: Pathway Classification
 

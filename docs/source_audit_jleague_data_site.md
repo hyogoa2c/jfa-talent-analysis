@@ -272,6 +272,42 @@ rows after SFIX04-backed overrides were applied. To make this easier to audit, a
 diagnostics now include season, league, team, shirt number, appearances, minutes, and goals
 for the unresolved appearance context, not just the ambiguous player name.
 
+## 2020-2022 COVID-Period Collection and Disambiguation Pass
+
+SFPR01 availability audit for 2020-2022 found J1, J2, and J3 available in all three seasons,
+with one competition per league-season.
+
+The collection completed successfully. The COVID-period block has visible league-structure
+effects:
+
+- 2020 J1: 18 teams.
+- 2021 J1: 20 teams.
+- 2022 J1: 18 teams.
+- 2021 J3: 15 teams.
+- U-23 J3 teams disappear after 2020 in the collected league-team lists.
+
+Observed diagnostics after applying SFIX04-backed overrides:
+
+| Season | Appearance rows | Matched rows | Match rate | Ambiguous names |
+|---|---:|---:|---:|---:|
+| 2020 | 1,840 | 1,618 | 0.8793 | 3 |
+| 2021 | 1,885 | 1,672 | 0.8870 | 0 |
+| 2022 | 1,976 | 1,746 | 0.8836 | 4 |
+
+The 2020-2022 block produced:
+
+- 5,036 joined Japanese appearance rows.
+- 4,765 player-season feature rows.
+
+The combined 2014-2022 observation window produced:
+
+- 14,930 joined Japanese appearance rows.
+- 13,205 player-season feature rows.
+- 3,218 unique players in the feature table.
+
+Remaining ambiguous appearance contexts in 2020-2022 were confirmed to be zero-appearance
+rows after SFIX04-backed overrides were applied.
+
 ## 2014 J1 Season-League Sample
 
 Collector tested:
