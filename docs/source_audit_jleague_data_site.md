@@ -231,3 +231,49 @@ Implication:
 
 - Name-based matching is good enough for a first-pass Japanese-player filter.
 - A later identity resolution layer is still required for duplicate names, name changes, and ambiguous records.
+
+## Joined 2014 J1 Japanese-Player Sample
+
+Join script:
+
+```bash
+uv run python scripts/build_joined_appearance_sample.py \
+  --players data/interim/player_universe_sample.csv \
+  --appearances data/interim/appearance_records_2014_J1.csv
+```
+
+Summary script:
+
+```bash
+uv run python scripts/summarize_joined_appearance_sample.py
+```
+
+Observed result:
+
+| Metric | Value |
+|---|---:|
+| appearance rows | 555 |
+| automatically matched rows | 463 |
+| unique matched players | 457 |
+| unmatched unique names | 87 |
+| ambiguous unique names | 3 |
+| total matched minutes | 510,526 |
+| total matched goals | 557 |
+
+The three ambiguous names in the 2014 J1 sample are:
+
+- 吉川 健太
+- 松田 陸
+- 田中 達也
+
+These names have multiple candidates in the `SFIX03` player universe. They should be resolved using season, team, position, birth date, and profile history. If automatic resolution remains uncertain, manual mapping is acceptable.
+
+Current identity-resolution policy:
+
+1. Auto-match exact normalized Japanese names with one `SFIX03` candidate.
+2. Exclude unmatched names from the Japanese-player output for now.
+3. Write unmatched names to `data/interim/unmatched_appearance_names_2014_J1.csv`.
+4. Write ambiguous names to `data/interim/ambiguous_appearance_names_2014_J1.csv`.
+5. Add a manual override table later for ambiguous or high-value records.
+
+This produces a usable first-pass Japanese-player season outcome dataset while making unresolved identity issues explicit.

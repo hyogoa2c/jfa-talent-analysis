@@ -11,6 +11,7 @@ from jfa_talent_analysis.sources.jleague_data_site import (
     create_teams,
     fetch_sfpr01_appearance_records,
     parse_sfpr01_appearance_records,
+    sfpr01_search_url,
     write_appearance_sample,
 )
 
@@ -87,6 +88,14 @@ def collect_season_league(
             league=league_name,
             team_name=team.display_name,
         )
+        source_url = sfpr01_search_url(
+            season=season,
+            competition_frame_id=competition_frame_id,
+            competition_id=competition_id,
+            team_id=team.select_value,
+            league=league_name,
+            team_name=team.display_name,
+        )
         team_records = parse_sfpr01_appearance_records(
             html,
             season=season,
@@ -95,6 +104,7 @@ def collect_season_league(
             league=league_name,
             team_id=team.select_value,
             team_name=team.display_name,
+            source_url=source_url,
         )
         records.extend(team_records)
         if sleep_seconds > 0 and index < len(teams):
