@@ -5,8 +5,10 @@ from datetime import UTC, datetime
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlencode
 from urllib.parse import urljoin
 from urllib.request import Request, urlopen
+import csv
 import json
 import re
 
@@ -14,6 +16,7 @@ import re
 BASE_URL = "https://data.j-league.or.jp/"
 DEFAULT_PAGES = ("SFIX02", "SFIX03", "SFPR01")
 USER_AGENT = "jfa-talent-analysis/0.1 source-audit"
+SFIX03_SEARCH_URL = urljoin(BASE_URL, "SFIX03/search")
 
 
 @dataclass
@@ -53,6 +56,20 @@ class ScriptSummary:
 class TableSummary:
     headers: list[str]
     row_count: int
+
+
+@dataclass
+class PlayerUniverseRecord:
+    source_player_id: str
+    name_ja: str
+    name_en: str
+    last_belong_team: str
+    position: str
+    birth_date: str
+    height_cm: int | None
+    weight_kg: int | None
+    source_url: str
+    retrieved_at: str
 
 
 @dataclass
@@ -180,6 +197,42 @@ class DataSiteParser(HTMLParser):
             self._current_cell["text_parts"].append(data)
 
 
+class Sfix03PlayerListParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.player_ids: list[str] = []
+        self.tables: list[list[list[str]]] = []
+        self._current_table: list[list[str]] | None = None
+        self._current_row: list[str] | None = None
+        self._current_cell: list[str] | None = None
+
+    def handle_starttag(self, tag: str, attrs_list: list[tuple[str, str | None]]) -> None:
+        attrs = dict(attrs_list)
+        if tag == "input" and attrs.get("name") == "playerIdList" and attrs.get("value"):
+            self.player_ids.append(attrs["value"])
+        elif tag == "table":
+            self._current_table = []
+        elif tag == "tr" and self._current_table is not None:
+            self._current_row = []
+        elif tag in {"th", "td"} and self._current_row is not None:
+            self._current_cell = []
+
+    def handle_data(self, data: str) -> None:
+        if self._current_cell is not None:
+            self._current_cell.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in {"th", "td"} and self._current_cell is not None and self._current_row is not None:
+            self._current_row.append(normalize_text(" ".join(self._current_cell)))
+            self._current_cell = None
+        elif tag == "tr" and self._current_row is not None and self._current_table is not None:
+            self._current_table.append(self._current_row)
+            self._current_row = None
+        elif tag == "table" and self._current_table is not None:
+            self.tables.append(self._current_table)
+            self._current_table = None
+
+
 def normalize_text(value: str) -> str:
     return " ".join(value.split())
 
@@ -193,6 +246,107 @@ def fetch_url(url: str, timeout: int = 30) -> tuple[int, str | None, str]:
     with urlopen(request, timeout=timeout) as response:
         content = response.read().decode("utf-8", errors="replace")
         return response.status, response.headers.get("content-type"), content
+
+
+def post_form(url: str, form: dict[str, str], timeout: int = 30) -> tuple[int, str | None, str]:
+    data = urlencode(form).encode()
+    request = Request(
+        url,
+        data=data,
+        headers={
+            "User-Agent": USER_AGENT,
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+    )
+    with urlopen(request, timeout=timeout) as response:
+        content = response.read().decode("utf-8", errors="replace")
+        return response.status, response.headers.get("content-type"), content
+
+
+def sfix03_japanese_players_form() -> dict[str, str]:
+    return {
+        "team_year_id_ex": "",
+        "national_origin_ex": "0",
+        "field_position_type_ex": "",
+        "selectedTeamName": "（指定なし）",
+        "selectedNationalOriginName": "日本",
+        "selectedFieldPositionTypeName": "（指定なし）",
+        "selectedJLeaguePlayerTypeNmae": "すべて",
+        "selectedpalyerName": "",
+        "selectedbrithPalce": "",
+        "selectedplayerNameFirstAlphabet": "（指定なし）",
+        "last_belong_team": "",
+        "national_origin": "0",
+        "field_position_type": "",
+        "j_league_current_belong_player_type": "3",
+        "palyer_name": "",
+        "brith_palce": "",
+        "player_name_first_alphabet": "",
+    }
+
+
+def fetch_sfix03_japanese_players() -> str:
+    _, _, html = post_form(SFIX03_SEARCH_URL, sfix03_japanese_players_form())
+    return html
+
+
+def parse_height_weight(value: str) -> tuple[int | None, int | None]:
+    if not value or "/" not in value:
+        return None, None
+    height, weight = value.split("/", 1)
+    return parse_int(height), parse_int(weight)
+
+
+def parse_int(value: str) -> int | None:
+    value = value.strip()
+    if not value or not value.isdigit():
+        return None
+    return int(value)
+
+
+def parse_sfix03_player_universe(
+    html: str, retrieved_at: str | None = None
+) -> list[PlayerUniverseRecord]:
+    parser = Sfix03PlayerListParser()
+    parser.feed(html)
+    retrieved = retrieved_at or datetime.now(UTC).isoformat()
+
+    if not parser.tables:
+        return []
+
+    player_table = max(parser.tables, key=len)
+    data_rows = [row for row in player_table if len(row) == 6 and row[0] != "全てチェック クリア"]
+
+    records: list[PlayerUniverseRecord] = []
+    for player_id, row in zip(parser.player_ids, data_rows, strict=False):
+        height_cm, weight_kg = parse_height_weight(row[5])
+        records.append(
+            PlayerUniverseRecord(
+                source_player_id=player_id,
+                name_ja=row[0],
+                name_en=row[1],
+                last_belong_team=row[2],
+                position=row[3],
+                birth_date=row[4],
+                height_cm=height_cm,
+                weight_kg=weight_kg,
+                source_url=SFIX03_SEARCH_URL,
+                retrieved_at=retrieved,
+            )
+        )
+    return records
+
+
+def write_player_universe_sample(
+    path: Path, records: list[PlayerUniverseRecord], limit: int
+) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames = list(PlayerUniverseRecord.__dataclass_fields__.keys())
+    with path.open("w", encoding="utf-8", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for record in records[:limit]:
+            writer.writerow(asdict(record))
 
 
 def find_endpoint_hints(html: str) -> list[str]:

@@ -91,3 +91,33 @@ data/interim/player_universe_sample.csv
 
 Do not proceed to broad automated collection until the table fields and request behavior are confirmed.
 
+## PoC Result
+
+`SFIX03/search` POST succeeded with `national_origin_ex=0`.
+
+Command:
+
+```bash
+uv run python scripts/poc_sfix03_player_universe.py --limit 100
+```
+
+Observed result:
+
+- Parsed 7,162 Japanese player records.
+- Wrote a 100-row local sample to `data/interim/player_universe_sample.csv`.
+- The generated CSV is local-only and gitignored.
+
+Extracted fields:
+
+- `source_player_id`
+- `name_ja`
+- `name_en`
+- `last_belong_team`
+- `position`
+- `birth_date`
+- `height_cm`
+- `weight_kg`
+- `source_url`
+- `retrieved_at`
+
+This confirms that `SFIX03` can provide the base player identity universe. The next unresolved task is to connect these player IDs to season-level appearance records from `SFPR01`.
