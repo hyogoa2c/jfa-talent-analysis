@@ -62,6 +62,12 @@ Build player-season features after multi-season collection:
 uv run python scripts/build_multi_season_features.py --start-season 2014 --end-season 2016
 ```
 
+Suggest identity overrides for ambiguous same-name players using SFIX04 profile histories:
+
+```bash
+uv run python scripts/suggest_identity_overrides_from_profiles.py --appearance data/interim/appearance_records_2014_J1_J2_J3.csv --ambiguous data/interim/ambiguous_appearance_names_2014_J1_J2_J3.csv
+```
+
 ## Starting Point
 
 - [Research session note](docs/research_session_2026-06-26_jfa_talent_development.md)

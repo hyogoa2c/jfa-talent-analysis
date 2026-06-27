@@ -208,6 +208,42 @@ Implication:
 - The current automated SFPR01 pipeline should expand first across 2014 onward.
 - The 2005-2013 target period should be treated as a separate backfill problem instead of being forced through the current SFPR01 collector.
 
+## 2014-2016 Identity Disambiguation Pass
+
+Ambiguous Japanese names in the 2014-2016 joined sample were checked against `SFIX04`
+player detail pages. The detail page contains season/team history, so ambiguous rows can be
+resolved when exactly one candidate has a matching season and team.
+
+Helper command:
+
+```bash
+uv run python scripts/suggest_identity_overrides_from_profiles.py \
+  --appearance data/interim/appearance_records_2014_J1_J2_J3.csv \
+  --appearance data/interim/appearance_records_2015_J1_J2_J3.csv \
+  --appearance data/interim/appearance_records_2016_J1_J2_J3.csv \
+  --ambiguous data/interim/ambiguous_appearance_names_2014_J1_J2_J3.csv \
+  --ambiguous data/interim/ambiguous_appearance_names_2015_J1_J2_J3.csv \
+  --ambiguous data/interim/ambiguous_appearance_names_2016_J1_J2_J3.csv
+```
+
+Accepted overrides are stored in:
+
+```text
+data/manual/player_identity_overrides.csv
+```
+
+Observed improvement after applying SFIX04-backed overrides:
+
+| Season | Matched rows before | Matched rows after | Ambiguous names before | Ambiguous names after |
+|---|---:|---:|---:|---:|
+| 2014 | 1,355 | 1,364 | 10 | 2 |
+| 2015 | 1,746 | 1,756 | 9 | 3 |
+| 2016 | 1,899 | 1,913 | 10 | 0 |
+
+Remaining ambiguous rows in 2014-2015 were zero-appearance roster rows, so they were left
+unresolved for now. The primary analysis population should distinguish true appearance rows
+from registered-but-zero-appearance rows.
+
 ## 2014 J1 Season-League Sample
 
 Collector tested:

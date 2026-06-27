@@ -17,6 +17,7 @@ BASE_URL = "https://data.j-league.or.jp/"
 DEFAULT_PAGES = ("SFIX02", "SFIX03", "SFPR01")
 USER_AGENT = "jfa-talent-analysis/0.1 source-audit"
 SFIX03_SEARCH_URL = urljoin(BASE_URL, "SFIX03/search")
+SFIX04_INDEX_URL = urljoin(BASE_URL, "SFIX04/index")
 SFPR01_SEARCH_URL = urljoin(BASE_URL, "SFPR01/search")
 
 
@@ -69,6 +70,18 @@ class PlayerUniverseRecord:
     birth_date: str
     height_cm: int | None
     weight_kg: int | None
+    source_url: str
+    retrieved_at: str
+
+
+@dataclass
+class PlayerSeasonHistoryRecord:
+    source_player_id: str
+    season: str
+    team_name: str
+    league: str
+    appearances: int | None
+    goals: int | None
     source_url: str
     retrieved_at: str
 
@@ -321,6 +334,15 @@ def fetch_sfix03_japanese_players() -> str:
     return html
 
 
+def sfix04_player_url(source_player_id: str) -> str:
+    return f"{SFIX04_INDEX_URL}?{urlencode({'player_id': source_player_id})}"
+
+
+def fetch_sfix04_player_profile(source_player_id: str) -> str:
+    _, _, html = fetch_url(sfix04_player_url(source_player_id))
+    return html
+
+
 def parse_height_weight(value: str) -> tuple[int | None, int | None]:
     if not value or "/" not in value:
         return None, None
@@ -366,6 +388,46 @@ def parse_sfix03_player_universe(
             )
         )
     return records
+
+
+def parse_sfix04_player_season_history(
+    html: str,
+    *,
+    source_player_id: str,
+    source_url: str | None = None,
+    retrieved_at: str | None = None,
+) -> list[PlayerSeasonHistoryRecord]:
+    parser = Sfix03PlayerListParser()
+    parser.feed(html)
+    retrieved = retrieved_at or datetime.now(UTC).isoformat()
+    records: list[PlayerSeasonHistoryRecord] = []
+    for table in parser.tables:
+        header_index = find_player_history_header_index(table)
+        if header_index is None:
+            continue
+        for row in table[header_index + 2 :]:
+            if len(row) < 6 or not row[0].isdigit():
+                continue
+            records.append(
+                PlayerSeasonHistoryRecord(
+                    source_player_id=source_player_id,
+                    season=row[0],
+                    team_name=row[1],
+                    league=row[2],
+                    appearances=parse_int(row[3]),
+                    goals=parse_int(row[4]),
+                    source_url=source_url or sfix04_player_url(source_player_id),
+                    retrieved_at=retrieved,
+                )
+            )
+    return records
+
+
+def find_player_history_header_index(table: list[list[str]]) -> int | None:
+    for index, row in enumerate(table):
+        if len(row) >= 3 and row[:3] == ["シーズン", "チーム", "リーグ"]:
+            return index
+    return None
 
 
 def write_player_universe_sample(

@@ -2,6 +2,7 @@ from jfa_talent_analysis.sources.jleague_data_site import (
     DataSiteParser,
     find_endpoint_hints,
     parse_sfpr01_appearance_records,
+    parse_sfix04_player_season_history,
     parse_height_weight,
     parse_sfix03_player_universe,
 )
@@ -120,3 +121,30 @@ def test_parse_sfpr01_appearance_records():
     assert records[1].appearances == 18
     assert records[1].minutes == 1314
     assert records[1].goals == 1
+
+
+def test_parse_sfix04_player_season_history():
+    html = """
+    <html><body>
+      <table>
+        <tr><th>シーズン</th><th>チーム</th><th>リーグ</th><th>リーグ</th></tr>
+        <tr><th>出場</th><th>得点</th><th>出場</th><th>得点</th></tr>
+        <tr><td>2014</td><td>福島</td><td>J3</td><td>31</td><td>2</td><td>-</td></tr>
+        <tr><td>2015</td><td>福島</td><td>J3</td><td>27</td><td>1</td><td>-</td></tr>
+      </table>
+    </body></html>
+    """
+
+    records = parse_sfix04_player_season_history(
+        html,
+        source_player_id="11991",
+        retrieved_at="2026-06-26T00:00:00+00:00",
+    )
+
+    assert len(records) == 2
+    assert records[0].source_player_id == "11991"
+    assert records[0].season == "2014"
+    assert records[0].team_name == "福島"
+    assert records[0].league == "J3"
+    assert records[0].appearances == 31
+    assert records[0].goals == 2
