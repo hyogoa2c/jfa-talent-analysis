@@ -304,10 +304,10 @@ Observed raw collection:
 |---|---:|---:|
 | J1 | 18 | 555 |
 | J2 | 22 | 714 |
-| J3 | 12 requested / 11 parsed | 293 |
-| Combined | 52 requested / 51 parsed | 1,562 |
+| J3 | 11 regular clubs parsed | 293 |
+| Combined | 51 regular clubs parsed | 1,562 |
 
-Note: 2014 J3 includes `J-22` in the team selector, but the current parser did not extract player rows for it. Treat `J-22` as a special case before full historical collection.
+Note: 2014 J3 includes `J-22` in the team selector. `J-22` was a temporary U-22 selection team composed of players registered with other J1/J2 clubs, not a regular club team. It existed only for a limited period and is excluded from the primary analysis because club affiliation, team-level development investment, and appearance opportunity are not comparable with regular J.League clubs.
 
 Join to `SFIX03` Japanese-player universe:
 
@@ -334,7 +334,28 @@ Observed joined result:
 
 This confirms that the 2014-onward collection pipeline is feasible across J1/J2/J3, with the following known gaps:
 
-- `J-22` special handling.
+- `J-22` is excluded from primary analysis.
 - ambiguous Japanese names.
 - foreign players intentionally excluded after joining to the Japanese player universe.
 - 2013 and earlier data lives behind a separate legacy site link and needs a separate audit.
+
+## Manual Identity Overrides
+
+Ambiguous name resolution can be handled with a small manual override table:
+
+```text
+data/manual/player_identity_overrides.csv
+```
+
+Schema:
+
+| Column | Description |
+|---|---|
+| `season` | Season year |
+| `league` | League label |
+| `team_name` | Team name in appearance record |
+| `name_ja` | Japanese player name in appearance record |
+| `source_player_id` | Chosen `SFIX03` player ID |
+| `note` | Rationale or source note |
+
+The file is intentionally committed as an empty template. Future manual resolutions should be explicit and reviewable.

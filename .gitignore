@@ -32,6 +32,8 @@ dist/
 data/raw/
 data/interim/
 data/processed/
+!data/manual/
+!data/manual/*.csv
 outputs/
 reports/generated/
 
@@ -44,4 +46,3 @@ reports/generated/
 .DS_Store
 .idea/
 .vscode/
-

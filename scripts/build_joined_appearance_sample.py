@@ -39,6 +39,12 @@ def parse_args() -> argparse.Namespace:
         default=Path("data/interim/ambiguous_appearance_names_2014_J1.csv"),
         help="Ambiguous player-name diagnostics CSV.",
     )
+    parser.add_argument(
+        "--overrides",
+        type=Path,
+        default=Path("data/manual/player_identity_overrides.csv"),
+        help="Manual player identity overrides CSV.",
+    )
     return parser.parse_args()
 
 
@@ -48,15 +54,25 @@ def main() -> None:
     appearances = read_csv(args.appearances)
 
     player_index = index_players_by_name(players)
+    player_by_id = {player["source_player_id"]: player for player in players}
+    overrides = read_overrides(args.overrides)
     joined: list[dict[str, str]] = []
     unmatched: dict[str, int] = {}
     ambiguous: dict[str, list[dict[str, str]]] = {}
 
     for appearance in appearances:
         name = normalize_name(appearance["name_ja"])
+        override_id = find_override(overrides, appearance)
+        if override_id:
+            player = player_by_id.get(override_id)
+            if player is None:
+                raise ValueError(f"Override references unknown source_player_id={override_id}")
+            joined.append(join_record(appearance, player, match_method="manual_override"))
+            continue
+
         candidates = player_index.get(name, [])
         if len(candidates) == 1:
-            joined.append(join_record(appearance, candidates[0]))
+            joined.append(join_record(appearance, candidates[0], match_method="exact_name"))
         elif len(candidates) > 1:
             ambiguous[name] = candidates
         else:
@@ -76,6 +92,8 @@ def main() -> None:
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
     with path.open(encoding="utf-8", newline="") as file:
         return list(csv.DictReader(file))
 
@@ -91,9 +109,32 @@ def index_players_by_name(players: list[dict[str, str]]) -> dict[str, list[dict[
     return index
 
 
-def join_record(appearance: dict[str, str], player: dict[str, str]) -> dict[str, str]:
+def read_overrides(path: Path) -> list[dict[str, str]]:
+    return [
+        row
+        for row in read_csv(path)
+        if row.get("source_player_id") and row.get("name_ja")
+    ]
+
+
+def find_override(overrides: list[dict[str, str]], appearance: dict[str, str]) -> str | None:
+    for override in overrides:
+        if (
+            override["season"] == appearance["season"]
+            and override["league"] == appearance["league"]
+            and override["team_name"] == appearance["team_name"]
+            and normalize_name(override["name_ja"]) == normalize_name(appearance["name_ja"])
+        ):
+            return override["source_player_id"]
+    return None
+
+
+def join_record(
+    appearance: dict[str, str], player: dict[str, str], *, match_method: str
+) -> dict[str, str]:
     return {
         "source_player_id": player["source_player_id"],
+        "match_method": match_method,
         "name_ja": appearance["name_ja"],
         "name_en": player["name_en"],
         "birth_date": player["birth_date"],

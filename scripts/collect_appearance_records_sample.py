@@ -21,6 +21,8 @@ LEAGUE_FRAME_IDS = {
     "J3": "3",
 }
 
+EXCLUDED_TEAM_NAMES = {"J-22"}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -74,6 +76,7 @@ def collect_season_league(
     league_name = find_league_name(season, competition_frame_id) or league_key
     competition_id = find_single_competition_id(season, competition_frame_id)
     teams = create_teams(competition_id)
+    teams = [team for team in teams if team.display_name not in EXCLUDED_TEAM_NAMES]
     if limit_teams is not None:
         teams = teams[:limit_teams]
 
