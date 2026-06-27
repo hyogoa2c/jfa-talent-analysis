@@ -280,6 +280,20 @@ This produces a usable first-pass Japanese-player season outcome dataset while m
 
 ## 2014 J1/J2/J3 Combined Sample
 
+Unified build script:
+
+```bash
+uv run python scripts/build_season_dataset.py --season 2014 --sleep 0.5
+```
+
+This runs:
+
+1. `SFIX03` Japanese player universe collection.
+2. `SFPR01` appearance collection by league and team.
+3. League CSV combination.
+4. Japanese-player identity join.
+5. Summary output.
+
 Multi-league collection script:
 
 ```bash

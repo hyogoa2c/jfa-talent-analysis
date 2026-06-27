@@ -28,6 +28,14 @@ Run the package entry point:
 uv run jfa-talent-analysis
 ```
 
+Build the local 2014 J1/J2/J3 season sample:
+
+```bash
+uv run python scripts/build_season_dataset.py --season 2014 --sleep 0.5
+```
+
+This writes local, gitignored CSV files under `data/interim/` and `data/processed/`.
+
 ## Starting Point
 
 - [Research session note](docs/research_session_2026-06-26_jfa_talent_development.md)
