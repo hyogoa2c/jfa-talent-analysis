@@ -277,3 +277,64 @@ Current identity-resolution policy:
 5. Add a manual override table later for ambiguous or high-value records.
 
 This produces a usable first-pass Japanese-player season outcome dataset while making unresolved identity issues explicit.
+
+## 2014 J1/J2/J3 Combined Sample
+
+Multi-league collection script:
+
+```bash
+uv run python scripts/collect_appearance_records_multi_league_sample.py \
+  --season 2014 \
+  --sleep 0.5
+```
+
+Combine league CSVs:
+
+```bash
+uv run python scripts/combine_csv_files.py \
+  data/interim/appearance_records_2014_J1.csv \
+  data/interim/appearance_records_2014_J2.csv \
+  data/interim/appearance_records_2014_J3.csv \
+  --output data/interim/appearance_records_2014_J1_J2_J3.csv
+```
+
+Observed raw collection:
+
+| League | Teams | Rows |
+|---|---:|---:|
+| J1 | 18 | 555 |
+| J2 | 22 | 714 |
+| J3 | 12 requested / 11 parsed | 293 |
+| Combined | 52 requested / 51 parsed | 1,562 |
+
+Note: 2014 J3 includes `J-22` in the team selector, but the current parser did not extract player rows for it. Treat `J-22` as a special case before full historical collection.
+
+Join to `SFIX03` Japanese-player universe:
+
+```bash
+uv run python scripts/build_joined_appearance_sample.py \
+  --players data/interim/player_universe_sample.csv \
+  --appearances data/interim/appearance_records_2014_J1_J2_J3.csv \
+  --output data/processed/appearance_records_2014_J1_J2_J3_japanese_matched.csv \
+  --unmatched-output data/interim/unmatched_appearance_names_2014_J1_J2_J3.csv \
+  --ambiguous-output data/interim/ambiguous_appearance_names_2014_J1_J2_J3.csv
+```
+
+Observed joined result:
+
+| Metric | Value |
+|---|---:|
+| appearance rows | 1,562 |
+| automatically matched rows | 1,355 |
+| unique matched players | 1,306 |
+| unmatched unique names | 184 |
+| ambiguous unique names | 10 |
+| total matched minutes | 1,656,822 |
+| total matched goals | 1,894 |
+
+This confirms that the 2014-onward collection pipeline is feasible across J1/J2/J3, with the following known gaps:
+
+- `J-22` special handling.
+- ambiguous Japanese names.
+- foreign players intentionally excluded after joining to the Japanese player universe.
+- 2013 and earlier data lives behind a separate legacy site link and needs a separate audit.
