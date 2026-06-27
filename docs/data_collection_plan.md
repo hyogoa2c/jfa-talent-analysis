@@ -275,6 +275,29 @@ Output:
 data/interim/player_pathways.csv
 ```
 
+### Overseas Transfers and Returnees
+
+The current J.League Data Site pipeline can flag observed J.League reappearance after a
+multi-season gap, but this is only a candidate signal for overseas transfer or overseas
+return. It can also reflect JFL, regional leagues, injury periods, college contexts, loans,
+or other unobserved domestic stints.
+
+Before treating overseas transfer or overseas-return status as an outcome variable, add a
+separate source audit for transfer and career-history sources. Candidate source categories:
+
+- JFA/J.League and club official announcements.
+- Club profile career histories.
+- Wikidata/Wikipedia as identity and career-history hints.
+- Transfermarkt, Soccerway, WorldFootball.net, or other football databases, subject to
+  terms-of-use and redistribution constraints.
+- News articles for individual overseas moves and returns.
+
+Near-term use:
+
+- Keep `scripts/build_reappearance_candidates.py` as a discovery tool.
+- Do not label reappearance candidates as overseas returnees without source-backed transfer
+  evidence.
+
 Start with simple categories:
 
 - `j_club_academy`
