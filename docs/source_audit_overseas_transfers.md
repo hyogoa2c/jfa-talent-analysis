@@ -158,6 +158,41 @@ The Wikipedia enrichment pass found at least one candidate title for all 15 manu
 and produced no row-level search errors. Candidate lists can contain unrelated pages, so the
 human review step should select the correct player page before filling `manual_decision`.
 
+## Manual Review Entry Rules
+
+Manual review should fill only these fields:
+
+| Field | Rule |
+|---|---|
+| `manual_decision` | Use one of the allowed values below. Leave blank only before review. |
+| `manual_note` | Briefly state the reason for the decision, especially for negative or unresolved rows. |
+| `evidence_url` | Add the source URL used for the decision. Separate multiple URLs with `|`. |
+
+Allowed `manual_decision` values:
+
+| Value | Meaning | Minimum evidence |
+|---|---|---|
+| `confirmed_foreign_stint` | The player identity is resolved and an overseas club stint is confirmed. | `evidence_url` required. Prefer club, JFA/J.League, or a reliable profile; Wikipedia is acceptable for this review pass if it clearly lists the career chronology. |
+| `confirmed_no_foreign_stint` | The player identity is resolved and the J.League observation gap appears not to be an overseas stint. | `evidence_url` or `manual_note` required. Use this for domestic lower-division, university, injury, registration, or data-coverage explanations. |
+| `identity_resolved_no_decision` | The correct player page/source is found, but overseas-stint status is still unclear. | `evidence_url` required. |
+| `unresolved` | The row cannot be resolved confidently. | `manual_note` required. Explain the blocker. |
+
+Decision examples:
+
+| Situation | `manual_decision` | `manual_note` example |
+|---|---|---|
+| Wikipedia or official profile lists a foreign club during the gap. | `confirmed_foreign_stint` | `Career chronology lists Deportivo Alaves during the J.League gap.` |
+| Search results identify the player, but career history only shows domestic clubs outside J1/J2/J3. | `confirmed_no_foreign_stint` | `Gap appears to be domestic lower-division career, not overseas.` |
+| Correct player page is found but club history is incomplete. | `identity_resolved_no_decision` | `Identity resolved; source does not cover gap seasons clearly.` |
+| Several same-name players remain plausible. | `unresolved` | `Multiple candidates; cannot resolve identity from available pages.` |
+
+Run the validator before committing manual edits:
+
+```bash
+uv run python scripts/validate_overseas_manual_review_queue.py \
+  --input data/manual/overseas_transfer_manual_review_queue_2023_2025_gap2.csv
+```
+
 ## Interpretation Rules
 
 - Treat Wikidata matches as candidate evidence, not final labels.
