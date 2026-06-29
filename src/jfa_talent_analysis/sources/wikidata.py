@@ -8,6 +8,8 @@ from urllib.request import Request, urlopen
 
 SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
 USER_AGENT = "jfa-talent-analysis/0.1 Wikidata source audit"
+KATAKANA_START = "\u30a0"
+KATAKANA_END = "\u30ff"
 
 
 @dataclass(frozen=True)
@@ -113,6 +115,46 @@ def summarize_stints(stints: list[WikidataTeamStint]) -> dict[str, str]:
         "wikidata_foreign_team_count": str(len(foreign_teams)),
         "wikidata_foreign_teams": "|".join(foreign_teams),
     }
+
+
+def classify_wikidata_audit(name_ja: str, summary: dict[str, str]) -> dict[str, str]:
+    person_count = int(summary.get("wikidata_person_count", "0") or "0")
+    foreign_team_count = int(summary.get("wikidata_foreign_team_count", "0") or "0")
+
+    if person_count == 0:
+        return {
+            "audit_status": "needs_manual_review",
+            "manual_review_reason": review_reason("no_wikidata_person_match", name_ja),
+        }
+    if person_count > 1:
+        return {
+            "audit_status": "needs_manual_review",
+            "manual_review_reason": review_reason("multiple_wikidata_person_matches", name_ja),
+        }
+    if foreign_team_count > 0:
+        return {
+            "audit_status": "candidate_foreign_stint",
+            "manual_review_reason": "",
+        }
+    if contains_katakana(name_ja):
+        return {
+            "audit_status": "needs_manual_review",
+            "manual_review_reason": "katakana_name_without_wikidata_foreign_club_hint",
+        }
+    return {
+        "audit_status": "no_wikidata_foreign_stint",
+        "manual_review_reason": "",
+    }
+
+
+def review_reason(base_reason: str, name_ja: str) -> str:
+    if contains_katakana(name_ja):
+        return f"{base_reason}|katakana_name"
+    return base_reason
+
+
+def contains_katakana(value: str) -> bool:
+    return any(KATAKANA_START <= char <= KATAKANA_END for char in value)
 
 
 def escape_sparql_string(value: str) -> str:

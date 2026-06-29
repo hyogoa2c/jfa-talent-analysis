@@ -1,5 +1,7 @@
 from jfa_talent_analysis.sources.wikidata import (
     WikidataTeamStint,
+    classify_wikidata_audit,
+    contains_katakana,
     name_label_variants,
     parse_player_team_stints,
     summarize_stints,
@@ -58,3 +60,53 @@ def test_summarize_stints_counts_foreign_teams():
     assert summary["wikidata_person_ids"] == "Q1"
     assert summary["wikidata_foreign_team_count"] == "1"
     assert summary["wikidata_foreign_teams"] == "Hannover 96 (ドイツ)"
+
+
+def test_classify_wikidata_audit_marks_foreign_stint_candidate():
+    result = classify_wikidata_audit(
+        "原口 元気",
+        {
+            "wikidata_person_count": "1",
+            "wikidata_foreign_team_count": "2",
+        },
+    )
+
+    assert result == {
+        "audit_status": "candidate_foreign_stint",
+        "manual_review_reason": "",
+    }
+
+
+def test_classify_wikidata_audit_keeps_unmatched_katakana_names_for_manual_review():
+    result = classify_wikidata_audit(
+        "シュミット ダニエル",
+        {
+            "wikidata_person_count": "0",
+            "wikidata_foreign_team_count": "0",
+        },
+    )
+
+    assert result == {
+        "audit_status": "needs_manual_review",
+        "manual_review_reason": "no_wikidata_person_match|katakana_name",
+    }
+
+
+def test_classify_wikidata_audit_keeps_katakana_no_foreign_hint_for_manual_review():
+    result = classify_wikidata_audit(
+        "ジョン 太郎",
+        {
+            "wikidata_person_count": "1",
+            "wikidata_foreign_team_count": "0",
+        },
+    )
+
+    assert result == {
+        "audit_status": "needs_manual_review",
+        "manual_review_reason": "katakana_name_without_wikidata_foreign_club_hint",
+    }
+
+
+def test_contains_katakana():
+    assert contains_katakana("シュミット ダニエル")
+    assert not contains_katakana("原口 元気")

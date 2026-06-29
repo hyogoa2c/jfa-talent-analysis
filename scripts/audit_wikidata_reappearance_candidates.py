@@ -5,7 +5,11 @@ import csv
 import time
 from pathlib import Path
 
-from jfa_talent_analysis.sources.wikidata import fetch_player_team_stints, summarize_stints
+from jfa_talent_analysis.sources.wikidata import (
+    classify_wikidata_audit,
+    fetch_player_team_stints,
+    summarize_stints,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -38,10 +42,12 @@ def main() -> None:
     for index, candidate in enumerate(candidates, start=1):
         print(f"[{index}/{len(candidates)}] {candidate['name_ja']} / {candidate['name_en']}")
         stints = fetch_player_team_stints(candidate["name_ja"], candidate["name_en"])
+        summary = summarize_stints(stints)
         rows.append(
             {
                 **candidate,
-                **summarize_stints(stints),
+                **summary,
+                **classify_wikidata_audit(candidate["name_ja"], summary),
             }
         )
         if args.sleep > 0 and index < len(candidates):

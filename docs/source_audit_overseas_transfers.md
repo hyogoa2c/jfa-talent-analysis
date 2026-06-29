@@ -46,6 +46,21 @@ The audit output is local-only and gitignored:
 data/interim/source_audit/wikidata_reappearance_candidates.csv
 ```
 
+The audit script adds two review workflow columns:
+
+| Column | Meaning |
+|---|---|
+| `audit_status` | Machine-readable status for downstream filtering. |
+| `manual_review_reason` | Reason a row should remain in the manual review queue. |
+
+Current statuses:
+
+| Status | Meaning |
+|---|---|
+| `candidate_foreign_stint` | One Wikidata person match and at least one foreign-club `P54` team. Treat as candidate evidence. |
+| `no_wikidata_foreign_stint` | One Wikidata person match, but no foreign-club `P54` team. Do not treat as proof of no overseas stint. |
+| `needs_manual_review` | No person match, multiple person matches, or a katakana Japanese name without a foreign-club hint. |
+
 ## Initial Wikidata Findings
 
 An initial top-20 audit against `reappearance_candidates_2023_2025_gap2.csv` found:
@@ -56,6 +71,9 @@ An initial top-20 audit against `reappearance_candidates_2023_2025_gap2.csv` fou
 | Candidates with a Wikidata person match | 19 |
 | Candidates with at least one foreign-club `P54` team | 6 |
 | Candidates without a person match | 1 |
+| `candidate_foreign_stint` | 6 |
+| `no_wikidata_foreign_stint` | 10 |
+| `needs_manual_review` | 4 |
 
 Foreign-club hints were found for:
 
@@ -73,6 +91,15 @@ even though this is a likely relevant case. This confirms that Wikidata label ma
 be improved with aliases, birth dates, and/or an item-search fallback before being used as a
 broad recall-oriented source.
 
+For now, this class of case should remain in `needs_manual_review`. The expected volume is
+small enough that manual review is a valid final option, especially for Japanese players whose
+registered names are katakana or whose English names may appear in multiple orders across
+sources.
+
+The same top-20 audit also produced manual review rows for three multiple-person matches
+(`伊藤 剛`, `石田 雅俊`, `久保 征一郎`). These should not be auto-labeled until birth date,
+club chronology, or another source resolves the identity.
+
 ## Interpretation Rules
 
 - Treat Wikidata matches as candidate evidence, not final labels.
@@ -82,3 +109,5 @@ broad recall-oriented source.
   ordering, or contain aliases instead of labels.
 - Exact label matching can also return multiple people for common names, so `source_player_id`,
   birth date, and career chronology still matter.
+- Keep the manual review queue as a first-class output rather than forcing every row into an
+  automated positive or negative label.
