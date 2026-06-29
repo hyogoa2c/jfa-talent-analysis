@@ -46,6 +46,14 @@ The audit output is local-only and gitignored:
 data/interim/source_audit/wikidata_reappearance_candidates.csv
 ```
 
+For manual review, build a queue CSV from the audit output:
+
+```bash
+uv run python scripts/build_overseas_manual_review_queue.py \
+  --input data/interim/source_audit/wikidata_reappearance_candidates_2023_2025_gap2.csv \
+  --output data/manual/overseas_transfer_manual_review_queue_2023_2025_gap2.csv
+```
+
 The audit script adds two review workflow columns:
 
 | Column | Meaning |
@@ -99,6 +107,38 @@ sources.
 The same top-20 audit also produced manual review rows for three multiple-person matches
 (`伊藤 剛`, `石田 雅俊`, `久保 征一郎`). These should not be auto-labeled until birth date,
 club chronology, or another source resolves the identity.
+
+## Full 2023-2025 Reappearance Audit
+
+The full `reappearance_candidates_2023_2025_gap2.csv` audit covered 89 candidates:
+
+| Metric | Count |
+|---|---:|
+| Audited reappearance candidates | 89 |
+| Candidates with a Wikidata person match | 87 |
+| Rows with at least one foreign-club `P54` hint | 19 |
+| `candidate_foreign_stint` | 18 |
+| `no_wikidata_foreign_stint` | 56 |
+| `needs_manual_review` | 15 |
+
+Manual review reasons:
+
+| Reason | Count |
+|---|---:|
+| `multiple_wikidata_person_matches` | 12 |
+| `no_wikidata_person_match|katakana_name` | 1 |
+| `katakana_name_without_wikidata_foreign_club_hint` | 1 |
+| `no_wikidata_person_match` | 1 |
+
+Manual review queue:
+
+```text
+data/manual/overseas_transfer_manual_review_queue_2023_2025_gap2.csv
+```
+
+The queue includes blank `manual_decision`, `manual_note`, and `evidence_url` fields for
+human review. Rows with multiple Wikidata person matches remain in the queue even when one
+candidate has a foreign club hint, because the player identity is not resolved yet.
 
 ## Interpretation Rules
 
