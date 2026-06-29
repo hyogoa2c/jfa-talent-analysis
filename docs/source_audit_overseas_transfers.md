@@ -54,6 +54,17 @@ uv run python scripts/build_overseas_manual_review_queue.py \
   --output data/manual/overseas_transfer_manual_review_queue_2023_2025_gap2.csv
 ```
 
+Then add Japanese Wikipedia search candidates to reduce manual lookup work:
+
+```bash
+uv run python scripts/enrich_manual_review_queue_with_wikipedia.py \
+  --input data/manual/overseas_transfer_manual_review_queue_2023_2025_gap2.csv \
+  --output data/manual/overseas_transfer_manual_review_queue_2023_2025_gap2.csv \
+  --language ja \
+  --max-results 5 \
+  --sleep 1.0
+```
+
 The audit script adds two review workflow columns:
 
 | Column | Meaning |
@@ -136,9 +147,16 @@ Manual review queue:
 data/manual/overseas_transfer_manual_review_queue_2023_2025_gap2.csv
 ```
 
-The queue includes blank `manual_decision`, `manual_note`, and `evidence_url` fields for
-human review. Rows with multiple Wikidata person matches remain in the queue even when one
-candidate has a foreign club hint, because the player identity is not resolved yet.
+The queue includes `wikipedia_titles` and `wikipedia_urls` candidate columns plus blank
+`manual_decision`, `manual_note`, and `evidence_url` fields for human review. Wikipedia search
+candidates are convenience links only; final decisions should still be based on identity,
+career chronology, and source evidence. Rows with multiple Wikidata person matches remain in
+the queue even when one candidate has a foreign club hint, because the player identity is not
+resolved yet.
+
+The Wikipedia enrichment pass found at least one candidate title for all 15 manual-review rows
+and produced no row-level search errors. Candidate lists can contain unrelated pages, so the
+human review step should select the correct player page before filling `manual_decision`.
 
 ## Interpretation Rules
 

@@ -15,6 +15,9 @@ MANUAL_REVIEW_COLUMNS = [
     "wikidata_foreign_teams",
     "audit_status",
     "manual_review_reason",
+    "wikipedia_titles",
+    "wikipedia_urls",
+    "wikipedia_search_error",
     "manual_decision",
     "manual_note",
     "evidence_url",
@@ -37,10 +40,21 @@ def build_manual_review_row(row: dict[str, str]) -> dict[str, str]:
     values = {
         column: row.get(column, "")
         for column in MANUAL_REVIEW_COLUMNS
-        if column not in {"manual_decision", "manual_note", "evidence_url"}
+        if column
+        not in {
+            "wikipedia_titles",
+            "wikipedia_urls",
+            "wikipedia_search_error",
+            "manual_decision",
+            "manual_note",
+            "evidence_url",
+        }
     }
     values.update(
         {
+            "wikipedia_titles": "",
+            "wikipedia_urls": "",
+            "wikipedia_search_error": "",
             "manual_decision": "",
             "manual_note": "",
             "evidence_url": "",
