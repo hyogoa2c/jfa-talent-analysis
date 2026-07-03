@@ -260,3 +260,10 @@ treat rows outside this table as missing, not negative.
   birth date, and career chronology still matter.
 - Keep the manual review queue as a first-class output rather than forcing every row into an
   automated positive or negative label.
+- When cross-checking an "absent season" against Wikipedia during manual review, read the
+  league-competition column specifically. Wikipedia's per-year total often combines league,
+  league cup, and Emperor's Cup appearances (e.g. `リーグ戦 / リーグ杯 / 天皇杯 / 期間通算`);
+  our appearance counts are J1/J2/J3 league fixtures only (see
+  `docs/data_collection_plan.md`), so a nonzero combined total does not contradict a `0`
+  league appearance in our data. Confirmed during review of player 8646 (山下達也): Wikipedia's
+  2022 combined total was 2, but the J1 league column was 0, matching our source exactly.
