@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from jfa_talent_analysis.pipeline import parse_int
 
-
 ALLOWED_MANUAL_DECISIONS = {
     "",
     "confirmed_foreign_stint",

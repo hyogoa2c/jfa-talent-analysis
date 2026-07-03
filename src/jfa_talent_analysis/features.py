@@ -6,7 +6,6 @@ from datetime import date
 
 from jfa_talent_analysis.pipeline import parse_int
 
-
 MIDSEASON_MONTH = 6
 MIDSEASON_DAY = 30
 

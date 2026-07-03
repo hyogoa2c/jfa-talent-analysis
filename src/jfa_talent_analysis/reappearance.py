@@ -22,7 +22,7 @@ def build_reappearance_candidates(
     for player_id, player_rows in by_player.items():
         by_season = {parse_int(row["season"]): row for row in player_rows}
         seasons = sorted(by_season)
-        for previous_season, reappearance_season in zip(seasons, seasons[1:]):
+        for previous_season, reappearance_season in zip(seasons, seasons[1:], strict=False):
             absent_seasons = reappearance_season - previous_season - 1
             if (
                 target_start_season <= reappearance_season <= target_end_season

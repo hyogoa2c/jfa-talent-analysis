@@ -7,7 +7,6 @@ from urllib.request import Request
 
 from jfa_talent_analysis.sources.retry import request_with_retry
 
-
 SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
 USER_AGENT = "jfa-talent-analysis/0.1 Wikidata source audit"
 KATAKANA_START = "\u30a0"

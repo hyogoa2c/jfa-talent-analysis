@@ -7,7 +7,6 @@ from urllib.request import Request
 
 from jfa_talent_analysis.sources.retry import request_with_retry
 
-
 USER_AGENT = "jfa-talent-analysis/0.1 Wikipedia manual review helper"
 
 

@@ -4,7 +4,6 @@ import time
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-
 RETRYABLE_STATUS_CODES = {429, 500, 502, 503, 504}
 
 
