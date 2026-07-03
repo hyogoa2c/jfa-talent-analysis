@@ -11,7 +11,6 @@ from jfa_talent_analysis.sources.wikipedia import (
     summarize_wikipedia_candidates,
 )
 
-
 WIKIPEDIA_COLUMNS = [
     "wikipedia_titles",
     "wikipedia_urls",
@@ -63,9 +62,11 @@ def main() -> None:
                 "wikipedia_search_error": "",
             }
         except Exception as error:
+            # Keep any previously fetched candidates so a transient failure never
+            # erases earlier enrichment results on re-run.
             wikipedia_summary = {
-                "wikipedia_titles": "",
-                "wikipedia_urls": "",
+                "wikipedia_titles": row.get("wikipedia_titles", ""),
+                "wikipedia_urls": row.get("wikipedia_urls", ""),
                 "wikipedia_search_error": f"{type(error).__name__}: {error}",
             }
         enriched_rows.append({**row, **wikipedia_summary})
