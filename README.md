@@ -115,6 +115,7 @@ Overseas review workflow (see [the overseas transfer source audit](docs/source_a
 - `build_overseas_manual_review_queue.py` - build the manual review queue from a Wikidata audit
 - `enrich_manual_review_queue_with_wikipedia.py` - add Wikipedia search candidates to the queue
 - `validate_overseas_manual_review_queue.py` - validate manual review entries before committing
+- `build_overseas_transfer_outcomes.py` - materialize a moved_overseas outcome table from queue decisions
 
 ## Starting Point
 

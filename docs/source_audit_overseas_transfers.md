@@ -224,6 +224,31 @@ uv run python scripts/validate_overseas_manual_review_queue.py \
   --input data/manual/overseas_transfer_manual_review_queue_2023_2025_gap2.csv
 ```
 
+## Building the moved_overseas Outcome
+
+Once queue rows have decisions, materialize a `moved_overseas` outcome table:
+
+```bash
+uv run python scripts/build_overseas_transfer_outcomes.py \
+  --input data/manual/overseas_transfer_manual_review_queue_2023_2025_gap2.csv \
+  --output data/processed/overseas_transfer_outcomes_2023_2025_gap2.csv
+```
+
+Every queue row is kept in the output, and `moved_overseas` is set from `manual_decision`:
+
+| `manual_decision` | `moved_overseas` |
+|---|---|
+| `confirmed_foreign_stint` | `1` |
+| `confirmed_no_foreign_stint` | `0` |
+| `identity_resolved_no_decision`, `unresolved`, or blank | `""` (unknown) |
+
+This table only covers rows that entered the manual review queue. The 56 candidates with
+`audit_status == no_wikidata_foreign_stint` are deliberately excluded rather than defaulted to
+`moved_overseas=0`: a missing Wikidata `P54` hint is not proof of no overseas stint (see
+Interpretation Rules below), so labeling them would silently overstate recall. Any future full
+`moved_overseas` feature (e.g. for `docs/data_collection_plan.md`'s outcome features) should
+treat rows outside this table as missing, not negative.
+
 ## Interpretation Rules
 
 - Treat Wikidata matches as candidate evidence, not final labels.
