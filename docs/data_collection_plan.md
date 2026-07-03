@@ -266,7 +266,21 @@ Current implementation status:
   the 2015/2016 championship matches are simply outside the collected league totals.
 - J3 is automatically excluded before 2014 in the multi-season driver.
 - Current derived features are based only on seasons included in the input file, so first-observed season, first-J1 season, and cumulative U21/U23 minutes are observation-window measures until multi-season collection is run.
-- A 2013 smoke attempt found no SFPR01 competition frames for that year, so 2005-2013 backfill requires a separate source-availability audit before large-scale collection.
+- A full 2005-2013 SFPR01 availability audit (`scripts/audit_sfpr01_season_availability.py
+  --start-season 2005 --end-season 2013`) confirmed zero competition frames for every season
+  and league in that range, not just 2013. This was cross-checked directly against the SFPR01
+  search page's own season `<select>` dropdown, whose options span only 2014 through the
+  current season (plus youth/special entries) — 2005-2013 are not offered as choices at all.
+  This is a hard boundary of the SFPR01 endpoint's dataset, not a request-format or
+  collection-code issue: **SFPR01 has no appearance-record data before 2014.** 2005-2013
+  backfill for the primary population (defined above as players active from 2005 onward)
+  therefore requires an entirely different source (e.g. archived league records, JFA/club
+  official histories, or third-party databases from the candidate list in
+  `docs/source_audit_overseas_transfers.md`, subject to the same terms-of-use checks), not
+  further collection from this source. Until that source is identified, treat 2014 as the
+  practical start of the appearance/outcome-feature observation window and the 2005-2013
+  portion of the primary population definition as aspirational rather than currently
+  collectible.
 - 2020-2022 collection is available through SFPR01, but should be treated as a COVID-period block because league/team counts differ from surrounding seasons.
 
 ### Step 3: Pathway Classification
@@ -365,6 +379,7 @@ data/processed/player_pathway_outcomes.csv
 | Incomplete youth histories | Store confidence and source coverage |
 | Conflicting pathway claims | Preserve source-specific claims, resolve only in processed layer |
 | Site terms restrictions | Document source permissions before automated scraping |
+| No SFPR01 appearance data before 2014 (confirmed) | Treat 2014 as the practical collection start; source a separate 2005-2013 provider before extending the primary population's start year in analysis |
 
 ## Terms and Compliance Checklist
 
