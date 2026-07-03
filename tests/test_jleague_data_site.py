@@ -1,10 +1,12 @@
+import pytest
+
 from jfa_talent_analysis.sources.jleague_data_site import (
     DataSiteParser,
     find_endpoint_hints,
-    parse_sfpr01_appearance_records,
-    parse_sfix04_player_season_history,
     parse_height_weight,
     parse_sfix03_player_universe,
+    parse_sfix04_player_season_history,
+    parse_sfpr01_appearance_records,
 )
 
 
@@ -84,6 +86,28 @@ def test_parse_sfix03_player_universe():
     assert records[0].height_cm == 169
     assert records[0].weight_kg == 67
     assert records[1].source_player_id == "6825"
+
+
+def test_parse_sfix03_player_universe_raises_on_count_mismatch():
+    html = """
+    <html><body>
+      <input type="checkbox" name="playerIdList" value="173" id="0">
+      <input type="checkbox" name="playerIdList" value="6825" id="1">
+      <table>
+        <tr>
+          <th>全てチェック クリア</th><th>選手名（英語）</th><th>最終所属</th>
+          <th>ポジション</th><th>生年月日</th><th>身長/体重</th>
+        </tr>
+        <tr>
+          <td>阿井 達也</td><td>Tatsuya AI</td><td>甲府</td>
+          <td>MF</td><td>1968/04/17</td><td>169/67</td>
+        </tr>
+      </table>
+    </body></html>
+    """
+
+    with pytest.raises(ValueError, match="player_ids=2 data_rows=1"):
+        parse_sfix03_player_universe(html, retrieved_at="2026-06-26T00:00:00+00:00")
 
 
 def test_parse_sfpr01_appearance_records():
