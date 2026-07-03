@@ -12,6 +12,10 @@ from jfa_talent_analysis.sources.jleague_data_site import (
     sfix04_player_url,
 )
 
+# The club renamed between いわてグルージャ盛岡 (岩手) and グルージャ盛岡 (盛岡), so SFPR01
+# team names and SFIX04 history names disagree across seasons.
+TEAM_NAME_ALIASES = {"岩手": "盛岡"}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -187,7 +191,10 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
 
 
 def normalize_team_name(value: str) -> str:
-    return normalize_name(value).replace("岩手", "盛岡")
+    name = normalize_name(value)
+    for old, new in TEAM_NAME_ALIASES.items():
+        name = name.replace(old, new)
+    return name
 
 
 if __name__ == "__main__":
