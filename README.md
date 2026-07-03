@@ -79,6 +79,45 @@ uv run python scripts/build_reappearance_candidates.py --target-start-season 202
 
 This is a gap-based candidate list, not proof of overseas transfer.
 
+## Scripts
+
+Source audits (run before building collectors):
+
+- `audit_jleague_data_site.py` - audit J.League Data Site pages before building collectors
+- `audit_sfpr01_season_availability.py` - audit SFPR01 season/league competition availability
+- `audit_wikidata_reappearance_candidates.py` - audit Wikidata coverage for reappearance candidates
+
+Collection:
+
+- `poc_sfix03_player_universe.py` - sample Japanese players from SFIX03/search
+- `poc_sfpr01_appearance_records.py` - sample appearance records for one team from SFPR01
+- `collect_appearance_records_sample.py` - collect a season-league sample of SFPR01 appearance records
+- `collect_appearance_records_multi_league_sample.py` - collect a small multi-league sample
+- `build_season_dataset.py` - build one season end to end (universe, collection, join, diagnostics)
+- `build_multi_season_dataset.py` - run the season builder over a year range with diagnostics
+- `combine_csv_files.py` - combine CSV files with identical headers
+
+Joining and identity resolution:
+
+- `build_joined_appearance_sample.py` - join SFPR01 appearances to the SFIX03 player universe
+- `analyze_name_match_sample.py` - analyze simple name-match rates between the two sources
+- `summarize_joined_appearance_sample.py` - summarize a joined appearance sample
+- `suggest_identity_overrides_from_profiles.py` - suggest identity overrides for ambiguous names from SFIX04 histories
+
+Features:
+
+- `build_player_season_features.py` - build player-season features from one joined season
+- `build_multi_season_features.py` - combine joined seasons and build features over the window
+
+Overseas review workflow (see [the overseas transfer source audit](docs/source_audit_overseas_transfers.md) for the full runbook):
+
+- `build_reappearance_candidates.py` - flag players reappearing after a multi-season gap
+- `build_overseas_manual_review_queue.py` - build the manual review queue from a Wikidata audit
+- `enrich_manual_review_queue_with_wikipedia.py` - add Wikipedia search candidates to the queue
+- `validate_overseas_manual_review_queue.py` - validate manual review entries before committing
+
 ## Starting Point
 
 - [Research session note](docs/research_session_2026-06-26_jfa_talent_development.md)
+- [Data collection plan](docs/data_collection_plan.md)
+- [Overseas transfer source audit and review runbook](docs/source_audit_overseas_transfers.md)
