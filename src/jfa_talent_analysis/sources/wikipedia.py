@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import json
-import time
 from dataclasses import dataclass
-from urllib.error import HTTPError
 from urllib.parse import quote, urlencode
-from urllib.request import Request, urlopen
+from urllib.request import Request
+
+from jfa_talent_analysis.sources.retry import request_with_retry
 
 
 USER_AGENT = "jfa-talent-analysis/0.1 Wikipedia manual review helper"
@@ -84,18 +84,8 @@ def search_wikipedia(
             "User-Agent": USER_AGENT,
         },
     )
-    data: dict = {}
-    for attempt in range(retries + 1):
-        try:
-            with urlopen(request, timeout=timeout) as response:
-                data = json.loads(response.read().decode("utf-8"))
-            break
-        except HTTPError as error:
-            if error.code != 429 or attempt >= retries:
-                raise
-            retry_after = parse_retry_after(error.headers.get("Retry-After", ""))
-            time.sleep(retry_after)
-    return parse_wikipedia_search_results(data, language)
+    _, _, content = request_with_retry(request, timeout=timeout, retries=retries)
+    return parse_wikipedia_search_results(json.loads(content), language)
 
 
 def parse_wikipedia_search_results(
@@ -122,10 +112,3 @@ def summarize_wikipedia_candidates(results: list[WikipediaSearchResult]) -> dict
 
 def build_wikipedia_url(title: str, language: str = "ja") -> str:
     return f"https://{language}.wikipedia.org/wiki/{quote(title.replace(' ', '_'))}"
-
-
-def parse_retry_after(value: str) -> float:
-    try:
-        return max(float(value), 1.0)
-    except ValueError:
-        return 5.0

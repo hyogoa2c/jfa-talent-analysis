@@ -7,10 +7,12 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlencode
 from urllib.parse import urljoin
-from urllib.request import Request, urlopen
+from urllib.request import Request
 import csv
 import json
 import re
+
+from jfa_talent_analysis.sources.retry import request_with_retry
 
 
 BASE_URL = "https://data.j-league.or.jp/"
@@ -282,9 +284,7 @@ def page_url(page_id: str) -> str:
 
 def fetch_url(url: str, timeout: int = 30) -> tuple[int, str | None, str]:
     request = Request(url, headers={"User-Agent": USER_AGENT})
-    with urlopen(request, timeout=timeout) as response:
-        content = response.read().decode("utf-8", errors="replace")
-        return response.status, response.headers.get("content-type"), content
+    return request_with_retry(request, timeout=timeout)
 
 
 def post_form(url: str, form: dict[str, str], timeout: int = 30) -> tuple[int, str | None, str]:
@@ -297,9 +297,7 @@ def post_form(url: str, form: dict[str, str], timeout: int = 30) -> tuple[int, s
             "Content-Type": "application/x-www-form-urlencoded",
         },
     )
-    with urlopen(request, timeout=timeout) as response:
-        content = response.read().decode("utf-8", errors="replace")
-        return response.status, response.headers.get("content-type"), content
+    return request_with_retry(request, timeout=timeout)
 
 
 def post_json(path: str, form: dict[str, str], timeout: int = 30) -> dict[str, Any]:

@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import time
+from collections.abc import Iterator
+from dataclasses import asdict
 from pathlib import Path
 
+from jfa_talent_analysis.pipeline import LEAGUE_FRAME_IDS
 from jfa_talent_analysis.sources.jleague_data_site import (
     AppearanceRecord,
     create_competition_frames,
@@ -12,14 +16,7 @@ from jfa_talent_analysis.sources.jleague_data_site import (
     fetch_sfpr01_appearance_records,
     parse_sfpr01_appearance_records,
     sfpr01_search_url,
-    write_appearance_sample,
 )
-
-LEAGUE_FRAME_IDS = {
-    "J1": "1",
-    "J2": "2",
-    "J3": "3",
-}
 
 EXCLUDED_TEAM_NAMES = {"J-22"}
 
@@ -54,29 +51,38 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     output = args.output or Path(f"data/interim/appearance_records_{args.season}_{args.league}.csv")
-    records = collect_season_league(
-        season=args.season,
-        league_key=args.league,
-        limit_teams=args.limit_teams,
-        sleep_seconds=args.sleep,
-    )
-    write_appearance_sample(output, records, limit=len(records))
-    print(f"Collected {len(records)} appearance records for {args.season} {args.league}")
+    # Write per-team batches as they arrive so a failed run keeps everything
+    # fetched so far instead of discarding hours of collection.
+    output.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames = list(AppearanceRecord.__dataclass_fields__.keys())
+    total = 0
+    with output.open("w", encoding="utf-8", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for team_records in iter_team_appearance_records(
+            season=args.season,
+            league_key=args.league,
+            limit_teams=args.limit_teams,
+            sleep_seconds=args.sleep,
+        ):
+            writer.writerows(asdict(record) for record in team_records)
+            file.flush()
+            total += len(team_records)
+    print(f"Collected {total} appearance records for {args.season} {args.league}")
     print(f"Wrote records to {output}")
 
 
-def collect_season_league(
+def iter_team_appearance_records(
     *,
     season: str,
     league_key: str,
     limit_teams: int | None,
     sleep_seconds: float,
-) -> list[AppearanceRecord]:
+) -> Iterator[list[AppearanceRecord]]:
     competition_frame_id = LEAGUE_FRAME_IDS[league_key]
     league_name = find_league_name(season, competition_frame_id) or league_key
     competition_ids = find_competition_ids(season, competition_frame_id)
 
-    records: list[AppearanceRecord] = []
     for competition_index, competition_id in enumerate(competition_ids, start=1):
         teams = create_teams(competition_id)
         teams = [team for team in teams if team.display_name not in EXCLUDED_TEAM_NAMES]
@@ -114,14 +120,13 @@ def collect_season_league(
                 team_name=team.display_name,
                 source_url=source_url,
             )
-            records.extend(team_records)
+            yield team_records
             is_last_team = (
                 competition_index == len(competition_ids)
                 and team_index == len(teams)
             )
             if sleep_seconds > 0 and not is_last_team:
                 time.sleep(sleep_seconds)
-    return records
 
 
 def find_league_name(season: str, competition_frame_id: str) -> str | None:

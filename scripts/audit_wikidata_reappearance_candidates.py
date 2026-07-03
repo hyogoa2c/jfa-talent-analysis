@@ -6,6 +6,8 @@ import time
 from pathlib import Path
 
 from jfa_talent_analysis.sources.wikidata import (
+    AUDIT_COLUMNS,
+    SUMMARY_COLUMNS,
     classify_wikidata_audit,
     fetch_player_team_stints,
     summarize_stints,
@@ -38,40 +40,46 @@ def main() -> None:
     if args.limit is not None:
         candidates = candidates[: args.limit]
 
-    rows: list[dict[str, str]] = []
-    for index, candidate in enumerate(candidates, start=1):
-        print(f"[{index}/{len(candidates)}] {candidate['name_ja']} / {candidate['name_en']}")
-        stints = fetch_player_team_stints(candidate["name_ja"], candidate["name_en"])
-        summary = summarize_stints(stints)
-        rows.append(
-            {
-                **candidate,
-                **summary,
-                **classify_wikidata_audit(candidate["name_ja"], summary),
-            }
-        )
-        if args.sleep > 0 and index < len(candidates):
-            time.sleep(args.sleep)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    if not candidates:
+        args.output.write_text("", encoding="utf-8")
+        print("rows=0")
+        print(f"wrote={args.output}")
+        return
 
-    write_csv(args.output, rows)
-    print(f"rows={len(rows)}")
+    fieldnames = list(candidates[0].keys()) + [
+        column
+        for column in SUMMARY_COLUMNS + AUDIT_COLUMNS
+        if column not in candidates[0]
+    ]
+    # Write each row as it is audited so a mid-run failure keeps prior results.
+    count = 0
+    with args.output.open("w", encoding="utf-8", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for index, candidate in enumerate(candidates, start=1):
+            print(f"[{index}/{len(candidates)}] {candidate['name_ja']} / {candidate['name_en']}")
+            stints = fetch_player_team_stints(candidate["name_ja"], candidate["name_en"])
+            summary = summarize_stints(stints)
+            writer.writerow(
+                {
+                    **candidate,
+                    **summary,
+                    **classify_wikidata_audit(candidate["name_ja"], summary),
+                }
+            )
+            file.flush()
+            count += 1
+            if args.sleep > 0 and index < len(candidates):
+                time.sleep(args.sleep)
+
+    print(f"rows={count}")
     print(f"wrote={args.output}")
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as file:
         return list(csv.DictReader(file))
-
-
-def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    if not rows:
-        path.write_text("", encoding="utf-8")
-        return
-    with path.open("w", encoding="utf-8", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=list(rows[0].keys()))
-        writer.writeheader()
-        writer.writerows(rows)
 
 
 if __name__ == "__main__":

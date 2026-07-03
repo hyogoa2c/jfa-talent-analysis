@@ -3,13 +3,29 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+from urllib.request import Request
+
+from jfa_talent_analysis.sources.retry import request_with_retry
 
 
 SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
 USER_AGENT = "jfa-talent-analysis/0.1 Wikidata source audit"
 KATAKANA_START = "\u30a0"
 KATAKANA_END = "\u30ff"
+
+SUMMARY_COLUMNS = [
+    "wikidata_person_count",
+    "wikidata_person_ids",
+    "wikidata_team_count",
+    "wikidata_countries",
+    "wikidata_foreign_team_count",
+    "wikidata_foreign_teams",
+]
+
+AUDIT_COLUMNS = [
+    "audit_status",
+    "manual_review_reason",
+]
 
 
 @dataclass(frozen=True)
@@ -75,9 +91,8 @@ def fetch_player_team_stints(name_ja: str, name_en: str, timeout: int = 30) -> l
             "User-Agent": USER_AGENT,
         },
     )
-    with urlopen(request, timeout=timeout) as response:
-        data = json.loads(response.read().decode("utf-8"))
-    return parse_player_team_stints(data)
+    _, _, content = request_with_retry(request, timeout=timeout)
+    return parse_player_team_stints(json.loads(content))
 
 
 def parse_player_team_stints(data: dict) -> list[WikidataTeamStint]:

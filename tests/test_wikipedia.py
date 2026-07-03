@@ -1,7 +1,6 @@
 from jfa_talent_analysis.sources.wikipedia import (
     build_wikipedia_queries,
     parse_wikipedia_search_results,
-    parse_retry_after,
     summarize_wikipedia_candidates,
 )
 
@@ -54,8 +53,3 @@ def test_summarize_wikipedia_candidates_joins_fields():
     assert "https://ja.wikipedia.org/wiki/%E5%8E%9F%E5%A4%A7%E6%99%BA" in summary[
         "wikipedia_urls"
     ]
-
-
-def test_parse_retry_after_defaults_to_five_seconds():
-    assert parse_retry_after("2") == 2.0
-    assert parse_retry_after("") == 5.0
