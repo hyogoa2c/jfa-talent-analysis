@@ -8,8 +8,10 @@ from pathlib import Path
 from jfa_talent_analysis.sources.wikidata import (
     AUDIT_COLUMNS,
     SUMMARY_COLUMNS,
+    WikidataTeamStint,
     classify_wikidata_audit,
     fetch_player_team_stints,
+    foreign_stints_in_gap,
     summarize_stints,
 )
 
@@ -61,6 +63,13 @@ def main() -> None:
             print(f"[{index}/{len(candidates)}] {candidate['name_ja']} / {candidate['name_en']}")
             stints = fetch_player_team_stints(candidate["name_ja"], candidate["name_en"])
             summary = summarize_stints(stints)
+            summary.update(
+                gap_summary(
+                    stints,
+                    previous_observed_season=candidate.get("previous_observed_season", ""),
+                    reappearance_season=candidate.get("reappearance_season", ""),
+                )
+            )
             writer.writerow(
                 {
                     **candidate,
@@ -75,6 +84,38 @@ def main() -> None:
 
     print(f"rows={count}")
     print(f"wrote={args.output}")
+
+
+def gap_summary(
+    stints: list[WikidataTeamStint],
+    *,
+    previous_observed_season: str,
+    reappearance_season: str,
+) -> dict[str, str]:
+    """Compute in-gap foreign stint columns, or blanks if the seasons can't be parsed."""
+    previous_season = parse_season(previous_observed_season)
+    next_season = parse_season(reappearance_season)
+    if previous_season is None or next_season is None:
+        return {
+            "wikidata_foreign_team_in_gap_count": "",
+            "wikidata_foreign_teams_in_gap": "",
+        }
+    in_gap_teams = foreign_stints_in_gap(
+        stints,
+        gap_start_season=previous_season + 1,
+        gap_end_season=next_season - 1,
+    )
+    return {
+        "wikidata_foreign_team_in_gap_count": str(len(in_gap_teams)),
+        "wikidata_foreign_teams_in_gap": "|".join(in_gap_teams),
+    }
+
+
+def parse_season(value: str) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:

@@ -10,6 +10,8 @@ ALLOWED_MANUAL_DECISIONS = {
     "unresolved",
 }
 
+MANUAL_REVIEW_STATUSES = {"needs_manual_review", "candidate_foreign_stint"}
+
 MANUAL_REVIEW_COLUMNS = [
     "source_player_id",
     "name_ja",
@@ -22,6 +24,8 @@ MANUAL_REVIEW_COLUMNS = [
     "reappearance_minutes",
     "wikidata_person_ids",
     "wikidata_foreign_teams",
+    "wikidata_foreign_teams_in_gap",
+    "wikidata_birth_dates",
     "audit_status",
     "manual_review_reason",
     "wikipedia_titles",
@@ -75,7 +79,14 @@ def validate_manual_review_rows(rows: list[dict[str, str]]) -> list[str]:
 
 
 def build_manual_review_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
-    manual_rows = [row for row in rows if row.get("audit_status") == "needs_manual_review"]
+    manual_rows: list[dict[str, str]] = []
+    for row in rows:
+        audit_status = row.get("audit_status")
+        if audit_status not in MANUAL_REVIEW_STATUSES:
+            continue
+        if audit_status == "candidate_foreign_stint" and not row.get("manual_review_reason"):
+            row = {**row, "manual_review_reason": "foreign_hint_needs_verification"}
+        manual_rows.append(row)
     manual_rows.sort(
         key=lambda row: (
             parse_int(row.get("absent_seasons", "")) * -1,

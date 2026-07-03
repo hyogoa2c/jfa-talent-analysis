@@ -73,13 +73,29 @@ The audit script adds two review workflow columns:
 | `audit_status` | Machine-readable status for downstream filtering. |
 | `manual_review_reason` | Reason a row should remain in the manual review queue. |
 
+It also adds occupation, birth date, and in-gap overlap columns to support classification
+and manual review:
+
+| Column | Meaning |
+|---|---|
+| `wikidata_footballer_person_count` | Count of matched persons whose Wikidata occupation (`P106`) includes association football player (`Q937857`). Used to catch same-name matches to a non-footballer. |
+| `wikidata_birth_dates` | Pipe-joined distinct birth dates (`P569`, truncated to `YYYY-MM-DD`) across matched persons. Convenience hint for identity resolution; not used in classification. |
+| `wikidata_foreign_team_in_gap_count` | Count of distinct foreign `P54` team stints whose period overlaps the J.League observation gap (the seasons strictly between `previous_observed_season` and `reappearance_season`). |
+| `wikidata_foreign_teams_in_gap` | Pipe-joined `team (country)` strings for those in-gap foreign stints. |
+
+In-gap overlap is based on the `P580`/`P582` (start/end) qualifiers where present, and is
+conservative: a stint with a missing start date has an unknown overlap and is not counted as
+in-gap, and `wikidata_foreign_team_in_gap_count`/`wikidata_foreign_teams_in_gap` are left blank
+entirely when `previous_observed_season` or `reappearance_season` cannot be parsed as an
+integer.
+
 Current statuses:
 
 | Status | Meaning |
 |---|---|
-| `candidate_foreign_stint` | One Wikidata person match and at least one foreign-club `P54` team. Treat as candidate evidence. |
-| `no_wikidata_foreign_stint` | One Wikidata person match, but no foreign-club `P54` team. Do not treat as proof of no overseas stint. |
-| `needs_manual_review` | No person match, multiple person matches, or a katakana Japanese name without a foreign-club hint. |
+| `candidate_foreign_stint` | One Wikidata person match, the match is a footballer, and at least one foreign-club `P54` team. Treat as candidate evidence. These rows also enter the manual review queue (reason `foreign_hint_needs_verification`) for human confirmation. |
+| `no_wikidata_foreign_stint` | One Wikidata person match, the match is a footballer, but no foreign-club `P54` team. Do not treat as proof of no overseas stint. |
+| `needs_manual_review` | No person match, multiple person matches, a single person match that is not tagged as a footballer occupation, or a katakana Japanese name without a foreign-club hint. |
 
 ## Initial Wikidata Findings
 
@@ -160,6 +176,11 @@ and produced no row-level search errors. Candidate lists can contain unrelated p
 human review step should select the correct player page before filling `manual_decision`.
 
 ## Manual Review Entry Rules
+
+The queue now also contains `candidate_foreign_stint` rows (reason
+`foreign_hint_needs_verification`), not only `needs_manual_review` rows, so a Wikidata
+foreign-club hint is confirmed by a human rather than auto-accepted. The entry rules below are
+unchanged for reviewers; apply them the same way regardless of `audit_status`.
 
 Manual review should fill only these fields:
 
