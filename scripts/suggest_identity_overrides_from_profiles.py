@@ -5,6 +5,7 @@ import csv
 import time
 from pathlib import Path
 
+from jfa_talent_analysis.matching import index_players_by_name, normalize_name
 from jfa_talent_analysis.sources.jleague_data_site import (
     fetch_sfix04_player_profile,
     parse_sfix04_player_season_history,
@@ -183,17 +184,6 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
-
-
-def index_players_by_name(players: list[dict[str, str]]) -> dict[str, list[dict[str, str]]]:
-    index: dict[str, list[dict[str, str]]] = {}
-    for player in players:
-        index.setdefault(normalize_name(player["name_ja"]), []).append(player)
-    return index
-
-
-def normalize_name(value: str) -> str:
-    return " ".join(value.split())
 
 
 def normalize_team_name(value: str) -> str:

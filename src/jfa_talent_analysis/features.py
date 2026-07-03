@@ -4,6 +4,8 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
 
+from jfa_talent_analysis.pipeline import parse_int
+
 
 MIDSEASON_MONTH = 6
 MIDSEASON_DAY = 30
@@ -135,13 +137,6 @@ def parse_birth_date(value: str) -> date | None:
         return date(int(parts[0]), int(parts[1]), int(parts[2]))
     except ValueError:
         return None
-
-
-def parse_int(value: str | None) -> int:
-    if not value:
-        return 0
-    normalized = value.replace(",", "").strip()
-    return int(normalized) if normalized.isdigit() else 0
 
 
 def is_j1(league: str) -> bool:

@@ -4,6 +4,13 @@ import argparse
 import csv
 from pathlib import Path
 
+from jfa_talent_analysis.matching import (
+    AmbiguousAppearance,
+    match_appearances,
+    normalize_name,
+    valid_overrides,
+)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -52,42 +59,20 @@ def main() -> None:
     args = parse_args()
     players = read_csv(args.players)
     appearances = read_csv(args.appearances)
+    overrides = valid_overrides(read_csv(args.overrides))
 
-    player_index = index_players_by_name(players)
-    player_by_id = {player["source_player_id"]: player for player in players}
-    overrides = read_overrides(args.overrides)
-    joined: list[dict[str, str]] = []
-    unmatched: dict[str, int] = {}
-    ambiguous: list[dict[str, object]] = []
+    result = match_appearances(appearances=appearances, players=players, overrides=overrides)
 
-    for appearance in appearances:
-        name = normalize_name(appearance["name_ja"])
-        override_id = find_override(overrides, appearance)
-        if override_id:
-            player = player_by_id.get(override_id)
-            if player is None:
-                raise ValueError(f"Override references unknown source_player_id={override_id}")
-            joined.append(join_record(appearance, player, match_method="manual_override"))
-            continue
-
-        candidates = player_index.get(name, [])
-        if len(candidates) == 1:
-            joined.append(join_record(appearance, candidates[0], match_method="exact_name"))
-        elif len(candidates) > 1:
-            ambiguous.append({"appearance": appearance, "candidates": candidates})
-        else:
-            unmatched[name] = unmatched.get(name, 0) + 1
-
-    write_csv(args.output, joined)
-    write_unmatched(args.unmatched_output, unmatched)
-    write_ambiguous(args.ambiguous_output, ambiguous)
+    write_csv(args.output, result.joined)
+    write_unmatched(args.unmatched_output, result.unmatched_name_counts)
+    write_ambiguous(args.ambiguous_output, result.ambiguous)
 
     print(f"appearance_rows={len(appearances)}")
-    print(f"matched_rows={len(joined)}")
-    print(f"unmatched_unique_names={len(unmatched)}")
+    print(f"matched_rows={len(result.joined)}")
+    print(f"unmatched_unique_names={len(result.unmatched_name_counts)}")
     print(
         "ambiguous_unique_names="
-        f"{len({normalize_name(row['appearance']['name_ja']) for row in ambiguous})}"
+        f"{len({normalize_name(item.appearance['name_ja']) for item in result.ambiguous})}"
     )
     print(f"wrote_joined={args.output}")
     print(f"wrote_unmatched={args.unmatched_output}")
@@ -99,61 +84,6 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return []
     with path.open(encoding="utf-8", newline="") as file:
         return list(csv.DictReader(file))
-
-
-def normalize_name(value: str) -> str:
-    return " ".join(value.split())
-
-
-def index_players_by_name(players: list[dict[str, str]]) -> dict[str, list[dict[str, str]]]:
-    index: dict[str, list[dict[str, str]]] = {}
-    for player in players:
-        index.setdefault(normalize_name(player["name_ja"]), []).append(player)
-    return index
-
-
-def read_overrides(path: Path) -> list[dict[str, str]]:
-    return [
-        row
-        for row in read_csv(path)
-        if row.get("source_player_id") and row.get("name_ja")
-    ]
-
-
-def find_override(overrides: list[dict[str, str]], appearance: dict[str, str]) -> str | None:
-    for override in overrides:
-        if (
-            override["season"] == appearance["season"]
-            and override["league"] == appearance["league"]
-            and override["team_name"] == appearance["team_name"]
-            and normalize_name(override["name_ja"]) == normalize_name(appearance["name_ja"])
-        ):
-            return override["source_player_id"]
-    return None
-
-
-def join_record(
-    appearance: dict[str, str], player: dict[str, str], *, match_method: str
-) -> dict[str, str]:
-    return {
-        "source_player_id": player["source_player_id"],
-        "match_method": match_method,
-        "name_ja": appearance["name_ja"],
-        "name_en": player["name_en"],
-        "birth_date": player["birth_date"],
-        "position_master": player["position"],
-        "last_belong_team": player["last_belong_team"],
-        "season": appearance["season"],
-        "league": appearance["league"],
-        "team_id": appearance["team_id"],
-        "team_name": appearance["team_name"],
-        "shirt_number": appearance["shirt_number"],
-        "appearances": appearance["appearances"],
-        "minutes": appearance["minutes"],
-        "goals": appearance["goals"],
-        "appearance_source_url": appearance["source_url"],
-        "player_source_url": player["source_url"],
-    }
 
 
 def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
@@ -175,30 +105,28 @@ def write_unmatched(path: Path, unmatched: dict[str, int]) -> None:
     write_csv(path, rows)
 
 
-def write_ambiguous(path: Path, ambiguous: list[dict[str, object]]) -> None:
+def write_ambiguous(path: Path, ambiguous: list[AmbiguousAppearance]) -> None:
     rows: list[dict[str, str]] = []
     for item in sorted(
         ambiguous,
-        key=lambda row: (
-            row["appearance"]["season"],
-            row["appearance"]["league"],
-            row["appearance"]["team_name"],
-            row["appearance"]["name_ja"],
+        key=lambda item: (
+            item.appearance["season"],
+            item.appearance["league"],
+            item.appearance["team_name"],
+            item.appearance["name_ja"],
         ),
     ):
-        appearance = item["appearance"]
-        candidates = item["candidates"]
-        for player in candidates:
+        for player in item.candidates:
             rows.append(
                 {
-                    "season": appearance["season"],
-                    "league": appearance["league"],
-                    "team_name": appearance["team_name"],
-                    "shirt_number": appearance["shirt_number"],
-                    "name_ja": appearance["name_ja"],
-                    "appearances": appearance["appearances"],
-                    "minutes": appearance["minutes"],
-                    "goals": appearance["goals"],
+                    "season": item.appearance["season"],
+                    "league": item.appearance["league"],
+                    "team_name": item.appearance["team_name"],
+                    "shirt_number": item.appearance["shirt_number"],
+                    "name_ja": item.appearance["name_ja"],
+                    "appearances": item.appearance["appearances"],
+                    "minutes": item.appearance["minutes"],
+                    "goals": item.appearance["goals"],
                     "source_player_id": player["source_player_id"],
                     "name_en": player["name_en"],
                     "birth_date": player["birth_date"],

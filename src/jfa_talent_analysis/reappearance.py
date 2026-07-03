@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from collections import defaultdict
 
+from jfa_talent_analysis.pipeline import parse_int
+
 
 def build_reappearance_candidates(
     rows: list[dict[str, str]],
@@ -52,10 +54,3 @@ def build_reappearance_candidates(
             row["name_ja"],
         ),
     )
-
-
-def parse_int(value: str | None) -> int:
-    if not value:
-        return 0
-    normalized = value.replace(",", "").strip()
-    return int(normalized) if normalized.isdigit() else 0
