@@ -250,6 +250,21 @@ Minimum fields:
 - appearances
 - minutes if available
 
+Current implementation status:
+
+- `scripts/build_season_dataset.py` builds a local 2014 J1/J2/J3 sample from J.League Data Site.
+- `scripts/build_multi_season_dataset.py` runs the season builder over a year range and writes per-season diagnostics.
+- `scripts/build_player_season_features.py` derives player-season analytical features from the joined Japanese-player appearance sample.
+- `scripts/build_multi_season_features.py` combines joined season files over a year range and builds player-season features from the combined observation window.
+- `scripts/suggest_identity_overrides_from_profiles.py` uses SFIX04 season/team histories to suggest manual identity overrides for ambiguous same-name players.
+- Ambiguous diagnostics are written at unresolved appearance-context level, including season, league, team, shirt number, appearances, minutes, and goals.
+- `scripts/build_reappearance_candidates.py` flags players who reappear in a target window after an observed J.League appearance gap. This is useful for candidate discovery, but it is not proof of overseas transfer.
+- The collection script supports multiple competitions inside one league frame, which is needed for 2015 and 2016 J1 two-stage seasons.
+- J3 is automatically excluded before 2014 in the multi-season driver.
+- Current derived features are based only on seasons included in the input file, so first-observed season, first-J1 season, and cumulative U21/U23 minutes are observation-window measures until multi-season collection is run.
+- A 2013 smoke attempt found no SFPR01 competition frames for that year, so 2005-2013 backfill requires a separate source-availability audit before large-scale collection.
+- 2020-2022 collection is available through SFPR01, but should be treated as a COVID-period block because league/team counts differ from surrounding seasons.
+
 ### Step 3: Pathway Classification
 
 Classify each player into pre-professional pathway categories.
@@ -259,6 +274,29 @@ Output:
 ```text
 data/interim/player_pathways.csv
 ```
+
+### Overseas Transfers and Returnees
+
+The current J.League Data Site pipeline can flag observed J.League reappearance after a
+multi-season gap, but this is only a candidate signal for overseas transfer or overseas
+return. It can also reflect JFL, regional leagues, injury periods, college contexts, loans,
+or other unobserved domestic stints.
+
+Before treating overseas transfer or overseas-return status as an outcome variable, add a
+separate source audit for transfer and career-history sources. Candidate source categories:
+
+- JFA/J.League and club official announcements.
+- Club profile career histories.
+- Wikidata/Wikipedia as identity and career-history hints.
+- Transfermarkt, Soccerway, WorldFootball.net, or other football databases, subject to
+  terms-of-use and redistribution constraints.
+- News articles for individual overseas moves and returns.
+
+Near-term use:
+
+- Keep `scripts/build_reappearance_candidates.py` as a discovery tool.
+- Do not label reappearance candidates as overseas returnees without source-backed transfer
+  evidence.
 
 Start with simple categories:
 
@@ -355,4 +393,3 @@ Initial network metrics:
 - bridge score across academy/high-school/university/pro pathways
 
 Phase 2 should use graph storage only after the relational schema is stable. A property graph such as Neo4j is a good fit once relationship data becomes large enough to justify it.
-

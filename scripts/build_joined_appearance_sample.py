@@ -58,7 +58,7 @@ def main() -> None:
     overrides = read_overrides(args.overrides)
     joined: list[dict[str, str]] = []
     unmatched: dict[str, int] = {}
-    ambiguous: dict[str, list[dict[str, str]]] = {}
+    ambiguous: list[dict[str, object]] = []
 
     for appearance in appearances:
         name = normalize_name(appearance["name_ja"])
@@ -74,7 +74,7 @@ def main() -> None:
         if len(candidates) == 1:
             joined.append(join_record(appearance, candidates[0], match_method="exact_name"))
         elif len(candidates) > 1:
-            ambiguous[name] = candidates
+            ambiguous.append({"appearance": appearance, "candidates": candidates})
         else:
             unmatched[name] = unmatched.get(name, 0) + 1
 
@@ -85,7 +85,10 @@ def main() -> None:
     print(f"appearance_rows={len(appearances)}")
     print(f"matched_rows={len(joined)}")
     print(f"unmatched_unique_names={len(unmatched)}")
-    print(f"ambiguous_unique_names={len(ambiguous)}")
+    print(
+        "ambiguous_unique_names="
+        f"{len({normalize_name(row['appearance']['name_ja']) for row in ambiguous})}"
+    )
     print(f"wrote_joined={args.output}")
     print(f"wrote_unmatched={args.unmatched_output}")
     print(f"wrote_ambiguous={args.ambiguous_output}")
@@ -172,13 +175,30 @@ def write_unmatched(path: Path, unmatched: dict[str, int]) -> None:
     write_csv(path, rows)
 
 
-def write_ambiguous(path: Path, ambiguous: dict[str, list[dict[str, str]]]) -> None:
+def write_ambiguous(path: Path, ambiguous: list[dict[str, object]]) -> None:
     rows: list[dict[str, str]] = []
-    for name, candidates in sorted(ambiguous.items()):
+    for item in sorted(
+        ambiguous,
+        key=lambda row: (
+            row["appearance"]["season"],
+            row["appearance"]["league"],
+            row["appearance"]["team_name"],
+            row["appearance"]["name_ja"],
+        ),
+    ):
+        appearance = item["appearance"]
+        candidates = item["candidates"]
         for player in candidates:
             rows.append(
                 {
-                    "name_ja": name,
+                    "season": appearance["season"],
+                    "league": appearance["league"],
+                    "team_name": appearance["team_name"],
+                    "shirt_number": appearance["shirt_number"],
+                    "name_ja": appearance["name_ja"],
+                    "appearances": appearance["appearances"],
+                    "minutes": appearance["minutes"],
+                    "goals": appearance["goals"],
                     "source_player_id": player["source_player_id"],
                     "name_en": player["name_en"],
                     "birth_date": player["birth_date"],

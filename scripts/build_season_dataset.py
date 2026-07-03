@@ -25,6 +25,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--sleep", type=float, default=0.5)
     parser.add_argument(
+        "--limit-teams",
+        type=int,
+        default=None,
+        help="Limit teams per league for smoke tests.",
+    )
+    parser.add_argument(
         "--skip-player-universe",
         action="store_true",
         help="Reuse existing player universe CSV.",
@@ -66,7 +72,13 @@ def main() -> None:
             ]
         )
 
-    appearance_paths = collect_leagues(args.season, leagues, args.sleep, args.interim_dir)
+    appearance_paths = collect_leagues(
+        args.season,
+        leagues,
+        args.sleep,
+        args.interim_dir,
+        args.limit_teams,
+    )
     combined_path = args.interim_dir / f"appearance_records_{args.season}_{'_'.join(leagues)}.csv"
     run(
         [
@@ -117,24 +129,31 @@ def main() -> None:
 
 
 def collect_leagues(
-    season: str, leagues: list[str], sleep_seconds: float, interim_dir: Path
+    season: str,
+    leagues: list[str],
+    sleep_seconds: float,
+    interim_dir: Path,
+    limit_teams: int | None,
 ) -> list[Path]:
     outputs: list[Path] = []
     for league in leagues:
         output = interim_dir / f"appearance_records_{season}_{league}.csv"
+        command = [
+            sys.executable,
+            "scripts/collect_appearance_records_sample.py",
+            "--season",
+            season,
+            "--league",
+            league,
+            "--sleep",
+            str(sleep_seconds),
+            "--output",
+            str(output),
+        ]
+        if limit_teams is not None:
+            command.extend(["--limit-teams", str(limit_teams)])
         run(
-            [
-                sys.executable,
-                "scripts/collect_appearance_records_sample.py",
-                "--season",
-                season,
-                "--league",
-                league,
-                "--sleep",
-                str(sleep_seconds),
-                "--output",
-                str(output),
-            ]
+            command
         )
         outputs.append(output)
     return outputs

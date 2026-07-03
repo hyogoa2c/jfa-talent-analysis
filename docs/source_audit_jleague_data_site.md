@@ -185,6 +185,168 @@ Important limitation:
 
 This is still useful for Phase 1 because it provides season-level outcome variables once identity resolution is handled.
 
+## SFPR01 Season Availability Audit
+
+Season/league metadata can be audited with:
+
+```bash
+uv run python scripts/audit_sfpr01_season_availability.py \
+  --start-season 2005 \
+  --end-season 2016
+```
+
+Observed result from the 2005-2016 audit:
+
+| Season range | SFPR01 J1/J2 availability | Notes |
+|---|---|---|
+| 2005-2013 | Not available via current `createCompetitionFrames` flow | J1/J2 expected frame IDs were not returned. Backfill needs a separate source-availability audit or another source. |
+| 2014 | Available | J1, J2, and J3 each have one competition. |
+| 2015-2016 | Available | J1 has two competitions (`1st` and `2nd` stages); J2 and J3 each have one competition. |
+
+Implication:
+
+- The current automated SFPR01 pipeline should expand first across 2014 onward.
+- The 2005-2013 target period should be treated as a separate backfill problem instead of being forced through the current SFPR01 collector.
+
+## 2014-2016 Identity Disambiguation Pass
+
+Ambiguous Japanese names in the 2014-2016 joined sample were checked against `SFIX04`
+player detail pages. The detail page contains season/team history, so ambiguous rows can be
+resolved when exactly one candidate has a matching season and team.
+
+Helper command:
+
+```bash
+uv run python scripts/suggest_identity_overrides_from_profiles.py \
+  --appearance data/interim/appearance_records_2014_J1_J2_J3.csv \
+  --appearance data/interim/appearance_records_2015_J1_J2_J3.csv \
+  --appearance data/interim/appearance_records_2016_J1_J2_J3.csv \
+  --ambiguous data/interim/ambiguous_appearance_names_2014_J1_J2_J3.csv \
+  --ambiguous data/interim/ambiguous_appearance_names_2015_J1_J2_J3.csv \
+  --ambiguous data/interim/ambiguous_appearance_names_2016_J1_J2_J3.csv
+```
+
+Accepted overrides are stored in:
+
+```text
+data/manual/player_identity_overrides.csv
+```
+
+Observed improvement after applying SFIX04-backed overrides:
+
+| Season | Matched rows before | Matched rows after | Ambiguous names before | Ambiguous names after |
+|---|---:|---:|---:|---:|
+| 2014 | 1,355 | 1,364 | 10 | 2 |
+| 2015 | 1,746 | 1,756 | 9 | 3 |
+| 2016 | 1,899 | 1,913 | 10 | 0 |
+
+Remaining ambiguous rows in 2014-2015 were zero-appearance roster rows, so they were left
+unresolved for now. The primary analysis population should distinguish true appearance rows
+from registered-but-zero-appearance rows.
+
+## 2017-2019 Collection and Disambiguation Pass
+
+SFPR01 availability audit for 2017-2019 found J1, J2, and J3 available in all three seasons,
+with one competition per league-season. Full collection completed successfully.
+
+Observed diagnostics after applying SFIX04-backed overrides:
+
+| Season | Appearance rows | Matched rows | Match rate | Ambiguous names |
+|---|---:|---:|---:|---:|
+| 2017 | 1,824 | 1,582 | 0.8673 | 2 |
+| 2018 | 1,875 | 1,618 | 0.8629 | 5 |
+| 2019 | 1,936 | 1,661 | 0.8580 | 6 |
+
+The 2017-2019 block produced:
+
+- 4,861 joined Japanese appearance rows.
+- 4,394 player-season feature rows.
+
+The combined 2014-2019 observation window produced:
+
+- 9,894 joined Japanese appearance rows.
+- 8,440 player-season feature rows.
+
+Remaining ambiguous appearance contexts in 2017-2019 were confirmed to be zero-appearance
+rows after SFIX04-backed overrides were applied. To make this easier to audit, ambiguous
+diagnostics now include season, league, team, shirt number, appearances, minutes, and goals
+for the unresolved appearance context, not just the ambiguous player name.
+
+## 2020-2022 COVID-Period Collection and Disambiguation Pass
+
+SFPR01 availability audit for 2020-2022 found J1, J2, and J3 available in all three seasons,
+with one competition per league-season.
+
+The collection completed successfully. The COVID-period block has visible league-structure
+effects:
+
+- 2020 J1: 18 teams.
+- 2021 J1: 20 teams.
+- 2022 J1: 18 teams.
+- 2021 J3: 15 teams.
+- U-23 J3 teams disappear after 2020 in the collected league-team lists.
+
+Observed diagnostics after applying SFIX04-backed overrides:
+
+| Season | Appearance rows | Matched rows | Match rate | Ambiguous names |
+|---|---:|---:|---:|---:|
+| 2020 | 1,840 | 1,618 | 0.8793 | 3 |
+| 2021 | 1,885 | 1,672 | 0.8870 | 0 |
+| 2022 | 1,976 | 1,746 | 0.8836 | 4 |
+
+The 2020-2022 block produced:
+
+- 5,036 joined Japanese appearance rows.
+- 4,765 player-season feature rows.
+
+The combined 2014-2022 observation window produced:
+
+- 14,930 joined Japanese appearance rows.
+- 13,205 player-season feature rows.
+- 3,218 unique players in the feature table.
+
+Remaining ambiguous appearance contexts in 2020-2022 were confirmed to be zero-appearance
+rows after SFIX04-backed overrides were applied.
+
+## 2023-2025 Recent-Period Collection and Disambiguation Pass
+
+SFPR01 availability audit for 2023-2026 found 2023-2025 available for J1, J2, and J3, with
+one competition per league-season. The 2026 season was not available through the current
+SFPR01 competition-frame flow at audit time, so it should be re-audited later.
+
+The collection completed successfully. The recent-period block has visible league-structure
+effects:
+
+- 2023 J1: 18 teams, J2: 22 teams, J3: 20 teams.
+- 2024 J1/J2/J3: 20 teams each.
+- 2025 J1/J2/J3: 20 teams each.
+- 2025 J3 includes both `栃木SC` and `栃木Ｃ`, plus `高知`.
+
+Observed diagnostics after applying SFIX04-backed overrides:
+
+| Season | Appearance rows | Matched rows | Match rate | Ambiguous names |
+|---|---:|---:|---:|---:|
+| 2023 | 2,085 | 1,855 | 0.8897 | 1 |
+| 2024 | 2,151 | 1,927 | 0.8959 | 3 |
+| 2025 | 2,218 | 1,939 | 0.8742 | 6 |
+
+The 2023-2025 block produced:
+
+- 5,721 joined Japanese appearance rows.
+- 5,314 player-season feature rows.
+
+The combined 2014-2025 observation window produced:
+
+- 20,651 joined Japanese appearance rows.
+- 18,519 player-season feature rows.
+- 4,037 unique players in the feature table.
+
+The 2023-2025 reappearance-candidate pass found 89 players who reappeared in the target
+window after at least two absent seasons in observed J.League appearances. This is useful
+for finding possible overseas-return cases, but it is not proof of overseas transfer because
+JFL, regional leagues, injuries, college/loan contexts, and other unobserved periods can
+create the same gap pattern.
+
 ## 2014 J1 Season-League Sample
 
 Collector tested:

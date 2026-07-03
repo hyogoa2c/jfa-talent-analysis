@@ -74,44 +74,53 @@ def collect_season_league(
 ) -> list[AppearanceRecord]:
     competition_frame_id = LEAGUE_FRAME_IDS[league_key]
     league_name = find_league_name(season, competition_frame_id) or league_key
-    competition_id = find_single_competition_id(season, competition_frame_id)
-    teams = create_teams(competition_id)
-    teams = [team for team in teams if team.display_name not in EXCLUDED_TEAM_NAMES]
-    if limit_teams is not None:
-        teams = teams[:limit_teams]
+    competition_ids = find_competition_ids(season, competition_frame_id)
 
     records: list[AppearanceRecord] = []
-    for index, team in enumerate(teams, start=1):
-        print(f"[{index}/{len(teams)}] {season} {league_key} {team.display_name}")
-        html = fetch_sfpr01_appearance_records(
-            season=season,
-            competition_frame_id=competition_frame_id,
-            competition_id=competition_id,
-            team_id=team.select_value,
-            league=league_name,
-            team_name=team.display_name,
-        )
-        source_url = sfpr01_search_url(
-            season=season,
-            competition_frame_id=competition_frame_id,
-            competition_id=competition_id,
-            team_id=team.select_value,
-            league=league_name,
-            team_name=team.display_name,
-        )
-        team_records = parse_sfpr01_appearance_records(
-            html,
-            season=season,
-            competition_frame_id=competition_frame_id,
-            competition_id=competition_id,
-            league=league_name,
-            team_id=team.select_value,
-            team_name=team.display_name,
-            source_url=source_url,
-        )
-        records.extend(team_records)
-        if sleep_seconds > 0 and index < len(teams):
-            time.sleep(sleep_seconds)
+    for competition_index, competition_id in enumerate(competition_ids, start=1):
+        teams = create_teams(competition_id)
+        teams = [team for team in teams if team.display_name not in EXCLUDED_TEAM_NAMES]
+        if limit_teams is not None:
+            teams = teams[:limit_teams]
+
+        for team_index, team in enumerate(teams, start=1):
+            print(
+                f"[competition {competition_index}/{len(competition_ids)} "
+                f"team {team_index}/{len(teams)}] {season} {league_key} {team.display_name}"
+            )
+            html = fetch_sfpr01_appearance_records(
+                season=season,
+                competition_frame_id=competition_frame_id,
+                competition_id=competition_id,
+                team_id=team.select_value,
+                league=league_name,
+                team_name=team.display_name,
+            )
+            source_url = sfpr01_search_url(
+                season=season,
+                competition_frame_id=competition_frame_id,
+                competition_id=competition_id,
+                team_id=team.select_value,
+                league=league_name,
+                team_name=team.display_name,
+            )
+            team_records = parse_sfpr01_appearance_records(
+                html,
+                season=season,
+                competition_frame_id=competition_frame_id,
+                competition_id=competition_id,
+                league=league_name,
+                team_id=team.select_value,
+                team_name=team.display_name,
+                source_url=source_url,
+            )
+            records.extend(team_records)
+            is_last_team = (
+                competition_index == len(competition_ids)
+                and team_index == len(teams)
+            )
+            if sleep_seconds > 0 and not is_last_team:
+                time.sleep(sleep_seconds)
     return records
 
 
@@ -122,14 +131,13 @@ def find_league_name(season: str, competition_frame_id: str) -> str | None:
     return None
 
 
-def find_single_competition_id(season: str, competition_frame_id: str) -> str:
+def find_competition_ids(season: str, competition_frame_id: str) -> list[str]:
     competitions = create_competitions(season, competition_frame_id)
-    if len(competitions) != 1:
+    if not competitions:
         raise ValueError(
-            f"Expected one competition for {season=} {competition_frame_id=}, "
-            f"got {len(competitions)}"
+            f"Expected at least one competition for {season=} {competition_frame_id=}"
         )
-    return competitions[0].select_value
+    return [competition.select_value for competition in competitions]
 
 
 if __name__ == "__main__":
