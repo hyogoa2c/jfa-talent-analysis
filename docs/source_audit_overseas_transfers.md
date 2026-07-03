@@ -37,13 +37,14 @@ Then audit Wikidata coverage:
 ```bash
 uv run python scripts/audit_wikidata_reappearance_candidates.py \
   --input data/processed/reappearance_candidates_2023_2025_gap2.csv \
+  --output data/interim/source_audit/wikidata_reappearance_candidates_2023_2025_gap2.csv \
   --limit 20
 ```
 
 The audit output is local-only and gitignored:
 
 ```text
-data/interim/source_audit/wikidata_reappearance_candidates.csv
+data/interim/source_audit/wikidata_reappearance_candidates_2023_2025_gap2.csv
 ```
 
 For manual review, build a queue CSV from the audit output:
