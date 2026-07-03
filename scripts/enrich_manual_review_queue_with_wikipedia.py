@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import os
 import time
 from pathlib import Path
 
@@ -44,12 +45,12 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     rows = read_csv(args.input)
-    if args.limit is not None:
-        rows = rows[: args.limit]
+    limit = len(rows) if args.limit is None else min(args.limit, len(rows))
+    target_rows = rows[:limit]
 
     enriched_rows: list[dict[str, str]] = []
-    for index, row in enumerate(rows, start=1):
-        print(f"[{index}/{len(rows)}] {row['name_ja']} / {row['name_en']}")
+    for index, row in enumerate(target_rows, start=1):
+        print(f"[{index}/{len(target_rows)}] {row['name_ja']} / {row['name_en']}")
         try:
             candidates = fetch_wikipedia_candidates(
                 row["name_ja"],
@@ -68,11 +69,14 @@ def main() -> None:
                 "wikipedia_search_error": f"{type(error).__name__}: {error}",
             }
         enriched_rows.append({**row, **wikipedia_summary})
-        if args.sleep > 0 and index < len(rows):
+        if args.sleep > 0 and index < len(target_rows):
             time.sleep(args.sleep)
 
-    write_csv(args.output, enriched_rows, build_fieldnames(rows))
-    print(f"rows={len(enriched_rows)}")
+    # Keep rows beyond --limit so a partial enrichment run never truncates the queue.
+    output_rows = enriched_rows + rows[limit:]
+    write_csv(args.output, output_rows, build_fieldnames(rows))
+    print(f"enriched_rows={len(enriched_rows)}")
+    print(f"rows={len(output_rows)}")
     print(f"wrote={args.output}")
 
 
@@ -94,10 +98,12 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 def write_csv(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
+    temp_path = path.with_name(path.name + ".tmp")
+    with temp_path.open("w", encoding="utf-8", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames, restval="")
         writer.writeheader()
         writer.writerows(rows)
+    os.replace(temp_path, path)
 
 
 if __name__ == "__main__":

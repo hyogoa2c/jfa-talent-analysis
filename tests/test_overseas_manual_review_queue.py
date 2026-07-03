@@ -1,5 +1,6 @@
 from jfa_talent_analysis.overseas_review import (
     build_manual_review_rows,
+    merge_existing_review_entries,
     validate_manual_review_rows,
 )
 
@@ -140,3 +141,73 @@ def test_validate_manual_review_rows_requires_note_for_unresolved():
     )
 
     assert errors == ["line 2 source_player_id=1: unresolved requires manual_note"]
+
+
+def test_merge_existing_review_entries_carries_manual_and_wikipedia_columns():
+    rebuilt = [
+        {
+            "source_player_id": "1",
+            "reappearance_season": "2024",
+            "wikipedia_titles": "",
+            "wikipedia_urls": "",
+            "wikipedia_search_error": "",
+            "manual_decision": "",
+            "manual_note": "",
+            "evidence_url": "",
+        }
+    ]
+    existing = [
+        {
+            "source_player_id": "1",
+            "reappearance_season": "2024",
+            "wikipedia_titles": "選手A",
+            "wikipedia_urls": "https://ja.wikipedia.org/wiki/選手A",
+            "wikipedia_search_error": "",
+            "manual_decision": "confirmed_foreign_stint",
+            "manual_note": "Career chronology lists a foreign club.",
+            "evidence_url": "https://example.com/profile",
+        }
+    ]
+
+    merged, dropped = merge_existing_review_entries(rebuilt, existing)
+
+    assert dropped == []
+    assert merged[0]["manual_decision"] == "confirmed_foreign_stint"
+    assert merged[0]["manual_note"] == "Career chronology lists a foreign club."
+    assert merged[0]["evidence_url"] == "https://example.com/profile"
+    assert merged[0]["wikipedia_titles"] == "選手A"
+
+
+def test_merge_existing_review_entries_leaves_new_rows_blank():
+    rebuilt = [
+        {"source_player_id": "2", "reappearance_season": "2025", "manual_decision": ""}
+    ]
+
+    merged, dropped = merge_existing_review_entries(rebuilt, [])
+
+    assert dropped == []
+    assert merged[0]["manual_decision"] == ""
+
+
+def test_merge_existing_review_entries_reports_dropped_reviewed_rows():
+    existing = [
+        {
+            "source_player_id": "9",
+            "reappearance_season": "2023",
+            "manual_decision": "unresolved",
+            "manual_note": "Multiple candidates.",
+            "evidence_url": "",
+        },
+        {
+            "source_player_id": "10",
+            "reappearance_season": "2023",
+            "manual_decision": "",
+            "manual_note": "",
+            "evidence_url": "",
+        },
+    ]
+
+    merged, dropped = merge_existing_review_entries([], existing)
+
+    assert merged == []
+    assert [row["source_player_id"] for row in dropped] == ["9"]

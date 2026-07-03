@@ -186,6 +186,15 @@ Decision examples:
 | Correct player page is found but club history is incomplete. | `identity_resolved_no_decision` | `Identity resolved; source does not cover gap seasons clearly.` |
 | Several same-name players remain plausible. | `unresolved` | `Multiple candidates; cannot resolve identity from available pages.` |
 
+Queue safety guarantees:
+
+- Rebuilding the queue with `build_overseas_manual_review_queue.py` preserves existing
+  `wikipedia_*`, `manual_decision`, `manual_note`, and `evidence_url` values for rows that
+  are still in the rebuilt queue, and warns on stderr about reviewed rows that would be
+  dropped.
+- `enrich_manual_review_queue_with_wikipedia.py --limit N` enriches only the first N rows
+  but always writes the full queue back, so a partial run never truncates the file.
+
 Run the validator before committing manual edits:
 
 ```bash
