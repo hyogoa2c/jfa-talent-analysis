@@ -260,6 +260,10 @@ Current implementation status:
 - Ambiguous diagnostics are written at unresolved appearance-context level, including season, league, team, shirt number, appearances, minutes, and goals.
 - `scripts/build_reappearance_candidates.py` flags players who reappear in a target window after an observed J.League appearance gap. This is useful for candidate discovery, but it is not proof of overseas transfer.
 - The collection script supports multiple competitions inside one league frame, which is needed for 2015 and 2016 J1 two-stage seasons.
+- A 2014-2025 SFPR01 availability audit confirmed the J1/J2/J3 frames contain only league
+  competitions (one per season, plus the 2015/2016 J1 1st/2nd stages). Playoff and
+  championship matches live in other frames, so league minutes are not double-counted;
+  the 2015/2016 championship matches are simply outside the collected league totals.
 - J3 is automatically excluded before 2014 in the multi-season driver.
 - Current derived features are based only on seasons included in the input file, so first-observed season, first-J1 season, and cumulative U21/U23 minutes are observation-window measures until multi-season collection is run.
 - A 2013 smoke attempt found no SFPR01 competition frames for that year, so 2005-2013 backfill requires a separate source-availability audit before large-scale collection.
