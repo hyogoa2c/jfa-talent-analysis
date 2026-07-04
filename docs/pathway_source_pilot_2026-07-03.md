@@ -112,3 +112,34 @@ cross-checked against fansaka.info and Wikidata P69 when they exist) rather than
 fully-scaled pipeline — but the pilot's 95% mapped-coverage result suggests that process, once a
 Wikipedia fetch-and-parse tool exists, is far more tractable across the full player population than the
 audit's "expect a substantial manual review load... plausibly a majority of players" framing implied.
+
+## Implementation Status
+
+The Wikipedia fetch-and-parse capability this pilot recommended has been built:
+
+- `jfa_talent_analysis.sources.wikipedia.fetch_wikipedia_extract` fetches a full plaintext
+  article extract via the MediaWiki `action=query&prop=extracts&explaintext=1` API.
+- `extract_pathway_context` heuristically returns prose from sections whose heading matches a
+  pre-pro marker (来歴/経歴/幼少期/高校時代/大学時代/etc.), including nested subsections (e.g.
+  a `筑波大学` subsection under `幼少期`), and falls back to the whole article when no heading
+  matches — both structural patterns observed in this pilot (三笘薫's split
+  幼少期/クラブ経歴 vs. 伊藤遼哉's single flat 来歴) are covered by tests in
+  `tests/test_wikipedia.py`.
+- `scripts/build_pathway_candidates_from_wikipedia.py` runs this against a small player list and
+  writes candidate `wikipedia_pathway_context` text per player, alongside `wikipedia_found` and
+  the resolved title — a research aid for manual/semi-automated review, matching this pilot's
+  conclusion that `pathway_category` assignment itself still needs human judgment, not an
+  automatic classifier.
+
+Known limitation confirmed by a smoke test: when a player's direct-title fetch is missing, the
+script falls back to Wikipedia's fuzzy title search (the same search used by the overseas-transfer
+enrichment workflow), which can surface an unrelated page for a name with no real article (e.g. a
+nonsense test name matched an unrelated musician's biography). `wikipedia_found=1` therefore means
+"a candidate page was found," not "the correct player was confirmed" — exactly the same caveat
+`docs/source_audit_overseas_transfers.md` already documents for Wikipedia search candidates, and
+why this script's output is candidate evidence for a reviewer, not a final label.
+
+**This has intentionally not been run at production scale** (i.e., not against the full
+`data/processed/player_season_features_2014_2025_J1_J2_J3.csv` population) — only smoke-tested
+against a handful of already-verified players from this pilot. Running it broadly, reviewing the
+output, and building the actual `pathway_category` assignment step remain future work.

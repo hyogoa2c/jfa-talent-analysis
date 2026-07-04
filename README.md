@@ -117,6 +117,10 @@ Overseas review workflow (see [the overseas transfer source audit](docs/source_a
 - `validate_overseas_manual_review_queue.py` - validate manual review entries before committing
 - `build_overseas_transfer_outcomes.py` - materialize a moved_overseas outcome table from queue decisions
 
+Pathway classification research (see [the pathway source pilot](docs/pathway_source_pilot_2026-07-03.md)):
+
+- `build_pathway_candidates_from_wikipedia.py` - fetch candidate pre-professional pathway text from Wikipedia for manual/semi-automated review; not yet run at production scale
+
 ## Starting Point
 
 - [Research session note](docs/research_session_2026-06-26_jfa_talent_development.md)
