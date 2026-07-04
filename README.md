@@ -121,6 +121,10 @@ Pathway classification research (see [the pathway source pilot](docs/pathway_sou
 
 - `build_pathway_candidates_from_wikipedia.py` - fetch candidate pre-professional pathway text from Wikipedia for manual/semi-automated review; not yet run at production scale
 
+National-team selection research (see [the national-team pilot](docs/national_team_pilot_2026-07-03.md)):
+
+- `build_national_team_candidates_from_wikipedia.py` - fetch candidate national-team selection text from Wikipedia for manual/semi-automated review; not yet run at production scale
+
 ## Starting Point
 
 - [Research session note](docs/research_session_2026-06-26_jfa_talent_development.md)

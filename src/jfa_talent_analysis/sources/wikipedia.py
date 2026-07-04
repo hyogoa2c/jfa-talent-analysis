@@ -26,6 +26,17 @@ PRE_PRO_SECTION_HEADINGS = {
     "アマチュア時代",
 }
 
+# Section headings that carry national-team selection history, per the pilot in
+# docs/national_team_pilot_2026-07-03.md. Heading naming varies between articles
+# (e.g. 中谷進之介 uses 代表歴 with nested 出場大会/試合数 subsections; 遠藤航 uses
+# 代表経歴 as a single flat section) — both forms have been confirmed in real
+# articles, not just inferred from the infobox field name.
+NATIONAL_TEAM_SECTION_HEADINGS = {
+    "代表歴",
+    "代表経歴",
+    "日本代表",
+}
+
 SECTION_HEADER_RE = re.compile(r"^(={2,4})\s*(.+?)\s*\1\s*$", re.MULTILINE)
 
 
@@ -176,13 +187,55 @@ def parse_extract_response(data: dict) -> str | None:
 def extract_pathway_context(extract_text: str) -> str:
     """Return prose from sections most likely to describe the pre-professional pathway.
 
-    Includes subsections nested under a matching heading (e.g. a "筑波大学" subsection
-    under "幼少期"), since a matching section commonly continues in a deeper subsection
-    rather than repeating the same heading text. Falls back to the whole article extract
-    when no matching heading is found at all, since heading conventions vary too much
-    between articles to guarantee a match (see docs/pathway_source_pilot_2026-07-03.md).
     This returns candidate research text for a human/semi-automated reviewer to read and
     classify — it does not itself infer a pathway_category.
+    """
+    return extract_sections_by_heading(extract_text, PRE_PRO_SECTION_HEADINGS)
+
+
+def extract_national_team_context(extract_text: str) -> str:
+    """Return prose from sections most likely to describe national-team selection.
+
+    This returns candidate research text for a human/semi-automated reviewer to read and
+    classify — it does not itself infer selection categories or years. Note that per-category
+    caps/goals infobox tables (e.g. a 代表歴 infobox field) are NOT captured by the plaintext
+    extract API this module uses; only prose sections are (see
+    docs/national_team_pilot_2026-07-03.md for the real examples this heading set is based on).
+    """
+    return extract_sections_by_heading(extract_text, NATIONAL_TEAM_SECTION_HEADINGS)
+
+
+def resolve_wikipedia_title_and_extract(name_ja: str, name_en: str) -> tuple[str | None, str | None]:
+    """Resolve a player's Wikipedia article: try the direct no-space title first, then
+    fall back to fuzzy title search. Returns (title, full plaintext extract), or
+    (None, None) if nothing is found.
+
+    A search-fallback hit is a candidate page, not a confirmed-correct match — fuzzy
+    search can surface an unrelated page for a name with no real article (see
+    docs/pathway_source_pilot_2026-07-03.md's Implementation Status note).
+    """
+    direct_title = "".join(name_ja.split())
+    extract = fetch_wikipedia_extract(direct_title) if direct_title else None
+    title = direct_title if extract else None
+
+    if extract is None:
+        for candidate in fetch_wikipedia_candidates(name_ja, name_en, max_results=1):
+            extract = fetch_wikipedia_extract(candidate.title)
+            if extract is not None:
+                title = candidate.title
+                break
+
+    return (title, extract) if extract is not None else (None, None)
+
+
+def extract_sections_by_heading(extract_text: str, headings: set[str]) -> str:
+    """Return prose from sections whose heading is in `headings`.
+
+    Includes subsections nested under a matching heading (e.g. a "出場大会" subsection
+    under "代表歴"), since a matching section commonly continues in a deeper subsection
+    rather than repeating the same heading text. Falls back to the whole article extract
+    when no matching heading is found at all, since heading conventions vary too much
+    between articles to guarantee a match.
     """
     matches = list(SECTION_HEADER_RE.finditer(extract_text))
     if not matches:
@@ -197,7 +250,7 @@ def extract_pathway_context(extract_text: str) -> str:
         start = match.end()
         end = matches[index + 1].start() if index + 1 < len(matches) else len(extract_text)
 
-        if heading in PRE_PRO_SECTION_HEADINGS:
+        if heading in headings:
             active = True
             active_depth = depth
         elif active and depth <= active_depth:

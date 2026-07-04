@@ -1,5 +1,6 @@
 from jfa_talent_analysis.sources.wikipedia import (
     build_wikipedia_queries,
+    extract_national_team_context,
     extract_pathway_context,
     parse_extract_response,
     parse_wikipedia_search_results,
@@ -112,3 +113,46 @@ def test_extract_pathway_context_includes_nested_subsection_under_matching_headi
     assert "川崎フロンターレU-10" in context
     assert "筑波大学体育専門学群" in context
     assert "プロとしてデビュー" not in context
+
+
+def test_extract_national_team_context_captures_flat_daihyokeireki_section():
+    # Matches the real 遠藤航 article structure: a flat 代表経歴 section, followed by
+    # an unrelated 人物 section that should be excluded.
+    text = (
+        "遠藤航は日本のプロサッカー選手。\n\n"
+        "== クラブ経歴 ==\n"
+        "2010年、湘南ベルマーレでJリーグデビューを果たす。\n\n"
+        "== 代表経歴 ==\n"
+        "2015年8月2日の北朝鮮戦で代表初出場を果たした。\n\n"
+        "== 人物 ==\n"
+        "プレースタイルはボランチ。"
+    )
+
+    context = extract_national_team_context(text)
+
+    assert "代表初出場" in context
+    assert "湘南ベルマーレ" not in context
+    assert "プレースタイル" not in context
+
+
+def test_extract_national_team_context_includes_nested_subsections_under_daihyoreki():
+    # Matches the real 中谷進之介 article structure: 代表歴 with nested 出場大会 and
+    # 試合数 subsections, followed by an unrelated 脚注 section that should be excluded.
+    text = (
+        "中谷進之介は日本のプロサッカー選手。\n\n"
+        "== 代表歴 ==\n"
+        "国際Aマッチ初出場 - 2021年3月31日 モンゴル代表戦\n\n"
+        "=== 出場大会 ===\n"
+        "U-15日本代表\n2011年 - AFC U-16選手権2012 (予選)\n\n"
+        "=== 試合数 ===\n"
+        "国際Aマッチ 5試合0得点（2021年 - 2022年）\n\n"
+        "== 脚注 ==\n"
+        "注釈は省略。"
+    )
+
+    context = extract_national_team_context(text)
+
+    assert "国際Aマッチ初出場" in context
+    assert "U-15日本代表" in context
+    assert "5試合0得点" in context
+    assert "注釈は省略" not in context

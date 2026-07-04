@@ -141,3 +141,36 @@ prerequisite, with the caveat that the "no evidence found" majority (55% here) s
 against JFA's per-occasion pages for a subsample before being trusted at full population scale, since
 this pilot's sample size (22) is too small to rule out a meaningful false-negative rate among the
 "no" players the way it could confidently classify the "yes" players it did find.
+
+## Implementation Status
+
+The Wikipedia fetch tool for this variable has been built, reusing the pathway tool's
+infrastructure:
+
+- `extract_sections_by_heading` in `jfa_talent_analysis.sources.wikipedia` was factored out of
+  `extract_pathway_context` as a shared, heading-set-parameterized helper.
+- `extract_national_team_context` applies it against a `NATIONAL_TEAM_SECTION_HEADINGS` set
+  (`代表歴`, `代表経歴`, `日本代表`) — both real heading spellings confirmed in this pilot
+  (中谷進之介 uses `代表歴` with nested `出場大会`/`試合数` subsections; 遠藤航 uses a flat
+  `代表経歴`). Confirmed by direct fetch that the per-category caps/goals **infobox** field this
+  pilot also read (via a rendered-page tool, not the plaintext extract API) is NOT captured by
+  this function — only prose sections are. The `代表歴`/`代表経歴` prose sections turned out to
+  carry the same substantive detail as the infobox in both checked cases, including 中谷進之介's
+  full six-category history, so this gap did not cost real coverage in this pilot's spot checks,
+  but it means a future reviewer should not expect exact cap/goal numbers to always be present in
+  this tool's output the way the infobox sometimes states them.
+- `resolve_wikipedia_title_and_extract` was factored out of the pathway script into
+  `jfa_talent_analysis.sources.wikipedia` as a shared title-resolution helper (direct no-space
+  title first, then fuzzy search fallback), now used by both
+  `scripts/build_pathway_candidates_from_wikipedia.py` and the new
+  `scripts/build_national_team_candidates_from_wikipedia.py`.
+- Tests in `tests/test_wikipedia.py` cover both real heading patterns found in this pilot.
+- Smoke-tested against 中谷進之介 (rich case, correctly extracted), 大石文弥 (no evidence case,
+  correctly falls back to the whole article since no matching heading exists), and a nonexistent
+  name (correctly falls through to fuzzy search, which surfaces an unrelated page — the same known
+  limitation already documented for the pathway tool).
+
+**This has intentionally not been run at production scale.** Running it against the full player
+population, cross-checking against Wikidata P54, and building the actual
+`national_team_selections` table remain future work — as does the JFA per-occasion squad-page
+spot-check this pilot recommends before trusting "no evidence" rows at scale.

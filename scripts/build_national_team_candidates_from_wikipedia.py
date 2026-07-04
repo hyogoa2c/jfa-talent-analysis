@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 
 from jfa_talent_analysis.sources.wikipedia import (
-    extract_pathway_context,
+    extract_national_team_context,
     resolve_wikipedia_title_and_extract,
 )
 
@@ -15,7 +15,7 @@ OUTPUT_COLUMNS = [
     "name_ja",
     "name_en",
     "wikipedia_title",
-    "wikipedia_pathway_context",
+    "wikipedia_national_team_context",
     "wikipedia_found",
 ]
 
@@ -23,10 +23,10 @@ OUTPUT_COLUMNS = [
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Fetch candidate pre-professional pathway text from Wikipedia for a list of "
+            "Fetch candidate national-team selection text from Wikipedia for a list of "
             "players. This produces research candidates for manual/semi-automated review "
-            "(see docs/pathway_source_pilot_2026-07-03.md) — it does not assign a "
-            "pathway_category itself."
+            "(see docs/national_team_pilot_2026-07-03.md) — it does not itself decide "
+            "whether a player was selected or assign a category."
         )
     )
     parser.add_argument(
@@ -50,14 +50,14 @@ def main() -> None:
     rows: list[dict[str, str]] = []
     for index, player in enumerate(players, start=1):
         print(f"[{index}/{len(players)}] {player['name_ja']} / {player['name_en']}")
-        title, context = fetch_pathway_context(player["name_ja"], player["name_en"])
+        title, context = fetch_national_team_context(player["name_ja"], player["name_en"])
         rows.append(
             {
                 "source_player_id": player["source_player_id"],
                 "name_ja": player["name_ja"],
                 "name_en": player["name_en"],
                 "wikipedia_title": title or "",
-                "wikipedia_pathway_context": context or "",
+                "wikipedia_national_team_context": context or "",
                 "wikipedia_found": "1" if title else "0",
             }
         )
@@ -71,11 +71,11 @@ def main() -> None:
     print(f"wrote={args.output}")
 
 
-def fetch_pathway_context(name_ja: str, name_en: str) -> tuple[str | None, str | None]:
+def fetch_national_team_context(name_ja: str, name_en: str) -> tuple[str | None, str | None]:
     title, extract = resolve_wikipedia_title_and_extract(name_ja, name_en)
     if extract is None:
         return None, None
-    return title, extract_pathway_context(extract)
+    return title, extract_national_team_context(extract)
 
 
 def dedupe_by_player(rows: list[dict[str, str]]) -> list[dict[str, str]]:
