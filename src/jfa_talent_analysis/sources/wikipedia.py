@@ -39,6 +39,44 @@ NATIONAL_TEAM_SECTION_HEADINGS = {
 
 SECTION_HEADER_RE = re.compile(r"^(={2,4})\s*(.+?)\s*\1\s*$", re.MULTILINE)
 
+# Title substrings that mark a non-biography page (list/character articles), the
+# dominant false-positive pattern found when the fuzzy search fallback has no real
+# match: appending "サッカー" to a name-only query surfaces soccer-themed fiction
+# (e.g. イナズマイレブン/ブルーロック character lists) or university/sibling alumni
+# list pages for obscure players with no article of their own. Confirmed at full
+# population scale: ~17-19% of Tier C (fringe-player) candidate rows hit this.
+JUNK_TITLE_PATTERNS = ("一覧", "登場人物", "キャラクター")
+
+# A Japanese Wikipedia biography's lead sentence states the subject's birth date in
+# parentheses right after the name, e.g. "三笘 薫（みとま かおる、1997年5月20日 - ）は".
+# Searching only the first LEAD_SEARCH_WINDOW characters avoids picking up an
+# unrelated date buried deeper in a list-type article that slipped past the title
+# check.
+LEAD_SEARCH_WINDOW = 200
+LEAD_BIRTH_DATE_RE = re.compile(r"(\d{4})年(\d{1,2})月(\d{1,2})日")
+
+
+def looks_like_junk_title(title: str) -> bool:
+    """Return True if a resolved Wikipedia title looks like a list/character page
+    rather than a biography, per the false-positive patterns found in
+    docs/pathway_source_pilot_2026-07-03.md and docs/national_team_pilot_2026-07-03.md
+    at full population scale."""
+    return any(pattern in title for pattern in JUNK_TITLE_PATTERNS)
+
+
+def extract_lead_birth_date(extract_text: str) -> str | None:
+    """Extract a YYYY-MM-DD birth date from a Wikipedia article's lead sentence.
+
+    Returns None if no date pattern appears within the first LEAD_SEARCH_WINDOW
+    characters (e.g. a list-type page with no personal birth date up front, or an
+    article whose lead sentence doesn't follow the usual biography convention).
+    """
+    match = LEAD_BIRTH_DATE_RE.search(extract_text[:LEAD_SEARCH_WINDOW])
+    if match is None:
+        return None
+    year, month, day = match.groups()
+    return f"{int(year):04d}-{int(month):02d}-{int(day):02d}"
+
 
 @dataclass(frozen=True)
 class WikipediaSearchResult:

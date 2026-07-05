@@ -174,3 +174,25 @@ infrastructure:
 population, cross-checking against Wikidata P54, and building the actual
 `national_team_selections` table remain future work — as does the JFA per-occasion squad-page
 spot-check this pilot recommends before trusting "no evidence" rows at scale.
+
+## Production Run and Identity Verification (2026-07-04/05)
+
+Run at full population scale (4,037 players, same three career-minutes tiers as the sibling
+pathway run) alongside `build_pathway_candidates_from_wikipedia.py` — see
+`docs/pathway_source_pilot_2026-07-03.md`'s "Production Run and Identity Verification" section
+for the full account of what happened (an initial 6-way-parallel attempt hit Wikimedia's rate
+limiter, HTTP 429, fixed by switching to sequential execution) and the false-positive pattern
+discovered at scale (the search fallback matching soccer-themed fiction or alumni-list pages for
+players with no real article, concentrated in Tier C). That account and the
+`verify_wikipedia_candidate_identity.py` tool apply identically here, since both scripts share
+the same `resolve_wikipedia_title_and_extract` title-resolution logic — the two runs' identity
+results were consistent to within 1-2 rows per tier (a birth-date lead sentence occasionally
+fails to parse on one run's fresh re-fetch of the exact same page but not the other's, likely a
+transient rendering/whitespace difference between requests, not a systematic issue). Same
+headline numbers apply: 84.3% `confirmed` overall (94.7% Tier A, 92.5% Tier B, 61.5% Tier C),
+with the remainder needing manual review before being trusted as either a real "candidate found"
+or a genuine "no evidence" case.
+
+Reviewing the `national_team_tier_*_verified.csv` files (gitignored,
+`data/interim/pathway_national_team/`) and building the actual `national_team_selections` table
+remain future work.

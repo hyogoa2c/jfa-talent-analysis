@@ -1,7 +1,9 @@
 from jfa_talent_analysis.sources.wikipedia import (
     build_wikipedia_queries,
+    extract_lead_birth_date,
     extract_national_team_context,
     extract_pathway_context,
+    looks_like_junk_title,
     parse_extract_response,
     parse_wikipedia_search_results,
     summarize_wikipedia_candidates,
@@ -156,3 +158,38 @@ def test_extract_national_team_context_includes_nested_subsections_under_daihyor
     assert "U-15日本代表" in context
     assert "5試合0得点" in context
     assert "注釈は省略" not in context
+
+
+def test_looks_like_junk_title_flags_list_and_character_pages():
+    # Real false-positive matches found at full population scale (see
+    # docs/pathway_source_pilot_2026-07-03.md and
+    # docs/national_team_pilot_2026-07-03.md): the fuzzy search fallback surfaced
+    # these pages for obscure players with no article of their own.
+    assert looks_like_junk_title("日本大学の人物一覧")
+    assert looks_like_junk_title("イナズマイレブンGOの登場人物")
+    assert looks_like_junk_title("兄弟スポーツ選手一覧")
+
+
+def test_looks_like_junk_title_allows_normal_biography_titles():
+    assert not looks_like_junk_title("三笘薫")
+    assert not looks_like_junk_title("中谷進之介")
+
+
+def test_extract_lead_birth_date_parses_standard_lead_sentence():
+    text = "三笘 薫（みとま かおる、1997年5月20日 - ）は、大分県日田市生まれのプロサッカー選手。"
+
+    assert extract_lead_birth_date(text) == "1997-05-20"
+
+
+def test_extract_lead_birth_date_returns_none_without_a_date():
+    text = "日本大学の人物一覧では、様々な分野で活躍する卒業生を紹介する。"
+
+    assert extract_lead_birth_date(text) is None
+
+
+def test_extract_lead_birth_date_ignores_dates_outside_the_lead_window():
+    # A date buried far past the lead sentence (e.g. inside a long list article)
+    # should not be picked up as if it were the subject's own birth date.
+    text = "見出しの本文。" * 60 + "1999年3月3日に関連イベントが開催された。"
+
+    assert extract_lead_birth_date(text) is None

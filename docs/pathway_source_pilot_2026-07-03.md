@@ -143,3 +143,53 @@ why this script's output is candidate evidence for a reviewer, not a final label
 `data/processed/player_season_features_2014_2025_J1_J2_J3.csv` population) — only smoke-tested
 against a handful of already-verified players from this pilot. Running it broadly, reviewing the
 output, and building the actual `pathway_category` assignment step remain future work.
+
+## Production Run and Identity Verification (2026-07-04/05)
+
+Ran `build_pathway_candidates_from_wikipedia.py` against the full 4,037-player population,
+split into three tiers by total career J.League minutes (2014-2025): Tier A (≥3,000 min,
+n=1,982), Tier B (500-2,999 min, n=849), Tier C (<500 min, n=1,206). First attempted with 6
+processes in parallel (one per tier per outcome variable, run alongside the sibling
+national-team fetch) — this triggered Wikimedia's rate limiter (HTTP 429, confirmed via a
+direct `curl` with the script's own User-Agent header, `x-envoy-ratelimited: true`,
+`retry-after: 42`) after sustained concurrent load. Not an IP ban: a plain `curl` with a
+different User-Agent succeeded immediately throughout. Fixed by switching to strictly
+sequential execution (one script at a time) with `--sleep 1.0`; completed cleanly at ~6-10
+seconds/player (the search-fallback path for non-exact-title players dominates this, not the
+sleep itself).
+
+This full-scale run surfaced a false-positive pattern too small to appear in the 22-player
+pilot: the fuzzy search fallback (triggered when a player has no exact-title article) can match
+an unrelated page whose title happens to be soccer-adjacent, most commonly soccer-themed
+fiction (e.g. a real player named 大磯竜輝 matched `イナズマイレブンGOの登場人物`, a 153,085-
+character character-list page for the anime; two other real players both matched `ブルーロック`,
+a soccer manga, with byte-identical context length) or broad alumni/list pages (e.g.
+`日本大学の人物一覧`). Concentrated almost entirely in Tier C (fringe players most likely to
+lack a real article): 16.9-18.0% of Tier C rows had a context over 10,000 characters, versus
+0.3-1.6% in Tier A/B.
+
+Built `scripts/verify_wikipedia_candidate_identity.py` to catch this: it rejects titles matching
+a junk-page pattern (`一覧`/`登場人物`/`キャラクター`, via `looks_like_junk_title` in
+`sources/wikipedia.py`) outright with no re-fetch, and for everything else, re-fetches the full
+article and cross-checks a `extract_lead_birth_date`-parsed birth date (from the lead sentence,
+e.g. "1997年5月20日") against the player's known `birth_date`. Run across all six tier files
+(pathway + national-team × A/B/C); results were nearly identical between the pathway and
+national-team runs (as expected, since both resolve the same title via the same logic):
+
+| | Tier A (n=1,982) | Tier B (n=849) | Tier C (n=1,206) | Overall (n=4,037) |
+|---|---|---|---|---|
+| `confirmed` | 94.7% | 92.5% | 61.5% | 84.3% |
+| `birth_date_mismatch` | 1.5% | 2.2-2.4% | 8.3-8.4% | 3.7% |
+| `no_birth_date_found` | 3.8% | 5.2-5.3% | 21.9-22.1% | 9.5% |
+| `title_pattern_reject` | 0.05% | 0% | 8.0-8.3% | 2.5% |
+
+`birth_date_mismatch` (a real person's page, just the wrong person) is the case simple
+length/title heuristics alone would miss entirely — this is why the birth-date cross-check was
+necessary, not just the cheaper title-pattern filter. `no_birth_date_found` is not itself proof
+of a bad match (a genuinely correct but unusually-formatted article could fail the lead-sentence
+regex) but should be treated as unconfirmed pending manual review, the same as
+`birth_date_mismatch` and `title_pattern_reject` — only `confirmed` rows (84.3% overall) should
+be used as-is going into the next `pathway_category`-labeling pass.
+
+Reviewing the `*_verified.csv` files (in `data/interim/pathway_national_team/`, gitignored) and
+building the actual `pathway_category` assignment step remain future work.

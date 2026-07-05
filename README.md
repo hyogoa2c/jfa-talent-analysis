@@ -119,11 +119,12 @@ Overseas review workflow (see [the overseas transfer source audit](docs/source_a
 
 Pathway classification research (see [the pathway source pilot](docs/pathway_source_pilot_2026-07-03.md)):
 
-- `build_pathway_candidates_from_wikipedia.py` - fetch candidate pre-professional pathway text from Wikipedia for manual/semi-automated review; not yet run at production scale
+- `build_pathway_candidates_from_wikipedia.py` - fetch candidate pre-professional pathway text from Wikipedia for manual/semi-automated review; run at full population scale 2026-07-04/05
+- `verify_wikipedia_candidate_identity.py` - cross-check a candidate CSV's matched Wikipedia title against known player birth_date, rejecting junk-page titles outright; 84.3% confirmed overall at full scale
 
 National-team selection research (see [the national-team pilot](docs/national_team_pilot_2026-07-03.md)):
 
-- `build_national_team_candidates_from_wikipedia.py` - fetch candidate national-team selection text from Wikipedia for manual/semi-automated review; not yet run at production scale
+- `build_national_team_candidates_from_wikipedia.py` - fetch candidate national-team selection text from Wikipedia for manual/semi-automated review; run at full population scale 2026-07-04/05
 
 ## Starting Point
 
