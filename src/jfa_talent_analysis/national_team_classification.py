@@ -69,8 +69,14 @@ def classify_national_team_selection(context: str) -> NationalTeamClassification
     for sentence in sentences:
         negated = bool(NEGATION_RE.search(sentence))
         candidate_only = bool(CANDIDATE_RE.search(sentence))
-        has_negation = has_negation or negated
-        has_candidate = has_candidate or candidate_only
+        # A negation/candidate word only matters here if the same sentence is
+        # actually about a national-team-ish selection (e.g. "落選" describing a
+        # *club* academy trial, 福森直也's "ガンバ大阪ジュニアユースのセレクション
+        # を受けるが落選", says nothing about the national team) — otherwise it
+        # would flag needs_review on an unrelated sentence elsewhere in the bio.
+        sentence_is_relevant = "代表" in sentence or bool(UNIVERSITY_SELECT_RE.search(sentence))
+        has_negation = has_negation or (negated and sentence_is_relevant)
+        has_candidate = has_candidate or (candidate_only and sentence_is_relevant)
 
         if negated:
             continue

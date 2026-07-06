@@ -226,26 +226,41 @@ schooling check) and 29318 (labeled `j_club_academy`, correctly caught by the ov
 relocation check; true category is `unknown`, a taxonomy gap this classifier cannot resolve
 automatically since the taxonomy has no "overseas academy" bucket).
 
-**Full-scale result** (`scripts/label_pathway_categories.py`, run against all 6
-`*_verified.csv` files' `confirmed` rows, n=3,403):
+**First full-scale pass found a real coverage gap, not just theoretical ambiguity**: an initial
+run flagged 238/3,403 (7.0%) confirmed rows for review, but a breakdown by reason showed 200 of
+those 238 (84%) were `unknown` results (`no_institution_keyword_found`), not the incidental-
+schooling/overseas-relocation ambiguity the design targeted. Sampling those 200 rows found the
+regex simply never checked for `アカデミー` ("XXのアカデミー出身"), a very common phrasing for
+club academy membership distinct from `ユース`/`下部組織` — 69/200 (35%) of the "unknown" rows
+contained it. Added `アカデミー` to `J_CLUB_ACADEMY_RE` and re-ran; separately, a matching
+review of the sibling national-team classifier's `needs_review` rows found ~35/333 were
+similarly over-flagged by an unrelated `候補`/`落選` mention elsewhere in the bio (see
+`docs/national_team_pilot_2026-07-03.md`'s Labeling Phase section) and narrowed that check too.
+Both fixes were re-validated against the 22-player table before being trusted (still 20/22,
+0 silently wrong) — this is standard practice for this project, not a special step taken only
+because the user pushed back on the review volume.
+
+**Full-scale result after both fixes** (`scripts/label_pathway_categories.py`, run against all
+6 `*_verified.csv` files' `confirmed` rows, n=3,403):
 
 | | Tier A (n=1,876) | Tier B (n=785) | Tier C (n=742) | Overall (n=3,403) |
 |---|---|---|---|---|
 | `university` | 58.9% | 63.8% | 57.3% | 59.7% |
 | `high_school` | 18.2% | 16.4% | 15.0% | 17.1% |
-| `j_club_academy` | 17.2% | 12.6% | 20.8% | 16.9% |
-| `unknown` | 5.2% | 6.6% | 6.7% | 5.9% |
-| `jfa_academy` / `grassroots_club` | 0.5% | 0.5% | 0.3% | 0.5% |
-| **flagged `needs_review`** | 6.7% | 7.4% | 7.3% | **7.0%** |
+| `j_club_academy` | 18.7% | 15.4% | 23.3% | 19.0% |
+| `unknown` | 3.7% | 3.8% | 4.2% | 3.8% |
+| `jfa_academy` / `grassroots_club` | 0.5% | 0.6% | 0.3% | 0.5% |
+| **flagged `needs_review`** | 5.2% | 4.6% | 4.7% | **5.0%** |
 
-Only 238 of 3,403 confirmed rows (7.0%) need a human read before their `pathway_category` can
-be trusted; the remaining 93% carry a `high`-confidence auto-label validated at 100% accuracy
-in the pilot sample (all 20 correct guesses were `high` confidence; both misses were flagged).
-Output: `data/interim/pathway_national_team/pathway_tier_{a,b,c}_labeled.csv` (gitignored),
-columns `pathway_category`/`pathway_confidence`/`pathway_matched_categories`/`pathway_reason`
-alongside the original identity columns. Rows outside `identity_check=confirmed` are kept with
-a blank category (`pathway_reason=identity_not_confirmed`) for coverage visibility, not silently
+169 of 3,403 confirmed rows (5.0%, down from 238/7.0% before the `アカデミー` fix) need a human
+read before their `pathway_category` can be trusted; the remaining 95% carry a `high`-confidence
+auto-label validated at 100% accuracy in the pilot sample (all 20 correct guesses were `high`
+confidence; both misses were flagged). Output:
+`data/interim/pathway_national_team/pathway_tier_{a,b,c}_labeled.csv` (gitignored), columns
+`pathway_category`/`pathway_confidence`/`pathway_matched_categories`/`pathway_reason` alongside
+the original identity columns. Rows outside `identity_check=confirmed` are kept with a blank
+category (`pathway_reason=identity_not_confirmed`) for coverage visibility, not silently
 dropped.
 
-Reviewing the 238 flagged rows and joining `confirmed`, auto-labeled rows into
+Reviewing the 169 flagged rows and joining `confirmed`, auto-labeled rows into
 `docs/data_collection_plan.md`'s Step 5 analysis-ready dataset remain future work.

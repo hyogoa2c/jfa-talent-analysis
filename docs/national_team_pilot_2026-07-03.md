@@ -228,8 +228,18 @@ pilot's manual read — its context contains "`全日本大学選抜候補に選
 candidate-only mention analogous to 45105's already-`unclear` case), which the pilot's own
 "no mention anywhere" note did not account for — and it is flagged `needs_review` either way.
 
-**Full-scale result** (`scripts/label_national_team_selections.py`, run against all 6
-`*_verified.csv` files' `confirmed` rows, n=3,403 — the same population as the pathway
+**First full-scale pass over-flagged on unrelated negation/candidate mentions**: an initial run
+flagged 333/3,403 (9.8%) rows, but checking whether the negation/candidate word actually
+co-occurred with a selection-relevant token found ~35 rows were flagged solely because an
+unrelated `候補`/`落選`/etc. word appeared *elsewhere* in the bio — e.g. 福森直也's "`ガンバ
+大阪ジュニアユースのセレクションを受けるが落選`" describes missing a *club academy* trial, not
+a national-team decision, yet it tripped the review flag for his entire row. Narrowed both
+`NEGATION_RE` and `CANDIDATE_RE` to only count when the same sentence also contains `代表` or
+`大学選抜`, re-validated against the 22-player table (still 21/22, same single arguable
+mismatch), and re-ran.
+
+**Full-scale result after the fix** (`scripts/label_national_team_selections.py`, run against
+all 6 `*_verified.csv` files' `confirmed` rows, n=3,403 — the same population as the pathway
 labeling pass):
 
 | | Tier A (n=1,876) | Tier B (n=785) | Tier C (n=742) | Overall (n=3,403) |
@@ -237,20 +247,22 @@ labeling pass):
 | `yes` | 53.1% | 34.5% | 23.3% | 42.3% |
 | `no` | 44.0% | 63.8% | 74.1% | 55.1% |
 | `unclear` | 2.9% | 1.7% | 2.6% | 2.6% |
-| **flagged `needs_review`** | 12.1% | 7.0% | 7.0% | **9.8%** |
+| **flagged `needs_review`** | 10.5% | 6.2% | 6.6% | **8.7%** |
 
 The `yes`-rate gradient across tiers (53% → 35% → 23%) reproduces this pilot's own finding
 that the notability/selection correlation is a real population effect, not a source-coverage
-artifact — reassuring at 3,403 players rather than 22. 90.2% of confirmed rows carry a
-`high`-confidence auto-label; the remaining 333 rows need a human read, concentrated more in
-Tier A (richer, longer prose with more negation/candidate language to parse) than Tier B/C.
-Output: `data/interim/pathway_national_team/national_team_tier_{a,b,c}_labeled.csv`
-(gitignored), columns `any_national_team_selection`/`national_team_categories`/
-`national_team_confidence`/`national_team_reason`. As with the pathway table, non-`confirmed`
+artifact — reassuring at 3,403 players rather than 22, and unchanged by the review-flag fix
+(only confidence changed, not any row's `any_national_team_selection`/`categories` value).
+91.3% of confirmed rows carry a `high`-confidence auto-label; the remaining 295 rows (down from
+333 before the fix) need a human read, still concentrated more in Tier A (richer, longer prose
+with more negation/candidate language to parse) than Tier B/C. Output:
+`data/interim/pathway_national_team/national_team_tier_{a,b,c}_labeled.csv` (gitignored),
+columns `any_national_team_selection`/`national_team_categories`/`national_team_confidence`/
+`national_team_reason`. As with the pathway table, non-`confirmed`
 identity rows are kept with a blank result rather than dropped.
 
 This pilot's own recommendation to spot-check the "no evidence found" majority against JFA
 per-occasion squad pages before trusting it at full population scale remains outstanding —
-the `no` rows here are still Wikipedia-absence-based, not JFA-corroborated. Reviewing the 333
+the `no` rows here are still Wikipedia-absence-based, not JFA-corroborated. Reviewing the 295
 flagged rows and the JFA spot-check both remain future work, alongside joining these labels
 into `docs/data_collection_plan.md`'s Step 5 analysis-ready dataset.

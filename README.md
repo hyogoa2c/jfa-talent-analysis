@@ -121,12 +121,12 @@ Pathway classification research (see [the pathway source pilot](docs/pathway_sou
 
 - `build_pathway_candidates_from_wikipedia.py` - fetch candidate pre-professional pathway text from Wikipedia for manual/semi-automated review; run at full population scale 2026-07-04/05
 - `verify_wikipedia_candidate_identity.py` - cross-check a candidate CSV's matched Wikipedia title against known player birth_date, rejecting junk-page titles outright; 84.3% confirmed overall at full scale
-- `label_pathway_categories.py` - apply the `pathway_category` heuristic classifier to identity-confirmed candidates; 93.0% high-confidence, 7.0% flagged for manual review at full scale (2026-07-05)
+- `label_pathway_categories.py` - apply the `pathway_category` heuristic classifier to identity-confirmed candidates; 95.0% high-confidence, 5.0% flagged for manual review at full scale (2026-07-05)
 
 National-team selection research (see [the national-team pilot](docs/national_team_pilot_2026-07-03.md)):
 
 - `build_national_team_candidates_from_wikipedia.py` - fetch candidate national-team selection text from Wikipedia for manual/semi-automated review; run at full population scale 2026-07-04/05
-- `label_national_team_selections.py` - apply the `any_national_team_selection`/category heuristic classifier to identity-confirmed candidates; 90.2% high-confidence, 9.8% flagged for manual review at full scale (2026-07-05)
+- `label_national_team_selections.py` - apply the `any_national_team_selection`/category heuristic classifier to identity-confirmed candidates; 91.3% high-confidence, 8.7% flagged for manual review at full scale (2026-07-05)
 
 ## Starting Point
 

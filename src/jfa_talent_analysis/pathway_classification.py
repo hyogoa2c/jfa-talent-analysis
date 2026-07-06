@@ -23,9 +23,12 @@ JFA_ACADEMY_RE = re.compile(r"JFAアカデミー")
 # (e.g. "大分トリニータU-18"), but the same notation also appears in national-team
 # youth-tournament mentions (e.g. "U-17日本代表", "AFC U-16選手権") that say nothing
 # about a club academy. Exclude those by requiring the match not be immediately
-# followed by a national-team/tournament word.
+# followed by a national-team/tournament word. "アカデミー" ("XXのアカデミー出身") is a
+# very common phrasing for the same thing that a first full-scale run missed
+# entirely — it accounted for a third of all "no institution keyword found" rows
+# (see docs/pathway_source_pilot_2026-07-03.md's Labeling Phase section).
 J_CLUB_ACADEMY_RE = re.compile(
-    r"ユース|下部組織|U-?1[2-8](?!\s*(?:日本代表|選手権|ワールドカップ|代表))"
+    r"ユース|下部組織|アカデミー|U-?1[2-8](?!\s*(?:日本代表|選手権|ワールドカップ|代表))"
 )
 GRASSROOTS_RE = re.compile(r"少年団|スポーツ少年団|ジュニア(?!ユース)")
 

@@ -64,10 +64,24 @@ def test_club_age_group_team_is_not_a_national_team_mention():
     assert result.categories == ()
 
 
-def test_negated_selection_is_excluded():
-    result = classify_national_team_selection("2013 FIFA U-17ワールドカップのメンバーからは落選した。")
+def test_negated_selection_with_daihyo_is_excluded_and_flagged():
+    result = classify_national_team_selection("U-17日本代表のメンバーからは落選した。")
     assert result.any_national_team_selection == "no"
     assert result.confidence == "needs_review"
+
+
+def test_negation_without_daihyo_wording_is_not_flagged():
+    """A negation word describing a *club* trial or a bare tournament name (no
+    "代表"/"大学選抜" in the same sentence) shouldn't flag needs_review just because
+    the word appears somewhere in the bio — docs/national_team_pilot_2026-07-03.md's
+    Labeling Phase section found this over-flagged ~35 unrelated rows (e.g.
+    福森直也's "ガンバ大阪ジュニアユースのセレクションを受けるが落選", about a club
+    academy trial, not the national team) before this was narrowed."""
+    result = classify_national_team_selection(
+        "ガンバ大阪ジュニアユースのセレクションを受けるが落選。"
+    )
+    assert result.any_national_team_selection == "no"
+    assert result.confidence == "high"
 
 
 def test_candidate_only_wording_is_unclear():
