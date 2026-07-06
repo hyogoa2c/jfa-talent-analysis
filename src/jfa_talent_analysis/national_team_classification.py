@@ -129,6 +129,52 @@ def classify_national_team_selection(context: str) -> NationalTeamClassification
     )
 
 
+NATIONAL_TEAM_REVIEW_QUEUE_COLUMNS = [
+    "source_player_id",
+    "name_ja",
+    "name_en",
+    "tier",
+    "wikipedia_title",
+    "any_national_team_selection",
+    "national_team_categories",
+    "national_team_reason",
+    "wikipedia_national_team_context",
+    "reviewed_any_national_team_selection",
+    "reviewed_categories",
+    "reviewer_note",
+]
+
+
+def build_national_team_review_queue_rows(
+    labeled_rows: list[dict[str, str]],
+    context_by_player_id: dict[str, str],
+    tier: str,
+) -> list[dict[str, str]]:
+    """Build review-queue rows for every needs_review labeled row, joining back
+    the original Wikipedia context text (dropped from the labeled CSV to keep it
+    small) so a reviewer doesn't have to open a second file per row."""
+    return [
+        {
+            "source_player_id": row["source_player_id"],
+            "name_ja": row["name_ja"],
+            "name_en": row["name_en"],
+            "tier": tier,
+            "wikipedia_title": row["wikipedia_title"],
+            "any_national_team_selection": row["any_national_team_selection"],
+            "national_team_categories": row["national_team_categories"],
+            "national_team_reason": row["national_team_reason"],
+            "wikipedia_national_team_context": context_by_player_id.get(
+                row["source_player_id"], ""
+            ),
+            "reviewed_any_national_team_selection": "",
+            "reviewed_categories": "",
+            "reviewer_note": "",
+        }
+        for row in labeled_rows
+        if row["national_team_confidence"] == "needs_review"
+    ]
+
+
 def build_national_team_label_rows(
     candidate_rows: list[dict[str, str]], context_column: str
 ) -> list[dict[str, str]]:

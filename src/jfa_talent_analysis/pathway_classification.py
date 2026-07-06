@@ -137,6 +137,48 @@ def classify_pathway_category(context: str) -> PathwayClassification:
     )
 
 
+PATHWAY_REVIEW_QUEUE_COLUMNS = [
+    "source_player_id",
+    "name_ja",
+    "name_en",
+    "tier",
+    "wikipedia_title",
+    "pathway_category",
+    "pathway_matched_categories",
+    "pathway_reason",
+    "wikipedia_pathway_context",
+    "reviewed_pathway_category",
+    "reviewer_note",
+]
+
+
+def build_pathway_review_queue_rows(
+    labeled_rows: list[dict[str, str]],
+    context_by_player_id: dict[str, str],
+    tier: str,
+) -> list[dict[str, str]]:
+    """Build review-queue rows for every needs_review labeled row, joining back
+    the original Wikipedia context text (dropped from the labeled CSV to keep it
+    small) so a reviewer doesn't have to open a second file per row."""
+    return [
+        {
+            "source_player_id": row["source_player_id"],
+            "name_ja": row["name_ja"],
+            "name_en": row["name_en"],
+            "tier": tier,
+            "wikipedia_title": row["wikipedia_title"],
+            "pathway_category": row["pathway_category"],
+            "pathway_matched_categories": row["pathway_matched_categories"],
+            "pathway_reason": row["pathway_reason"],
+            "wikipedia_pathway_context": context_by_player_id.get(row["source_player_id"], ""),
+            "reviewed_pathway_category": "",
+            "reviewer_note": "",
+        }
+        for row in labeled_rows
+        if row["pathway_confidence"] == "needs_review"
+    ]
+
+
 def build_pathway_label_rows(
     candidate_rows: list[dict[str, str]], context_column: str
 ) -> list[dict[str, str]]:

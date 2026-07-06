@@ -3,6 +3,7 @@ from pathlib import Path
 
 from jfa_talent_analysis.national_team_classification import (
     build_national_team_label_row,
+    build_national_team_review_queue_rows,
     classify_national_team_selection,
 )
 
@@ -120,3 +121,38 @@ def test_out_of_range_bracket_maps_to_other():
     result = classify_national_team_selection("U-22日本代表\nMirabror Usmanov Memorial Cup(2025年)")
     assert result.any_national_team_selection == "yes"
     assert result.categories == ("other",)
+
+
+def test_build_national_team_review_queue_rows_only_includes_needs_review():
+    labeled_rows = [
+        {
+            "source_player_id": "1",
+            "name_ja": "高信頼度太郎",
+            "name_en": "",
+            "wikipedia_title": "高信頼度太郎",
+            "any_national_team_selection": "no",
+            "national_team_categories": "",
+            "national_team_reason": "clean_signal",
+            "national_team_confidence": "high",
+        },
+        {
+            "source_player_id": "2",
+            "name_ja": "要確認次郎",
+            "name_en": "",
+            "wikipedia_title": "要確認次郎",
+            "any_national_team_selection": "no",
+            "national_team_categories": "",
+            "national_team_reason": "negation_or_candidate_language_present",
+            "national_team_confidence": "needs_review",
+        },
+    ]
+    rows = build_national_team_review_queue_rows(
+        labeled_rows, {"2": "U-17日本代表候補に選ばれた。"}, tier="b"
+    )
+    assert len(rows) == 1
+    assert rows[0]["source_player_id"] == "2"
+    assert rows[0]["tier"] == "b"
+    assert rows[0]["wikipedia_national_team_context"] == "U-17日本代表候補に選ばれた。"
+    assert rows[0]["reviewed_any_national_team_selection"] == ""
+    assert rows[0]["reviewed_categories"] == ""
+    assert rows[0]["reviewer_note"] == ""

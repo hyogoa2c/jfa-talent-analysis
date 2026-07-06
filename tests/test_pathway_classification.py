@@ -3,6 +3,7 @@ from pathlib import Path
 
 from jfa_talent_analysis.pathway_classification import (
     build_pathway_label_row,
+    build_pathway_review_queue_rows,
     classify_pathway_category,
 )
 
@@ -123,3 +124,37 @@ def test_bare_koukou_age_reference_is_not_a_named_school():
     result = classify_pathway_category("小学4年時から○○の下部組織に加入。高校2年時に主将を務めた。")
     assert result.pathway_category == "j_club_academy"
     assert result.confidence == "high"
+
+
+def test_build_pathway_review_queue_rows_only_includes_needs_review():
+    labeled_rows = [
+        {
+            "source_player_id": "1",
+            "name_ja": "高信頼度太郎",
+            "name_en": "",
+            "wikipedia_title": "高信頼度太郎",
+            "pathway_category": "high_school",
+            "pathway_matched_categories": "high_school",
+            "pathway_reason": "single_stage_tier_matched",
+            "pathway_confidence": "high",
+        },
+        {
+            "source_player_id": "2",
+            "name_ja": "要確認次郎",
+            "name_en": "",
+            "wikipedia_title": "要確認次郎",
+            "pathway_category": "high_school",
+            "pathway_matched_categories": "high_school|j_club_academy",
+            "pathway_reason": "possible_incidental_schooling_around_club_academy",
+            "pathway_confidence": "needs_review",
+        },
+    ]
+    rows = build_pathway_review_queue_rows(
+        labeled_rows, {"2": "寮生活を送った。"}, tier="a"
+    )
+    assert len(rows) == 1
+    assert rows[0]["source_player_id"] == "2"
+    assert rows[0]["tier"] == "a"
+    assert rows[0]["wikipedia_pathway_context"] == "寮生活を送った。"
+    assert rows[0]["reviewed_pathway_category"] == ""
+    assert rows[0]["reviewer_note"] == ""
