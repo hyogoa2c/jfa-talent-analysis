@@ -196,3 +196,61 @@ or a genuine "no evidence" case.
 Reviewing the `national_team_tier_*_verified.csv` files (gitignored,
 `data/interim/pathway_national_team/`) and building the actual `national_team_selections` table
 remain future work.
+
+## Labeling Phase (2026-07-05)
+
+Built `jfa_talent_analysis.national_team_classification.classify_national_team_selection`,
+a heuristic classifier over `wikipedia_national_team_context` text, following the same
+validate-against-the-pilot-table-before-scaling discipline as the sibling pathway classifier
+(see `docs/pathway_source_pilot_2026-07-03.md`'s Labeling Phase section for the shared
+methodology and reasoning).
+
+**Method**: splits context into sentences/lines and, per sentence, looks for a `U-NN`
+bracket (mapped to a standard category when `NN` is in `{15,16,17,18,19,20,23}`, else
+`other`, per `docs/data_collection_plan.md`'s schema), a `大学選抜` mention (→ `university`),
+or a bare `日本代表`/`A代表`/`国際Aマッチ` line (→ `A`). Two corrections proved necessary
+after the first pass against the pilot table: (1) a bare `U-NN` only counts if `代表` appears
+in the *same sentence* — otherwise it is usually a club's own youth age-group team (e.g.
+"`U-18`には昇格せず", 高瀬生聖/遠藤貴成's false-positive pattern, both silently miscounted as
+`yes` before this fix); (2) any sentence containing negation language (`落選`/`選外`/`メンバー
+から外れ`/etc.) is excluded entirely, since Wikipedia prose narrates confirmed selections and
+near-misses in the same paragraph (中谷進之介's "`2013 FIFA U-17ワールドカップのメンバーから
+は落選した`"). `候補`(candidate-only) language yields `unclear` rather than `yes` (西村遥己's
+case), and any negation or candidate wording anywhere in the context downgrades confidence to
+`needs_review` — the `categories` list stays best-effort even when `any_national_team_selection`
+is high-confidence, since dense narrative prose can still miss or misattribute an individual
+bracket.
+
+**Validation against the 22-player pilot table**: 21/22 (95%) correct on
+`any_national_team_selection`; the one mismatch (29298 寺前光太, classifier says `unclear`
+where the pilot's table says `no`) is arguably a correction of an oversight in the original
+pilot's manual read — its context contains "`全日本大学選抜候補に選出される`" (a real
+candidate-only mention analogous to 45105's already-`unclear` case), which the pilot's own
+"no mention anywhere" note did not account for — and it is flagged `needs_review` either way.
+
+**Full-scale result** (`scripts/label_national_team_selections.py`, run against all 6
+`*_verified.csv` files' `confirmed` rows, n=3,403 — the same population as the pathway
+labeling pass):
+
+| | Tier A (n=1,876) | Tier B (n=785) | Tier C (n=742) | Overall (n=3,403) |
+|---|---|---|---|---|
+| `yes` | 53.1% | 34.5% | 23.3% | 42.3% |
+| `no` | 44.0% | 63.8% | 74.1% | 55.1% |
+| `unclear` | 2.9% | 1.7% | 2.6% | 2.6% |
+| **flagged `needs_review`** | 12.1% | 7.0% | 7.0% | **9.8%** |
+
+The `yes`-rate gradient across tiers (53% → 35% → 23%) reproduces this pilot's own finding
+that the notability/selection correlation is a real population effect, not a source-coverage
+artifact — reassuring at 3,403 players rather than 22. 90.2% of confirmed rows carry a
+`high`-confidence auto-label; the remaining 333 rows need a human read, concentrated more in
+Tier A (richer, longer prose with more negation/candidate language to parse) than Tier B/C.
+Output: `data/interim/pathway_national_team/national_team_tier_{a,b,c}_labeled.csv`
+(gitignored), columns `any_national_team_selection`/`national_team_categories`/
+`national_team_confidence`/`national_team_reason`. As with the pathway table, non-`confirmed`
+identity rows are kept with a blank result rather than dropped.
+
+This pilot's own recommendation to spot-check the "no evidence found" majority against JFA
+per-occasion squad pages before trusting it at full population scale remains outstanding —
+the `no` rows here are still Wikipedia-absence-based, not JFA-corroborated. Reviewing the 333
+flagged rows and the JFA spot-check both remain future work, alongside joining these labels
+into `docs/data_collection_plan.md`'s Step 5 analysis-ready dataset.

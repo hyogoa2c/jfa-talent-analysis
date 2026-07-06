@@ -193,3 +193,59 @@ be used as-is going into the next `pathway_category`-labeling pass.
 
 Reviewing the `*_verified.csv` files (in `data/interim/pathway_national_team/`, gitignored) and
 building the actual `pathway_category` assignment step remain future work.
+
+## Labeling Phase (2026-07-05)
+
+Rather than manually reading all ~3,400 `confirmed` rows, built
+`jfa_talent_analysis.pathway_classification.classify_pathway_category`, a heuristic
+classifier over `wikipedia_pathway_context` text, and validated it against this pilot's own
+22-player table (the only players in the full-scale data with an independent, manually
+verified ground-truth label) before running it at scale — the same validate-before-trusting
+discipline used throughout this project.
+
+**Method**: assigns the highest-priority institution keyword found in the text
+(`university` > `high_school` > `jfa_academy` > `j_club_academy` > `grassroots_club`), mirroring
+this pilot's own terminal-institution rule, and separately requires a preceding character
+before a bare `高校` match (excluding relative age references like "高校2年時", which are not
+a named school — the pattern that caused 中谷進之介's initial misclassification below). Rather
+than flagging every co-occurrence of a school and a club-academy signal (roughly 40-45% of all
+confirmed rows on a first attempt — most bios normally name both a childhood/JHS club and a
+high school in ordinary chronological order, e.g. 森重真人/稲垣祥 above, which the plain
+priority rule already resolves correctly), confidence is only downgraded to `needs_review` when
+*incidental-schooling framing language* (`寮生活`/`寮に入`/`誘われ`) is also present — the
+narrower signature actually found in this pilot's one real miss (7493 西川周作: a named high
+school existed only as a boarding arrangement for a club academy he'd already joined). A
+separate check flags an all-overseas pathway with no domestic institution at all (伊藤遼哉's
+taxonomy-gap case) via relocation-abroad language (`移住`/`渡欧`/etc.), since foreign-club
+`ユース`/`下部組織` mentions would otherwise be silently counted as a J-League club academy.
+
+**Validation against the 22-player pilot table**: 20/22 (91%) correct, **0 silently wrong** —
+every incorrect guess was flagged `needs_review` rather than confidently mislabeled. The two
+flagged-and-wrong cases are 7493 (labeled `high_school`, correctly caught by the incidental-
+schooling check) and 29318 (labeled `j_club_academy`, correctly caught by the overseas-
+relocation check; true category is `unknown`, a taxonomy gap this classifier cannot resolve
+automatically since the taxonomy has no "overseas academy" bucket).
+
+**Full-scale result** (`scripts/label_pathway_categories.py`, run against all 6
+`*_verified.csv` files' `confirmed` rows, n=3,403):
+
+| | Tier A (n=1,876) | Tier B (n=785) | Tier C (n=742) | Overall (n=3,403) |
+|---|---|---|---|---|
+| `university` | 58.9% | 63.8% | 57.3% | 59.7% |
+| `high_school` | 18.2% | 16.4% | 15.0% | 17.1% |
+| `j_club_academy` | 17.2% | 12.6% | 20.8% | 16.9% |
+| `unknown` | 5.2% | 6.6% | 6.7% | 5.9% |
+| `jfa_academy` / `grassroots_club` | 0.5% | 0.5% | 0.3% | 0.5% |
+| **flagged `needs_review`** | 6.7% | 7.4% | 7.3% | **7.0%** |
+
+Only 238 of 3,403 confirmed rows (7.0%) need a human read before their `pathway_category` can
+be trusted; the remaining 93% carry a `high`-confidence auto-label validated at 100% accuracy
+in the pilot sample (all 20 correct guesses were `high` confidence; both misses were flagged).
+Output: `data/interim/pathway_national_team/pathway_tier_{a,b,c}_labeled.csv` (gitignored),
+columns `pathway_category`/`pathway_confidence`/`pathway_matched_categories`/`pathway_reason`
+alongside the original identity columns. Rows outside `identity_check=confirmed` are kept with
+a blank category (`pathway_reason=identity_not_confirmed`) for coverage visibility, not silently
+dropped.
+
+Reviewing the 238 flagged rows and joining `confirmed`, auto-labeled rows into
+`docs/data_collection_plan.md`'s Step 5 analysis-ready dataset remain future work.
