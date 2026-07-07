@@ -47,6 +47,18 @@ def test_national_team_pilot_fixtures_overall_accuracy_does_not_regress():
     assert correct >= 20
 
 
+def test_prose_a_team_debut_is_detected():
+    """The compact "^日本代表$" line format only covers infobox-derived list-style
+    articles; a fuller narrative bio (like 原口元気's, found by manual review to be
+    a silent "no" before this pattern was added) states a senior debut in prose
+    instead, e.g. "2011年10月7日、キリンチャレンジカップ・ベトナム戦で日本代表初出場"."""
+    result = classify_national_team_selection(
+        "2011年10月7日、キリンチャレンジカップ・ベトナム戦で日本代表初出場。"
+    )
+    assert result.any_national_team_selection == "yes"
+    assert result.categories == ("A",)
+
+
 def test_clean_youth_and_a_team_line_format():
     result = classify_national_team_selection("U-18日本代表\nU-19日本代表\n日本代表\n")
     assert result.any_national_team_selection == "yes"

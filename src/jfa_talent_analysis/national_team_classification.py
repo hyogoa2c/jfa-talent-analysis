@@ -8,7 +8,19 @@ KNOWN_YOUTH_BRACKETS = {"15", "16", "17", "18", "19", "20", "23"}
 
 U_NUMBER_RE = re.compile(r"U-?(\d{2})")
 UNIVERSITY_SELECT_RE = re.compile(r"大学選抜")
-A_TEAM_LINE_RE = re.compile(r"^日本代表$|A代表|国際Aマッチ")
+
+# The bare "^日本代表$" line format only matches the compact infobox-derived list
+# style many articles use (e.g. 7493 西川周作's context, one category per line).
+# Famous, heavily-documented players more often have a full narrative 代表歴
+# section instead — e.g. 原口元気's "2011年10月7日、キリンチャレンジカップ・ベトナム
+# 戦で日本代表初出場" — which the bare-line pattern completely misses (found via a
+# manual review pass that flagged 原口元気 as a false "no" this pattern originally
+# produced; scanning all 3,403 confirmed rows for this same prose shape found one
+# more silent miss, 仲川輝人). Ironically this format skew means the *better*-
+# documented players were more likely to be undercounted than obscure ones.
+A_TEAM_LINE_RE = re.compile(
+    r"^日本代表$|A代表|国際Aマッチ|日本代表(?:に)?初(?:出場|ゴール|招集|選出)|日本代表デビュー"
+)
 
 # Negation/near-miss language: a name appearing next to one of these means the
 # player was *not* actually selected (dropped from a squad, fell short of a
