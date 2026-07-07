@@ -565,7 +565,7 @@ U-19日本代表候補
 U-20日本代表
 2013年東アジア競技大会",,,
 10443,水野 泰輔,Taisuke MIZUNO,a,水野泰輔,unclear,U18|U19,negation_or_candidate_language_present,"U-18日本代表候補
-U-19日本代表候補",yes,U18|U19,
+U-19日本代表候補",no,,"Sonnet recheck 2026-07-07: context is candidate-only (候補), no confirmed selection evidence found; corrected to no for consistency with the other 58 candidate-only rows in this queue."
 10445,後藤 優介,GOTO Yusuke,a,後藤優介,unclear,other,negation_or_candidate_language_present,2014年3月にU-21日本代表候補のトレーニングキャンプメンバーに選出された。翌年2月にはAFC U-23選手権2016予選に臨むU-22日本代表の予備登録メンバーに選出されたが、最終メンバーからは落選した。,no,,
 10610,橋本 拳人,HASHIMOTO Kento,a,橋本拳人,yes,A|U23|other,negation_or_candidate_language_present,"2016年4月にはリオデジャネイロオリンピックを控えていたU-23日本代表候補合宿に初招集され、長身のボランチとして 攻守に果敢なプレーで アピールに成功。翌5月のガーナ代表戦及びオリンピック本大会招集選手の最終選考の場となった6月のキリンチャレンジカップ南アフリカ代表戦にも出場し、積極的な守備とユーティリティー性を評価された。人数制限 に対応しうる柔軟性や、 外国の大型選手に当たり負けないフィジカルの強さから 本大会選出を有力視されていたが、ACL出場のためにトゥーロン国際大会を回避したことや、既存メンバーの調和を重視した選考がなされたために 選外となった。
 2019年3月、守田英正が負傷離脱したため、追加招集でキリンチャレンジカップ2019に臨む日本代表に初選出され、3月26日のボリビア戦にボランチとして初先発した。同年12月にはEAFF E-1サッカー選手権2019に出場する日本代表のメンバーに選出される 等以降日本代表に定着した。
@@ -6532,7 +6532,7 @@ Jリーグ初出場 - 2025年3月8日 J1第5節 鹿島アントラーズ戦 (三
 中島舜 - WorldFootball.net (英語)
 中島舜 - Transfermarkt.comによる選手データ (英語)
 中島舜 - J.League Data Siteによる選手データ
-中島舜 - playmakerstats.com (英語)",yes,university,
+中島舜 - playmakerstats.com (英語)",no,,"Sonnet recheck 2026-07-07: context is candidate-only (候補), no confirmed selection evidence found; corrected to no for consistency with the other 58 candidate-only rows in this queue."
 38941,貴田 遼河,Ryoga KIDA,c,貴田遼河,yes,U15|U16|U17,negation_or_candidate_language_present,"2020; U-15日本代表候補
 2021; U-16日本代表候補
 2022; U-17日本代表
@@ -6905,4 +6905,3 @@ U-16日本代表候補（2008年）
 清水貴文 - Transfermarkt.comによる選手データ (英語)
 清水貴文 - J.League Data Siteによる選手データ
 清水貴文 -  ゲキサカ",no,,
-,,,,,,,,, ,,
