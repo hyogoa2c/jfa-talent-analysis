@@ -345,6 +345,27 @@ Output:
 data/processed/player_pathway_outcomes.csv
 ```
 
+**Built 2026-07-07** via `scripts/build_player_pathway_outcomes.py`: one row per
+player (4,037 rows) joining collapsed player-season features (career minutes,
+`reached_j1`, first J1 season/age — collapsed from
+`player_season_features_2014_2025_J1_J2_J3.csv`'s per-season rows) with
+`pathway_category` and `any_national_team_selection`/`national_team_categories`
+(each resolved from the classifier's auto-label, overridden by the human review
+queue's `reviewed_*` value where present — see
+`docs/pathway_source_pilot_2026-07-03.md`/`docs/national_team_pilot_2026-07-03.md`'s
+Labeling Phase sections) and `moved_overseas` (from the existing 2023-2025
+reappearance-gap manual review queue).
+
+3,403 of 4,037 players (84.3%) have a resolved `pathway_category` and
+`any_national_team_selection`; the remaining 634 have `identity_not_confirmed`
+(no reliable Wikipedia match at the identity-verification step). `moved_overseas`
+is far sparser (33 players) since it currently only covers the narrow
+2023-2025 observed-reappearance-gap population, not the full 4,037 — extending
+overseas-transfer coverage to the full population, and the JFA per-occasion
+squad-page spot-check `docs/national_team_pilot_2026-07-03.md` recommends for
+the "no evidence found" majority, both remain future work before this table
+should be treated as final for modeling.
+
 ## Initial Analysis Targets
 
 ### Descriptive Analysis

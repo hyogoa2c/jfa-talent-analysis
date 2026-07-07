@@ -127,6 +127,11 @@ National-team selection research (see [the national-team pilot](docs/national_te
 
 - `build_national_team_candidates_from_wikipedia.py` - fetch candidate national-team selection text from Wikipedia for manual/semi-automated review; run at full population scale 2026-07-04/05
 - `label_national_team_selections.py` - apply the `any_national_team_selection`/category heuristic classifier to identity-confirmed candidates; 91.3% high-confidence, 8.7% flagged for manual review at full scale (2026-07-05)
+- `build_pathway_review_queue.py` / `build_national_team_review_queue.py` - build human review queues from needs_review rows, joining back Wikipedia context text; see `docs/pathway_national_team_review_instructions_2026-07-05.md`
+
+Step 5 analysis-ready dataset (docs/data_collection_plan.md):
+
+- `build_player_pathway_outcomes.py` - join collapsed player-season features with resolved pathway_category, any_national_team_selection, and moved_overseas outcomes into `data/processed/player_pathway_outcomes.csv`, one row per player (4,037 rows). Resolution prefers a human review queue's `reviewed_*` value over the classifier's auto-label; `pathway_category_source`/`national_team_selection_source` record which applied (`human_reviewed` / `auto_high_confidence` / `identity_not_confirmed`). `moved_overseas` is populated only for the narrow 2023-2025 reappearance-gap queue (33 players) — blank elsewhere, not assumed negative.
 
 ## Starting Point
 
