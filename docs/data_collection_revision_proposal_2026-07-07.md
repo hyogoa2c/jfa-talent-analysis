@@ -107,6 +107,13 @@ pages (confirmed browsable by year 2014-2026 in the original audit). This is a b
 verification cost that would give a concrete false-negative rate estimate for the `no` label,
 rather than leaving it as an open caveat indefinitely.
 
+**Executed 2026-07-08** (see `docs/jfa_national_team_spot_check_2026-07-08.md`): 45-player
+stratified sample, strict false-negative rate **2.2%** (1/45; 8.9% including candidate-camp-only
+call-ups), concentrated in the low-minutes tier. The one confirmed miss and one of the three
+candidate cases were absent from the players' own Wikipedia articles entirely (found only via
+club press releases) — quantifying the Wikipedia-absence method's blind spot for brief
+youth-level call-ups. The `no` label is usable at scale with this documented error rate.
+
 ## Not a collection gap, but an interpretation caveat worth carrying forward
 
 The `2005+` birth cohort's pathway distribution (71.3% `j_club_academy`, only 7.7% `university`,

@@ -261,8 +261,13 @@ columns `any_national_team_selection`/`national_team_categories`/`national_team_
 `national_team_reason`. As with the pathway table, non-`confirmed`
 identity rows are kept with a blank result rather than dropped.
 
-This pilot's own recommendation to spot-check the "no evidence found" majority against JFA
-per-occasion squad pages before trusting it at full population scale remains outstanding —
-the `no` rows here are still Wikipedia-absence-based, not JFA-corroborated. Reviewing the 295
-flagged rows and the JFA spot-check both remain future work, alongside joining these labels
-into `docs/data_collection_plan.md`'s Step 5 analysis-ready dataset.
+This pilot's recommended JFA spot-check of the "no evidence found" majority was run on
+2026-07-08 (see `docs/jfa_national_team_spot_check_2026-07-08.md`): a stratified 45-player
+sample of `no`-labeled players yielded a **2.2% strict false-negative rate** (1/45 — a
+confirmed U-17 selection absent from the player's own Wikipedia article, found only via a
+club press release) and 8.9% including candidate-camp-only call-ups, concentrated in the
+low-minutes tier (tier C strict rate 6.7%). The `no` label is therefore usable at scale as
+a good-but-not-perfect negative, with a known, quantified blind spot for brief youth-level
+call-ups that Wikipedia editors don't record. The 295 flagged rows were reviewed by the
+user on 2026-07-07; joining these labels into `docs/data_collection_plan.md`'s Step 5
+analysis-ready dataset is done.

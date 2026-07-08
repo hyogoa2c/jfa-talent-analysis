@@ -128,6 +128,13 @@ National-team selection research (see [the national-team pilot](docs/national_te
 - `build_national_team_candidates_from_wikipedia.py` - fetch candidate national-team selection text from Wikipedia for manual/semi-automated review; run at full population scale 2026-07-04/05
 - `label_national_team_selections.py` - apply the `any_national_team_selection`/category heuristic classifier to identity-confirmed candidates; 91.3% high-confidence, 8.7% flagged for manual review at full scale (2026-07-05)
 - `build_pathway_review_queue.py` / `build_national_team_review_queue.py` - build human review queues from needs_review rows, joining back Wikipedia context text; see `docs/pathway_national_team_review_instructions_2026-07-05.md`
+- The "no evidence" label's false-negative rate was spot-checked against JFA/club primary sources on a 45-player stratified sample: 2.2% strict (see [the JFA spot-check](docs/jfa_national_team_spot_check_2026-07-08.md))
+
+Wikipedia full-extract corpus and derived evidence (see [the revision proposal](docs/data_collection_revision_proposal_2026-07-07.md)):
+
+- `fetch_full_wikipedia_extracts.py` - cache full plaintext extracts for all identity-confirmed players (resume-safe; trimmed contexts lack the 出場歴 lines)
+- `extract_j1_debuts_from_wikipedia.py` - parse J.League/J1 debut lines and validate against SFPR01 in-window ground truth; this cross-validation exposed and fixed a features bug where zero-appearance J1 roster registrations counted as reaching J1 (24% of reached_j1=1 rows)
+- `label_overseas_stints.py` - classify senior-career foreign-club stints from career prose, extending moved_overseas beyond the 33-player manual queue
 
 Step 5 analysis-ready dataset (docs/data_collection_plan.md):
 
