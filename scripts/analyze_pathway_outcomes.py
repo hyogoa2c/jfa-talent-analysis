@@ -72,6 +72,8 @@ def load_data(path: Path) -> pd.DataFrame:
     df["pathway_category_filled"] = df["pathway_category"].fillna("").replace("", "no_data")
     df["nt_yes"] = (df["any_national_team_selection"] == "yes").astype(int)
     df["nt_labeled"] = df["any_national_team_selection"].isin(["yes", "no"])
+    df["overseas_yes"] = (df["moved_overseas_final"] == "1").astype(int)
+    df["overseas_labeled"] = df["moved_overseas_final"].isin(["0", "1"])
 
     # Prefer the Wikipedia-backfill-corrected J1 outcome when present
     # (docs/data_collection_revision_proposal_2026-07-07.md item 1): SFPR01's
@@ -138,7 +140,7 @@ def descriptive_section(df: pd.DataFrame, output_dir: Path) -> str:
     # (b)-(d) outcome rates by pathway, with Wilson 95% CI
     lines.append("### Outcome rates by primary pathway (with 95% Wilson CI)")
     lines.append("")
-    lines.append("| pathway_category | n | J1 attainment | overseas move (labeled subset only) | national-team selection |")
+    lines.append("| pathway_category | n | J1 attainment | overseas move (Wikipedia classifier, full population) | national-team selection |")
     lines.append("|---|---|---|---|---|")
     for category in PATHWAY_ORDER:
         sub = df[df["pathway_category"] == category]
@@ -146,9 +148,9 @@ def descriptive_section(df: pd.DataFrame, output_dir: Path) -> str:
         if n == 0:
             continue
         j1_rate, j1_ci = rate_with_ci(sub["reached_j1_final"] == 1)
-        overseas_labeled = sub[sub["moved_overseas"].notna() & (sub["moved_overseas"] != "")]
+        overseas_labeled = sub[sub["moved_overseas_final"].notna() & (sub["moved_overseas_final"] != "")]
         if len(overseas_labeled) > 0:
-            overseas_rate, overseas_ci = rate_with_ci(overseas_labeled["moved_overseas"] == "1")
+            overseas_rate, overseas_ci = rate_with_ci(overseas_labeled["moved_overseas_final"] == "1")
             overseas_text = f"{fmt_pct(overseas_rate)} (n={len(overseas_labeled)}, CI {fmt_pct(overseas_ci[0])}-{fmt_pct(overseas_ci[1])})"
         else:
             overseas_text = "n/a"
@@ -266,6 +268,27 @@ def logistic_regression_section(df: pd.DataFrame) -> str:
         data=nt_model_df,
     ).fit(disp=0)
     lines.append(format_logit_summary(nt_model, nt_model_df, "nt_yes"))
+    lines.append("")
+
+    lines.append("### Overseas move ~ pathway_category + birth_year")
+    lines.append("")
+    lines.append(
+        "`moved_overseas_final` now covers the full population (a heuristic "
+        "classifier over Wikipedia career prose, not the exhaustively "
+        "human-reviewed pathway/national-team labels — validated 32/32 against "
+        "a pilot golden set and cross-checked against the pre-existing 33-player "
+        "manually-reviewed queue, but not itself subject to a needs_review "
+        "human-review pass at scale). Treat this regression as informative but "
+        "less authoritative than the J1/national-team ones above until a review "
+        "pass is run on its flagged rows."
+    )
+    lines.append("")
+    overseas_model_df = model_df[model_df["overseas_labeled"]]
+    overseas_model = smf.logit(
+        "overseas_yes ~ C(pathway_category, Treatment(reference='j_club_academy')) + birth_year_c",
+        data=overseas_model_df,
+    ).fit(disp=0)
+    lines.append(format_logit_summary(overseas_model, overseas_model_df, "overseas_yes"))
 
     return "\n".join(lines)
 
@@ -325,12 +348,14 @@ def survival_section(df: pd.DataFrame, output_dir: Path) -> str:
 
     fig, ax = plt.subplots(figsize=(7, 5))
     median_ages = []
+    km_plateaus = {}
     for category in MAIN_PATHWAYS:
         sub = model_df[model_df["pathway_category"] == category]
         kmf = KaplanMeierFitter()
         kmf.fit(sub["duration"], event_observed=sub["event"], label=category)
         kmf.plot_survival_function(ax=ax)
         median_ages.append((category, kmf.median_survival_time_, len(sub)))
+        km_plateaus[category] = 1 - kmf.survival_function_.iloc[-1, 0]
     ax.set_xlabel("Age")
     ax.set_ylabel("Proportion not yet reached J1")
     ax.set_title("Kaplan-Meier: time to J1 debut by pathway_category")
@@ -349,14 +374,18 @@ def survival_section(df: pd.DataFrame, output_dir: Path) -> str:
     lines.append("")
     lines.append("Chart: `km_time_to_j1_debut.png`")
     lines.append("")
+    raw_university_rate = (
+        df.loc[df["pathway_category"] == "university", "reached_j1_final"].eq(1).mean() * 100
+    )
     lines.append(
-        "Note: the KM curve's long-run plateau (e.g. ~52% for `university`) is "
-        "somewhat higher than that pathway's raw observed J1 attainment rate in "
-        "the descriptive table above (37.7%) — this is expected, not a "
-        "contradiction. KM reweights by how long each player has actually been "
-        "followed; many `university`-pathway players are still young and "
-        "under observation, so the raw rate understates how many will "
-        "eventually reach J1 if followed to the same age as older cohorts."
+        f"Note: the KM curve's long-run plateau (~{km_plateaus['university'] * 100:.0f}% for "
+        f"`university`) is somewhat higher than that pathway's raw observed J1 "
+        f"attainment rate in the descriptive table above ({raw_university_rate:.1f}%) "
+        "— this is expected, not a contradiction. KM reweights by how long each "
+        "player has actually been followed; many `university`-pathway players "
+        "are still young and under observation, so the raw rate understates how "
+        "many will eventually reach J1 if followed to the same age as older "
+        "cohorts."
     )
     lines.append("")
 
@@ -385,22 +414,21 @@ def survival_section(df: pd.DataFrame, output_dir: Path) -> str:
 
 
 def overseas_caveat_section(df: pd.DataFrame) -> str:
-    labeled = df[df["moved_overseas"].notna() & (df["moved_overseas"] != "")]
+    labeled = df[df["moved_overseas_final"].notna() & (df["moved_overseas_final"] != "")]
+    manual = df[df["moved_overseas_final_source"] == "manual_review"]
     lines = [
-        "## Overseas Move: Not Modeled",
+        "## Overseas Move: Coverage Note",
         "",
-        f"`moved_overseas` is populated for only {len(labeled)} of {len(df)} players "
-        "(0.8%), all drawn from the 2023-2025 observed-reappearance-gap candidate "
-        "queue — players who were *already flagged* as plausible overseas movers by "
-        "a multi-season absence pattern, not a random or representative sample of "
-        "the full population. Fitting a logistic regression or survival model on "
-        "this subset would estimate a **selection effect**, not a **pathway "
-        "effect** (e.g. any pathway category could look artificially associated "
-        "with overseas moves just because that category happens to be "
-        "over-represented among *candidates who were already suspected* of moving "
-        "abroad). No regression or survival model is reported for this outcome. "
-        "See the accompanying data-collection revision proposal for how to extend "
-        "coverage before this outcome can be modeled.",
+        f"`moved_overseas_final` now covers {len(labeled)} of {len(df)} players "
+        f"({len(labeled) / len(df) * 100:.1f}%), up from the 33-player (0.8%) "
+        "manually-reviewed-only coverage this report originally shipped with "
+        "(see `docs/data_collection_revision_proposal_2026-07-07.md` item 2 and "
+        f"`docs/jfa_national_team_spot_check_2026-07-08.md`'s sibling work). "
+        f"Only {len(manual)} rows still carry the original, narrowly-scoped "
+        "2023-2025 reappearance-gap manual review as their source (preferred "
+        "when present); the rest come from a full-population Wikipedia career-"
+        "prose classifier. The logistic regression above uses this expanded "
+        "column, not the original 33-row `moved_overseas` field.",
     ]
     return "\n".join(lines)
 
