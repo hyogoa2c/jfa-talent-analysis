@@ -6,7 +6,7 @@ gitignored — rerun the script to regenerate it). Three gaps surfaced, ranked b
 threaten the validity of results already produced versus how much they block results not yet
 attempted.
 
-## 1. [High priority] `reached_j1` and `first_j1_age` are unreliable for cohorts likely to have debuted before 2014
+## 1. [High priority, DONE 2026-07-08] `reached_j1` and `first_j1_age` are unreliable for cohorts likely to have debuted before 2014
 
 **This is a new finding from running the regression/survival analysis, not something the earlier
 audits caught**, though it is a direct consequence of the already-documented "SFPR01 has no
@@ -68,7 +68,22 @@ cohort-specific data gap, not a smooth trend, so it isn't fully corrected by tha
    supplementary cross-check rather than the primary source, consistent with this project's
    established Wikipedia-first pattern.
 
-## 2. [High priority] `moved_overseas` covers 0.8% of the population, and not randomly
+**Resolved 2026-07-08.** Fetched full Wikipedia extracts for all 3,403 confirmed players,
+parsed "Jリーグ初出場" debut lines (`debut_extraction.py`), and validated against SFPR01
+in-window ground truth: 97.3% agreement (321/330) on debuts SFPR01 could also see, confirming
+the extractor before trusting its 340 pre-2014 backfill values. This work also surfaced a
+**separate, larger bug**: `first_j1_season_by_player` was counting zero-appearance J1 roster
+registrations (bench-only, 特別指定/2種登録 players) as "reaching J1" — 24.2% of all
+`reached_j1=1` players (443/1,834) had zero career J1 minutes. Fixed in `features.py`
+(appearances>0, falling back to minutes>0). `reached_j1_final` now combines the corrected
+SFPR01 signal with the Wikipedia backfill; a sensitivity rerun restricted to `birth_year>=2000`
+(largely immune to the original truncation risk) shows consistent coefficients with the
+full-population regression (university odds ratio 0.31→0.28 for J1 attainment, 0.24→0.24 for
+national-team selection), so the truncation problem does not appear to flip the substantive
+findings, though the roster-only fix did shift the raw rates materially (see the regenerated
+`reports/generated/initial_analysis_report.md`).
+
+## 2. [High priority, DONE 2026-07-08] `moved_overseas` covers 0.8% of the population, and not randomly
 
 `data/processed/player_pathway_outcomes.csv` has a resolved `moved_overseas` value for only 33 of
 4,037 players. All 33 come from `overseas_transfer_outcomes_2023_2025_gap2.csv`, itself built from
@@ -93,7 +108,19 @@ largest remaining gap in outcome-variable coverage: two of the three Phase 1 res
 outcomes (`reached_j1`, `any_national_team_selection`) now have population-scale coverage;
 `moved_overseas` does not.
 
-## 3. [Medium priority] National-team "no evidence" rows were never spot-checked against JFA
+**Resolved 2026-07-08.** Built `overseas_classification.py`, a heuristic classifier over
+Wikipedia career prose (foreign league/country+division/club-move patterns, with guards against
+parents' relocations, short study-abroad stints, youth academies abroad, other players' moves,
+and failed trials) — validated 32/32 with 0 silently wrong against the pathway/national-team
+pilot's golden set, and cross-checked against the existing 33-player manually-reviewed queue
+(agreement on all but definitional differences, e.g. a player who moved abroad outside the
+originally-reviewed gap window). `moved_overseas_final` now covers 3,408 of 4,037 players
+(84.4%), preferring the original manual review where present. This is a heuristic classifier's
+output, not yet subject to the same needs_review human-review pass pathway/national-team
+selection received — the logistic regression added to the analysis report treats it as
+informative but less authoritative pending that review.
+
+## 3. [Medium priority, DONE 2026-07-08] National-team "no evidence" rows were never spot-checked against JFA
 
 `docs/national_team_pilot_2026-07-03.md` explicitly recommended spot-checking a sample of the "no
 national-team evidence found" majority against JFA's per-occasion squad-announcement pages before
