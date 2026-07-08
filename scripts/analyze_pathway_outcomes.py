@@ -61,14 +61,30 @@ def load_data(path: Path) -> pd.DataFrame:
         "first_observed_season",
         "last_observed_season",
         "first_j1_season",
+        "reached_j1_ever",
+        "first_j1_year_best",
     ]
     for column in numeric_columns:
-        df[column] = pd.to_numeric(df[column], errors="coerce")
+        if column in df.columns:
+            df[column] = pd.to_numeric(df[column], errors="coerce")
     df["birth_year"] = df["birth_date"].apply(parse_birth_year)
     df["birth_cohort"] = df["birth_year"].apply(birth_cohort)
     df["pathway_category_filled"] = df["pathway_category"].fillna("").replace("", "no_data")
     df["nt_yes"] = (df["any_national_team_selection"] == "yes").astype(int)
     df["nt_labeled"] = df["any_national_team_selection"].isin(["yes", "no"])
+
+    # Prefer the Wikipedia-backfill-corrected J1 outcome when present
+    # (docs/data_collection_revision_proposal_2026-07-07.md item 1): SFPR01's
+    # reached_j1/first_j1_age only see 2014+ debuts. first_j1_age_final is
+    # year-precision (first_j1_year_best - birth_year, ignores birth month) so
+    # that observed and backfilled debuts carry a uniform precision instead of
+    # mixing month-aware and year-only ages.
+    if "reached_j1_ever" in df.columns:
+        df["reached_j1_final"] = df["reached_j1_ever"].fillna(df["reached_j1"])
+        df["first_j1_age_final"] = df["first_j1_year_best"] - df["birth_year"]
+    else:
+        df["reached_j1_final"] = df["reached_j1"]
+        df["first_j1_age_final"] = df["first_j1_age"]
     return df
 
 
@@ -129,7 +145,7 @@ def descriptive_section(df: pd.DataFrame, output_dir: Path) -> str:
         n = len(sub)
         if n == 0:
             continue
-        j1_rate, j1_ci = rate_with_ci(sub["reached_j1"] == 1)
+        j1_rate, j1_ci = rate_with_ci(sub["reached_j1_final"] == 1)
         overseas_labeled = sub[sub["moved_overseas"].notna() & (sub["moved_overseas"] != "")]
         if len(overseas_labeled) > 0:
             overseas_rate, overseas_ci = rate_with_ci(overseas_labeled["moved_overseas"] == "1")
@@ -150,19 +166,19 @@ def descriptive_section(df: pd.DataFrame, output_dir: Path) -> str:
     lines.append("")
     lines.append("| pathway_category | n reached J1 | median first_j1_age |")
     lines.append("|---|---|---|")
-    reached = df[df["reached_j1"] == 1]
+    reached = df[df["reached_j1_final"] == 1]
     for category in PATHWAY_ORDER:
         sub = reached[reached["pathway_category"] == category]
         if len(sub) == 0:
             continue
-        lines.append(f"| {category} | {len(sub)} | {sub['first_j1_age'].median():.1f} |")
+        lines.append(f"| {category} | {len(sub)} | {sub['first_j1_age_final'].median():.1f} |")
     lines.append("")
 
     make_bar_chart(
         df,
         output_dir / "j1_attainment_by_pathway.png",
         title="J1 attainment rate by pathway_category",
-        rate_column_fn=lambda sub: (sub["reached_j1"] == 1),
+        rate_column_fn=lambda sub: (sub["reached_j1_final"] == 1),
     )
     make_bar_chart(
         df,
@@ -231,10 +247,10 @@ def logistic_regression_section(df: pd.DataFrame) -> str:
     lines.append("### J1 attainment ~ pathway_category + birth_year")
     lines.append("")
     j1_model = smf.logit(
-        "reached_j1 ~ C(pathway_category, Treatment(reference='j_club_academy')) + birth_year_c",
+        "reached_j1_final ~ C(pathway_category, Treatment(reference='j_club_academy')) + birth_year_c",
         data=model_df,
     ).fit(disp=0)
-    lines.append(format_logit_summary(j1_model, model_df, "reached_j1"))
+    lines.append(format_logit_summary(j1_model, model_df, "reached_j1_final"))
     lines.append("")
 
     lines.append("### National-team selection ~ pathway_category + birth_year")
@@ -290,12 +306,12 @@ def survival_section(df: pd.DataFrame, output_dir: Path) -> str:
     study_end_season = int(df["last_observed_season"].max())
     model_df = df[df["pathway_category"].isin(MAIN_PATHWAYS) & df["birth_year"].notna()].copy()
     model_df["duration"] = model_df.apply(
-        lambda row: row["first_j1_age"]
-        if row["reached_j1"] == 1
+        lambda row: row["first_j1_age_final"]
+        if row["reached_j1_final"] == 1
         else (study_end_season - row["birth_year"]),
         axis=1,
     )
-    model_df["event"] = model_df["reached_j1"]
+    model_df["event"] = model_df["reached_j1_final"]
     model_df = model_df[model_df["duration"].notna() & (model_df["duration"] > 0)]
 
     lines.append(
