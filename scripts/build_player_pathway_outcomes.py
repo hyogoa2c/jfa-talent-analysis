@@ -50,6 +50,18 @@ def parse_args() -> argparse.Namespace:
         default=Path("data/processed/overseas_transfer_outcomes_2023_2025_gap2.csv"),
     )
     parser.add_argument(
+        "--j1-debut-evidence",
+        type=Path,
+        default=Path("data/interim/wikipedia_full_extracts/j1_debut_evidence.csv"),
+        help="Output of extract_j1_debuts_from_wikipedia.py; optional (skipped if missing).",
+    )
+    parser.add_argument(
+        "--overseas-wiki-labels",
+        type=Path,
+        default=Path("data/interim/wikipedia_full_extracts/overseas_stints_labeled.csv"),
+        help="Output of label_overseas_stints.py; optional (skipped if missing).",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=Path("data/processed/player_pathway_outcomes.csv"),
@@ -96,12 +108,31 @@ def main() -> None:
         for row in read_csv(args.overseas_outcomes)
     }
 
+    # Wikipedia-derived evidence (docs/data_collection_revision_proposal_
+    # 2026-07-07.md items 1-2). Only in_window_match-validated bases are usable
+    # for backfill: rows whose extracted year fell in the SFPR01 window and
+    # DISAGREED with observed data are excluded as extractor noise.
+    wikipedia_j1_debut_by_id: dict[str, str] = {}
+    if args.j1_debut_evidence.exists():
+        for row in read_csv(args.j1_debut_evidence):
+            if row["j1_debut_year"] and row["validation"] != "in_window_mismatch":
+                wikipedia_j1_debut_by_id[row["source_player_id"]] = row["j1_debut_year"]
+
+    overseas_wiki_by_id: dict[str, tuple[str, str]] = {}
+    if args.overseas_wiki_labels.exists():
+        overseas_wiki_by_id = {
+            row["source_player_id"]: (row["moved_overseas_wiki"], row["overseas_confidence"])
+            for row in read_csv(args.overseas_wiki_labels)
+        }
+
     rows = build_player_pathway_outcomes(
         player_summaries,
         pathway_resolved,
         nt_selection_resolved,
         nt_categories_by_id,
         moved_overseas_by_id,
+        wikipedia_j1_debut_by_id,
+        overseas_wiki_by_id,
     )
     rows.sort(key=lambda row: row["source_player_id"])
     write_csv(args.output, rows)
@@ -115,8 +146,16 @@ def main() -> None:
         Counter(row["any_national_team_selection"] or "(none)" for row in rows).items()
     ):
         print(f"  {selection}: {count}")
-    print("moved_overseas:")
-    for value, count in sorted(Counter(row["moved_overseas"] or "(none)" for row in rows).items()):
+    print("reached_j1_ever_source:")
+    for value, count in sorted(Counter(row["reached_j1_ever_source"] for row in rows).items()):
+        print(f"  {value}: {count}")
+    print("moved_overseas_final:")
+    for value, count in sorted(
+        Counter(row["moved_overseas_final"] or "(none)" for row in rows).items()
+    ):
+        print(f"  {value}: {count}")
+    print("moved_overseas_final_source:")
+    for value, count in sorted(Counter(row["moved_overseas_final_source"] for row in rows).items()):
         print(f"  {value}: {count}")
     print(f"wrote={args.output}")
 

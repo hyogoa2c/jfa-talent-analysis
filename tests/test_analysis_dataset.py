@@ -2,6 +2,8 @@ from jfa_talent_analysis.analysis_dataset import (
     apply_review_overrides,
     build_player_pathway_outcomes,
     collapse_player_season_features,
+    resolve_moved_overseas_final,
+    resolve_reached_j1,
 )
 
 
@@ -124,3 +126,45 @@ def test_build_player_pathway_outcomes_joins_every_source():
     assert rows_by_id["2"]["pathway_category"] == ""
     assert rows_by_id["2"]["any_national_team_selection"] == ""
     assert rows_by_id["2"]["moved_overseas"] == ""
+
+
+def test_resolve_reached_j1_wikipedia_backfills_pre2014_debut():
+    summary = {"reached_j1": "0", "first_j1_season": ""}
+    assert resolve_reached_j1(summary, "2010") == ("1", "wikipedia_backfill", "2010")
+
+
+def test_resolve_reached_j1_takes_earlier_year_when_both_exist():
+    summary = {"reached_j1": "1", "first_j1_season": "2015"}
+    assert resolve_reached_j1(summary, "2009") == ("1", "both", "2009")
+
+
+def test_resolve_reached_j1_sfpr01_only():
+    summary = {"reached_j1": "1", "first_j1_season": "2016"}
+    assert resolve_reached_j1(summary, "") == ("1", "sfpr01", "2016")
+
+
+def test_resolve_reached_j1_no_evidence():
+    summary = {"reached_j1": "0", "first_j1_season": ""}
+    assert resolve_reached_j1(summary, "") == ("0", "no_evidence", "")
+
+
+def test_resolve_moved_overseas_manual_yes_wins():
+    assert resolve_moved_overseas_final("1", "no", "high") == ("1", "manual_review")
+
+
+def test_resolve_moved_overseas_high_confidence_wiki_yes_beats_gap_scoped_no():
+    result = resolve_moved_overseas_final("0", "yes", "high")
+    assert result == ("1", "wikipedia_classifier_over_gap_scoped_review")
+
+
+def test_resolve_moved_overseas_flagged_wiki_yes_does_not_override_manual_no():
+    assert resolve_moved_overseas_final("0", "yes", "needs_review") == ("0", "manual_review")
+
+
+def test_resolve_moved_overseas_wiki_only():
+    assert resolve_moved_overseas_final("", "yes", "high") == ("1", "wikipedia_classifier")
+    assert resolve_moved_overseas_final("", "no", "high") == ("0", "wikipedia_classifier")
+
+
+def test_resolve_moved_overseas_no_evidence():
+    assert resolve_moved_overseas_final("", "", "") == ("", "no_evidence")

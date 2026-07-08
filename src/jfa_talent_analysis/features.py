@@ -107,9 +107,22 @@ def first_season_by_player(rows: list[dict[str, str]]) -> dict[str, int]:
 
 
 def first_j1_season_by_player(rows: list[dict[str, str]]) -> dict[str, int]:
+    """First season with an actual J1 match appearance.
+
+    Rows with zero appearances AND zero minutes are roster-registration
+    entries (bench-only players, 特別指定/2種登録 players who never played) —
+    SFPR01 emits them, and counting them silently inflated reached_j1 by 24%
+    (443 of 1,834 "reached" players had zero career J1 minutes) and shifted
+    first_j1_season a year early for late-debuting registered players. Found
+    via cross-validation against Wikipedia's 出場歴 debut lines, where every
+    mismatch had SFPR01 earlier than the stated playing debut. Appearances is
+    the primary signal with minutes as fallback, per the data-collection
+    plan's "missing minutes" risk note."""
     output: dict[str, int] = {}
     for row in rows:
         if not is_j1(row["league"]):
+            continue
+        if parse_int(row.get("appearances", "")) <= 0 and parse_int(row.get("minutes", "")) <= 0:
             continue
         player_id = row["source_player_id"]
         season = int(row["season"])

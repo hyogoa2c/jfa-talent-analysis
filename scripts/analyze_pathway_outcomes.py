@@ -35,6 +35,18 @@ def parse_args() -> argparse.Namespace:
         "--input", type=Path, default=Path("data/processed/player_pathway_outcomes.csv")
     )
     parser.add_argument("--output-dir", type=Path, default=Path("reports/generated"))
+    parser.add_argument(
+        "--min-birth-year",
+        type=int,
+        default=None,
+        help=(
+            "Restrict to players born in this year or later. Used as a sensitivity "
+            "check for the pre-2014 J1-debut truncation problem "
+            "(docs/data_collection_revision_proposal_2026-07-07.md item 1): older "
+            "cohorts were mostly already mid-career when the 2014 SFPR01 window "
+            "opens, so their reached_j1/first_j1_age are unreliable."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -66,6 +78,12 @@ def main() -> None:
     df = load_data(args.input)
 
     sections: list[str] = []
+    if args.min_birth_year is not None:
+        df = df[df["birth_year"].notna() & (df["birth_year"] >= args.min_birth_year)]
+        sections.append(
+            f"# Sensitivity run: restricted to birth_year >= {args.min_birth_year} "
+            f"(n={len(df)})"
+        )
     sections.append(descriptive_section(df, args.output_dir))
     sections.append(logistic_regression_section(df))
     sections.append(survival_section(df, args.output_dir))

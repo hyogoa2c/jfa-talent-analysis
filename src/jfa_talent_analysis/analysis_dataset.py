@@ -24,6 +24,19 @@ PLAYER_PATHWAY_OUTCOMES_COLUMNS = [
     "national_team_selection_source",
     "moved_overseas",
     "moved_overseas_basis",
+    # Wikipedia-backfilled J1 debut evidence (docs/data_collection_revision_
+    # proposal_2026-07-07.md item 1): SFPR01's reached_j1/first_j1_season only
+    # see 2014+, so pre-2014 debuts need Wikipedia's 出場歴 lines.
+    "wikipedia_j1_debut_year",
+    "reached_j1_ever",
+    "reached_j1_ever_source",
+    "first_j1_year_best",
+    # Full-population overseas outcome (proposal item 2): classifier over
+    # Wikipedia career prose, overridden by the manually-reviewed queue rows.
+    "moved_overseas_wiki",
+    "moved_overseas_wiki_confidence",
+    "moved_overseas_final",
+    "moved_overseas_final_source",
 ]
 
 
@@ -110,12 +123,66 @@ def apply_review_overrides(
     return resolved
 
 
+def resolve_reached_j1(
+    summary: dict[str, str], wikipedia_j1_debut_year: str
+) -> tuple[str, str, str]:
+    """Combine SFPR01's in-window reached_j1 with Wikipedia debut-line evidence.
+
+    Returns (reached_j1_ever, source, first_j1_year_best). Wikipedia evidence can
+    only ADD a J1 debut SFPR01 couldn't see (pre-2014, or a name-matching gap) —
+    it never demotes an SFPR01-observed J1 appearance. first_j1_year_best takes
+    the EARLIER of the two years, since SFPR01's first_j1_season for a pre-2014
+    debutant is really a later return/continuation season, not the debut.
+    """
+    sfpr01_reached = summary.get("reached_j1") == "1"
+    sfpr01_year = summary.get("first_j1_season", "")
+    wiki_year = wikipedia_j1_debut_year
+
+    if sfpr01_reached and wiki_year:
+        source = "both"
+    elif sfpr01_reached:
+        source = "sfpr01"
+    elif wiki_year:
+        source = "wikipedia_backfill"
+    else:
+        return ("0", "no_evidence", "")
+
+    years = [int(float(year)) for year in (sfpr01_year, wiki_year) if year]
+    return ("1", source, str(min(years)) if years else "")
+
+
+def resolve_moved_overseas_final(
+    manual_value: str, wiki_value: str, wiki_confidence: str
+) -> tuple[str, str]:
+    """Combine the manually-reviewed queue decision (33 reappearance-gap players,
+    highest authority where present) with the full-population Wikipedia
+    classifier. Note the definitions differ slightly: the manual queue judged a
+    specific reappearance gap, the classifier judges the whole career — a queue
+    "0" with a classifier "yes" therefore prefers the classifier only when its
+    confidence is high (the queue player may have moved abroad OUTSIDE the
+    reviewed gap, a real corpus case: 片岡爽 moved to Australia in 2024 after his
+    reviewed gap)."""
+    if manual_value == "1":
+        return ("1", "manual_review")
+    if manual_value == "0":
+        if wiki_value == "yes" and wiki_confidence == "high":
+            return ("1", "wikipedia_classifier_over_gap_scoped_review")
+        return ("0", "manual_review")
+    if wiki_value == "yes":
+        return ("1", "wikipedia_classifier")
+    if wiki_value == "no":
+        return ("0", "wikipedia_classifier")
+    return ("", "no_evidence")
+
+
 def build_player_pathway_outcomes(
     player_summaries: dict[str, dict[str, str]],
     pathway_resolved: dict[str, tuple[str, str]],
     national_team_resolved: dict[str, tuple[str, str]],
     national_team_categories_by_id: dict[str, str],
     moved_overseas_by_id: dict[str, tuple[str, str]],
+    wikipedia_j1_debut_by_id: dict[str, str] | None = None,
+    overseas_wiki_by_id: dict[str, tuple[str, str]] | None = None,
 ) -> list[dict[str, str]]:
     """Join per-player season summaries with resolved pathway/national-team
     labels and moved_overseas outcomes into one analysis-ready row per player.
@@ -125,11 +192,22 @@ def build_player_pathway_outcomes(
     project's established caution against reading missing evidence as a
     confirmed negative.
     """
+    wikipedia_j1_debut_by_id = wikipedia_j1_debut_by_id or {}
+    overseas_wiki_by_id = overseas_wiki_by_id or {}
+
     rows = []
     for player_id, summary in player_summaries.items():
         pathway_category, pathway_source = pathway_resolved.get(player_id, ("", ""))
         selection, selection_source = national_team_resolved.get(player_id, ("", ""))
         moved_overseas, moved_overseas_basis = moved_overseas_by_id.get(player_id, ("", ""))
+
+        wiki_j1_year = wikipedia_j1_debut_by_id.get(player_id, "")
+        reached_ever, reached_source, first_j1_best = resolve_reached_j1(summary, wiki_j1_year)
+
+        wiki_overseas, wiki_overseas_confidence = overseas_wiki_by_id.get(player_id, ("", ""))
+        overseas_final, overseas_final_source = resolve_moved_overseas_final(
+            moved_overseas, wiki_overseas, wiki_overseas_confidence
+        )
 
         rows.append(
             {
@@ -141,6 +219,14 @@ def build_player_pathway_outcomes(
                 "national_team_selection_source": selection_source,
                 "moved_overseas": moved_overseas,
                 "moved_overseas_basis": moved_overseas_basis,
+                "wikipedia_j1_debut_year": wiki_j1_year,
+                "reached_j1_ever": reached_ever,
+                "reached_j1_ever_source": reached_source,
+                "first_j1_year_best": first_j1_best,
+                "moved_overseas_wiki": wiki_overseas,
+                "moved_overseas_wiki_confidence": wiki_overseas_confidence,
+                "moved_overseas_final": overseas_final,
+                "moved_overseas_final_source": overseas_final_source,
             }
         )
     return rows
