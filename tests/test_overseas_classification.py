@@ -76,3 +76,21 @@ def test_no_signal_is_high_confidence_no():
     result = classify_overseas_stint("2018年にプロデビューし、国内クラブで活躍した。")
     assert result.moved_overseas == "no"
     assert result.confidence == "high"
+
+
+def test_chugoku_regional_league_is_not_china():
+    """"中国サッカーリーグ"/"中国リーグ" is a real *domestic* Japanese regional
+    league (Chugoku region), not a China move — a real corpus false-positive
+    pattern (福山シティFC, レノファ山口FC, ベルガロッソいわみ etc., all based in
+    Japan)."""
+    result = classify_overseas_stint("2022年、中国サッカーリーグのFCバレイン下関へ加入した。")
+    assert result.moved_overseas == "no"
+
+    result = classify_overseas_stint("2010年、当時中国リーグに所属していたレノファ山口FCに移籍。")
+    assert result.moved_overseas == "no"
+
+
+def test_genuine_china_move_still_detected():
+    result = classify_overseas_stint("2023年、中国スーパーリーグの上海海港へ完全移籍。")
+    assert result.moved_overseas == "yes"
+    assert result.confidence == "high"

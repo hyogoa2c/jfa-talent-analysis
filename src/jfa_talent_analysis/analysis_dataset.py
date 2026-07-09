@@ -151,27 +151,41 @@ def resolve_reached_j1(
     return ("1", source, str(min(years)) if years else "")
 
 
+TRUSTED_WIKI_CONFIDENCES = {"high", "human_reviewed"}
+
+
 def resolve_moved_overseas_final(
     manual_value: str, wiki_value: str, wiki_confidence: str
 ) -> tuple[str, str]:
     """Combine the manually-reviewed queue decision (33 reappearance-gap players,
     highest authority where present) with the full-population Wikipedia
-    classifier. Note the definitions differ slightly: the manual queue judged a
-    specific reappearance gap, the classifier judges the whole career — a queue
-    "0" with a classifier "yes" therefore prefers the classifier only when its
-    confidence is high (the queue player may have moved abroad OUTSIDE the
+    classifier — whose needs_review rows have themselves been human-reviewed
+    (data/manual/overseas_review_queue.csv, 196 rows; wiki_confidence=
+    "human_reviewed" for those, on par with the classifier's own "high"
+    confidence, see docs/overseas_needs_review_2026-07-09.md).
+
+    Note the definitions differ slightly: the manual queue judged a specific
+    reappearance gap, the classifier judges the whole career — a queue "0"
+    with a classifier "yes" therefore prefers the classifier only when its
+    confidence is trusted (the queue player may have moved abroad OUTSIDE the
     reviewed gap, a real corpus case: 片岡爽 moved to Australia in 2024 after his
     reviewed gap)."""
     if manual_value == "1":
         return ("1", "manual_review")
     if manual_value == "0":
-        if wiki_value == "yes" and wiki_confidence == "high":
-            return ("1", "wikipedia_classifier_over_gap_scoped_review")
+        if wiki_value == "yes" and wiki_confidence in TRUSTED_WIKI_CONFIDENCES:
+            source = (
+                "human_reviewed_over_gap_scoped_review"
+                if wiki_confidence == "human_reviewed"
+                else "wikipedia_classifier_over_gap_scoped_review"
+            )
+            return ("1", source)
         return ("0", "manual_review")
+    wiki_source = "human_reviewed" if wiki_confidence == "human_reviewed" else "wikipedia_classifier"
     if wiki_value == "yes":
-        return ("1", "wikipedia_classifier")
+        return ("1", wiki_source)
     if wiki_value == "no":
-        return ("0", "wikipedia_classifier")
+        return ("0", wiki_source)
     return ("", "no_evidence")
 
 

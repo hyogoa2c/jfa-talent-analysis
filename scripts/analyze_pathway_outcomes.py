@@ -280,14 +280,13 @@ def logistic_regression_section(df: pd.DataFrame) -> str:
     lines.append("### Overseas move ~ pathway_category + birth_year")
     lines.append("")
     lines.append(
-        "`moved_overseas_final` now covers the full population (a heuristic "
-        "classifier over Wikipedia career prose, not the exhaustively "
-        "human-reviewed pathway/national-team labels — validated 32/32 against "
-        "a pilot golden set and cross-checked against the pre-existing 33-player "
-        "manually-reviewed queue, but not itself subject to a needs_review "
-        "human-review pass at scale). Treat this regression as informative but "
-        "less authoritative than the J1/national-team ones above until a review "
-        "pass is run on its flagged rows."
+        "`moved_overseas_final` now covers the full population: a heuristic "
+        "classifier over Wikipedia career prose (validated 32/32 against a "
+        "pilot golden set and cross-checked against the pre-existing 33-player "
+        "manually-reviewed queue), with its 196 needs_review rows human-reviewed "
+        "(`data/manual/overseas_review_queue.csv`, see "
+        "`docs/overseas_needs_review_2026-07-09.md`) — the same confidence "
+        "standard as the pathway/national-team labels above."
     )
     lines.append("")
     overseas_model_df = model_df[model_df["overseas_labeled"]]
@@ -557,19 +556,28 @@ def survival_section(df: pd.DataFrame, output_dir: Path) -> str:
 def overseas_caveat_section(df: pd.DataFrame) -> str:
     labeled = df[df["moved_overseas_final"].notna() & (df["moved_overseas_final"] != "")]
     manual = df[df["moved_overseas_final_source"] == "manual_review"]
+    human_reviewed = df[
+        df["moved_overseas_final_source"].isin(
+            ["human_reviewed", "human_reviewed_over_gap_scoped_review"]
+        )
+    ]
+    auto_only = df[df["moved_overseas_final_source"] == "wikipedia_classifier"]
     lines = [
         "## Overseas Move: Coverage Note",
         "",
         f"`moved_overseas_final` now covers {len(labeled)} of {len(df)} players "
         f"({len(labeled) / len(df) * 100:.1f}%), up from the 33-player (0.8%) "
         "manually-reviewed-only coverage this report originally shipped with "
-        "(see `docs/data_collection_revision_proposal_2026-07-07.md` item 2 and "
-        f"`docs/jfa_national_team_spot_check_2026-07-08.md`'s sibling work). "
-        f"Only {len(manual)} rows still carry the original, narrowly-scoped "
-        "2023-2025 reappearance-gap manual review as their source (preferred "
-        "when present); the rest come from a full-population Wikipedia career-"
-        "prose classifier. The logistic regression above uses this expanded "
-        "column, not the original 33-row `moved_overseas` field.",
+        "(see `docs/data_collection_revision_proposal_2026-07-07.md` item 2, "
+        "`docs/jfa_national_team_spot_check_2026-07-08.md`'s sibling work, and "
+        "`docs/overseas_needs_review_2026-07-09.md` for the classifier's "
+        "needs_review pass). "
+        f"{len(manual)} rows carry the original, narrowly-scoped 2023-2025 "
+        f"reappearance-gap manual review; {len(human_reviewed)} more come from "
+        "the classifier's needs_review rows after human review; the remaining "
+        f"{len(auto_only)} are the classifier's high-confidence, unreviewed "
+        "output. The logistic regression above uses this expanded column, not "
+        "the original 33-row `moved_overseas` field.",
     ]
     return "\n".join(lines)
 

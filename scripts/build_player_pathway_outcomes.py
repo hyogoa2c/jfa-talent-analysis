@@ -62,6 +62,12 @@ def parse_args() -> argparse.Namespace:
         help="Output of label_overseas_stints.py; optional (skipped if missing).",
     )
     parser.add_argument(
+        "--overseas-review-queue",
+        type=Path,
+        default=Path("data/manual/overseas_review_queue.csv"),
+        help="Human review of the overseas classifier's needs_review rows; optional.",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=Path("data/processed/player_pathway_outcomes.csv"),
@@ -124,6 +130,14 @@ def main() -> None:
             row["source_player_id"]: (row["moved_overseas_wiki"], row["overseas_confidence"])
             for row in read_csv(args.overseas_wiki_labels)
         }
+
+    # Human review of the classifier's needs_review rows (data/manual/
+    # overseas_review_queue.csv) overrides the classifier's own value, marked
+    # "human_reviewed" so resolve_moved_overseas_final treats it as trusted.
+    if args.overseas_review_queue.exists():
+        for row in read_csv(args.overseas_review_queue):
+            reviewed_value = "yes" if row["reviewed_moved_overseas"] == "1" else "no"
+            overseas_wiki_by_id[row["source_player_id"]] = (reviewed_value, "human_reviewed")
 
     rows = build_player_pathway_outcomes(
         player_summaries,

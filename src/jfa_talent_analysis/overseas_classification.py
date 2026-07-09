@@ -64,7 +64,16 @@ COUNTRY_NAMES = (
     "ポーランド|ハンガリー|ルーマニア|ブルガリア|ギリシャ|トルコ|デンマーク|ノルウェー|スウェーデン|"
     "フィンランド|アイスランド|エストニア|ラトビア|リトアニア|マルタ|キプロス|アルバニア|"
     "北マケドニア|ボスニア|ウクライナ|ロシア|ベラルーシ|モルドバ|ジョージア|アルメニア|"
-    "アゼルバイジャン|カザフスタン|韓国|中国|タイ|ベトナム|インドネシア|マレーシア|シンガポール|"
+    # "中国" alone is ambiguous in Japanese: it means China, but also names the
+    # 中国地方 (Chugoku region of western Japan), and "中国サッカーリーグ"/
+    # "中国リーグ" is a real *domestic* Japanese regional league (feeding JFL) —
+    # a real corpus false-positive pattern caught 15 domestic moves (福山シティ
+    # FC, レノファ山口FC, ベルガロッソいわみ etc., all based in Japan) as
+    # "overseas". Excluded via negative lookahead; genuine China references
+    # ("中国スーパーリーグ" etc.) are matched by name in FOREIGN_LEAGUE_VOCAB
+    # instead, so this exclusion doesn't lose real China moves.
+    "アゼルバイジャン|カザフスタン|韓国|中国(?!地方|サッカーリーグ|リーグ)|タイ|ベトナム|"
+    "インドネシア|マレーシア|シンガポール|"
     "ミャンマー|カンボジア|ラオス|フィリピン|香港|マカオ|台湾|インド|バングラデシュ|モンゴル|"
     "オーストラリア|ニュージーランド|アメリカ|カナダ|メキシコ|ブラジル|アルゼンチン|チリ|ウルグアイ|"
     "パラグアイ|コロンビア|ペルー|エクアドル|ボリビア|カタール|サウジアラビア|UAE|バーレーン|"

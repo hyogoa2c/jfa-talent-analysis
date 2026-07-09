@@ -168,3 +168,13 @@ def test_resolve_moved_overseas_wiki_only():
 
 def test_resolve_moved_overseas_no_evidence():
     assert resolve_moved_overseas_final("", "", "") == ("", "no_evidence")
+
+
+def test_resolve_moved_overseas_human_reviewed_source_label():
+    assert resolve_moved_overseas_final("", "yes", "human_reviewed") == ("1", "human_reviewed")
+    assert resolve_moved_overseas_final("", "no", "human_reviewed") == ("0", "human_reviewed")
+
+
+def test_resolve_moved_overseas_human_reviewed_beats_gap_scoped_manual_no():
+    result = resolve_moved_overseas_final("0", "yes", "human_reviewed")
+    assert result == ("1", "human_reviewed_over_gap_scoped_review")

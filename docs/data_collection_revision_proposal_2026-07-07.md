@@ -115,10 +115,15 @@ and failed trials) — validated 32/32 with 0 silently wrong against the pathway
 pilot's golden set, and cross-checked against the existing 33-player manually-reviewed queue
 (agreement on all but definitional differences, e.g. a player who moved abroad outside the
 originally-reviewed gap window). `moved_overseas_final` now covers 3,408 of 4,037 players
-(84.4%), preferring the original manual review where present. This is a heuristic classifier's
-output, not yet subject to the same needs_review human-review pass pathway/national-team
-selection received — the logistic regression added to the analysis report treats it as
-informative but less authoritative pending that review.
+(84.4%), preferring the original manual review where present.
+
+**Needs_review pass completed 2026-07-09** (`docs/overseas_needs_review_2026-07-09.md`): all 196
+flagged rows read and resolved by hand (110 confirmed, 86 not), surfacing and fixing a real
+classifier bug along the way ("中国" matching the domestic 中国地方/Chugoku regional league as
+if it meant China — 15 rows). `moved_overseas_final` is now held to the same confidence standard
+as `pathway_category`/`any_national_team_selection`. Regression coefficients moved only slightly
+(university odds ratio for overseas move: 0.48→0.49 plain, 0.56→0.57 with the J1-attainment
+mediator) — the review corrected real errors without changing the substantive conclusion.
 
 ## 3. [Medium priority, DONE 2026-07-08] National-team "no evidence" rows were never spot-checked against JFA
 

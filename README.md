@@ -134,7 +134,7 @@ Wikipedia full-extract corpus and derived evidence (see [the revision proposal](
 
 - `fetch_full_wikipedia_extracts.py` - cache full plaintext extracts for all identity-confirmed players (resume-safe; trimmed contexts lack the 出場歴 lines)
 - `extract_j1_debuts_from_wikipedia.py` - parse J.League/J1 debut lines and validate against SFPR01 in-window ground truth; this cross-validation exposed and fixed a features bug where zero-appearance J1 roster registrations counted as reaching J1 (24% of reached_j1=1 rows)
-- `label_overseas_stints.py` - classify senior-career foreign-club stints from career prose, extending moved_overseas beyond the 33-player manual queue
+- `label_overseas_stints.py` - classify senior-career foreign-club stints from career prose, extending moved_overseas beyond the 33-player manual queue; all 196 needs_review rows human-reviewed 2026-07-09 (see [the review record](docs/overseas_needs_review_2026-07-09.md), which also documents a "中国" (China vs. the domestic Chugoku regional league) classifier bug found and fixed mid-review
 
 Step 5 analysis-ready dataset (docs/data_collection_plan.md):
 
