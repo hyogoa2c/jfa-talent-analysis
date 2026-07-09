@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import statsmodels.formula.api as smf
 from lifelines import CoxPHFitter, KaplanMeierFitter
+from scipy import stats
 
 from jfa_talent_analysis.pathway_outcome_analysis import (
     birth_cohort,
@@ -106,6 +107,7 @@ def main() -> None:
     sections.append(logistic_regression_section(df))
     sections.append(survival_section(df, args.output_dir))
     sections.append(overseas_caveat_section(df))
+    sections.append(additional_modeling_section(df))
 
     report_path = args.output_dir / "initial_analysis_report.md"
     report_path.write_text("\n\n".join(sections), encoding="utf-8")
@@ -289,6 +291,73 @@ def logistic_regression_section(df: pd.DataFrame) -> str:
         data=overseas_model_df,
     ).fit(disp=0)
     lines.append(format_logit_summary(overseas_model, overseas_model_df, "overseas_yes"))
+
+    return "\n".join(lines)
+
+
+def additional_modeling_section(df: pd.DataFrame) -> str:
+    lines = ["## Additional Modeling", ""]
+
+    model_df = df[df["pathway_category"].isin(MAIN_PATHWAYS) & df["birth_year"].notna()].copy()
+    model_df["pathway_category"] = pd.Categorical(
+        model_df["pathway_category"], categories=MAIN_PATHWAYS
+    )
+    model_df["birth_year_c"] = model_df["birth_year"] - BIRTH_YEAR_REFERENCE
+
+    # --- Mediation check: does pathway still predict overseas move once J1
+    # attainment is controlled for, or does pathway operate entirely THROUGH
+    # reaching J1 first (the much more common route to being scouted abroad)?
+    lines.append("### Overseas move ~ pathway_category + reached_j1 + birth_year (mediation check)")
+    lines.append("")
+    lines.append(
+        "The plain overseas model above cannot distinguish \"pathway predicts "
+        "overseas moves directly\" from \"pathway predicts J1 attainment, and J1 "
+        "attainment is what actually gets players scouted abroad.\" Adding "
+        "`reached_j1_final` as a covariate tests this: if the pathway "
+        "coefficients shrink toward 1.0 and lose significance once J1 "
+        "attainment is in the model, the pathway's overseas association is "
+        "mostly *mediated by* reaching J1 first, not a separate direct effect."
+    )
+    lines.append("")
+    mediation_df = model_df[model_df["overseas_labeled"]]
+    mediation_model = smf.logit(
+        "overseas_yes ~ C(pathway_category, Treatment(reference='j_club_academy')) "
+        "+ reached_j1_final + birth_year_c",
+        data=mediation_df,
+    ).fit(disp=0)
+    lines.append(format_logit_summary(mediation_model, mediation_df, "overseas_yes"))
+    lines.append("")
+
+    # --- Interaction: has the pathway effect on J1 attainment shifted across
+    # birth cohorts (e.g. as club academies professionalized further)?
+    lines.append("### J1 attainment ~ pathway_category * birth_year (era interaction)")
+    lines.append("")
+    lines.append(
+        "Tests whether the pathway gap is stable over time or has widened/"
+        "narrowed across birth cohorts, by adding a pathway"
+        "×birth_year_c interaction term to the plain J1-attainment model. A "
+        "significant interaction term means the university/high_school "
+        "penalty (relative to j_club_academy) is not constant across "
+        "generations."
+    )
+    lines.append("")
+    interaction_model = smf.logit(
+        "reached_j1_final ~ C(pathway_category, Treatment(reference='j_club_academy')) "
+        "* birth_year_c",
+        data=model_df,
+    ).fit(disp=0)
+    lines.append(format_logit_summary(interaction_model, model_df, "reached_j1_final"))
+    lines.append("")
+    lr_stat = 2 * (interaction_model.llf - smf.logit(
+        "reached_j1_final ~ C(pathway_category, Treatment(reference='j_club_academy')) + birth_year_c",
+        data=model_df,
+    ).fit(disp=0).llf)
+    lr_p = stats.chi2.sf(lr_stat, df=2)
+    lines.append(
+        f"Likelihood-ratio test for the two interaction terms jointly: "
+        f"LR stat={lr_stat:.2f}, df=2, p={lr_p:.4f} "
+        f"({'significant — the pathway effect does change across cohorts' if lr_p < 0.05 else 'not significant at the 0.05 level — no evidence the pathway effect differs by era in this data'})."
+    )
 
     return "\n".join(lines)
 
