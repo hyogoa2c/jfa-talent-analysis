@@ -4,6 +4,25 @@ import math
 
 BIRTH_COHORT_BOUNDS = [1990, 1995, 2000, 2005]
 
+# U15-U19 selection happens at an age that essentially always precedes (or is
+# concurrent with, at the very latest) a player's first-team pro debut, so it
+# works as an "was this player already recognized as elite talent before/
+# around turning pro" signal independent of the pathway/J1-attainment outcomes
+# themselves. U20+ and A are deliberately excluded: those categories are
+# frequently awarded *because of* strong J1/pro performance, which would make
+# them a post-treatment variable (a consequence of the outcome, not a cause
+# available for control) rather than an early-ability signal.
+YOUTH_NATIONAL_TEAM_CATEGORIES = {"U15", "U16", "U17", "U18", "U19"}
+
+
+def has_youth_national_team_selection(national_team_categories: str) -> bool:
+    """True if national_team_categories (a "|"-joined string, e.g. "U17|A")
+    contains any U15-U19 category — see YOUTH_NATIONAL_TEAM_CATEGORIES."""
+    if not national_team_categories:
+        return False
+    categories = set(national_team_categories.split("|"))
+    return bool(categories & YOUTH_NATIONAL_TEAM_CATEGORIES)
+
 
 def parse_birth_year(birth_date: str) -> int | None:
     """Parse a "YYYY/MM/DD" birth_date into a birth year, or None if blank/malformed."""

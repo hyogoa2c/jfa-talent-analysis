@@ -15,6 +15,7 @@ from scipy import stats
 
 from jfa_talent_analysis.pathway_outcome_analysis import (
     birth_cohort,
+    has_youth_national_team_selection,
     parse_birth_year,
     wilson_confidence_interval,
 )
@@ -75,6 +76,9 @@ def load_data(path: Path) -> pd.DataFrame:
     df["nt_labeled"] = df["any_national_team_selection"].isin(["yes", "no"])
     df["overseas_yes"] = (df["moved_overseas_final"] == "1").astype(int)
     df["overseas_labeled"] = df["moved_overseas_final"].isin(["0", "1"])
+    df["youth_selected"] = (
+        df["national_team_categories"].fillna("").apply(has_youth_national_team_selection).astype(int)
+    )
 
     # Prefer the Wikipedia-backfill-corrected J1 outcome when present
     # (docs/data_collection_revision_proposal_2026-07-07.md item 1): SFPR01's
@@ -108,6 +112,7 @@ def main() -> None:
     sections.append(survival_section(df, args.output_dir))
     sections.append(overseas_caveat_section(df))
     sections.append(additional_modeling_section(df))
+    sections.append(early_ability_signal_section(df))
 
     report_path = args.output_dir / "initial_analysis_report.md"
     report_path.write_text("\n\n".join(sections), encoding="utf-8")
@@ -358,6 +363,73 @@ def additional_modeling_section(df: pd.DataFrame) -> str:
         f"LR stat={lr_stat:.2f}, df=2, p={lr_p:.4f} "
         f"({'significant — the pathway effect does change across cohorts' if lr_p < 0.05 else 'not significant at the 0.05 level — no evidence the pathway effect differs by era in this data'})."
     )
+
+    return "\n".join(lines)
+
+
+def early_ability_signal_section(df: pd.DataFrame) -> str:
+    """Adds youth_selected (any U15-U19 national-team call-up) as a control,
+    as a first attempt at separating a pre-existing-ability selection effect
+    (clubs' academies recruit already-promising kids) from a pathway effect —
+    see docs/initial_analysis_interpretation_2026-07-09.md section 5's causal
+    warning. This reuses data already collected (national_team_categories),
+    no new data collection needed.
+    """
+    lines = ["## Early-Ability-Signal Control (youth_selected = any U15-U19 call-up)", ""]
+
+    model_df = df[df["pathway_category"].isin(MAIN_PATHWAYS) & df["birth_year"].notna()].copy()
+    model_df["pathway_category"] = pd.Categorical(
+        model_df["pathway_category"], categories=MAIN_PATHWAYS
+    )
+    model_df["birth_year_c"] = model_df["birth_year"] - BIRTH_YEAR_REFERENCE
+
+    lines.append("### youth_selected rate by pathway_category")
+    lines.append("")
+    lines.append(
+        "If academies really do recruit already-recognized talent, "
+        "`j_club_academy` players should show a higher youth-national-team "
+        "call-up rate than `university` players *even before* any pro-career "
+        "outcome is considered — a direct check of the selection-effect "
+        "hypothesis."
+    )
+    lines.append("")
+    lines.append("| pathway_category | n | youth_selected rate |")
+    lines.append("|---|---|---|")
+    for category in MAIN_PATHWAYS:
+        sub = model_df[model_df["pathway_category"] == category]
+        rate, ci = rate_with_ci(sub["youth_selected"] == 1)
+        lines.append(f"| {category} | {len(sub)} | {fmt_pct(rate)} (CI {fmt_pct(ci[0])}-{fmt_pct(ci[1])}) |")
+    lines.append("")
+
+    lines.append("### J1 attainment ~ pathway_category + birth_year + youth_selected")
+    lines.append("")
+    lines.append(
+        "Compare the pathway odds ratios here to the plain J1-attainment model "
+        "above: if they shrink substantially toward 1.0, much of the raw "
+        "pathway association is explained by pre-existing ability that both "
+        "the pathway choice and the outcome reflect, not by the pathway "
+        "itself."
+    )
+    lines.append("")
+    j1_signal_model = smf.logit(
+        "reached_j1_final ~ C(pathway_category, Treatment(reference='j_club_academy')) "
+        "+ birth_year_c + youth_selected",
+        data=model_df,
+    ).fit(disp=0)
+    lines.append(format_logit_summary(j1_signal_model, model_df, "reached_j1_final"))
+    lines.append("")
+
+    lines.append(
+        "### Overseas move ~ pathway_category + reached_j1 + birth_year + youth_selected"
+    )
+    lines.append("")
+    overseas_signal_df = model_df[model_df["overseas_labeled"]]
+    overseas_signal_model = smf.logit(
+        "overseas_yes ~ C(pathway_category, Treatment(reference='j_club_academy')) "
+        "+ reached_j1_final + birth_year_c + youth_selected",
+        data=overseas_signal_df,
+    ).fit(disp=0)
+    lines.append(format_logit_summary(overseas_signal_model, overseas_signal_df, "overseas_yes"))
 
     return "\n".join(lines)
 

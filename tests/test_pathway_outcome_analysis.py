@@ -1,5 +1,6 @@
 from jfa_talent_analysis.pathway_outcome_analysis import (
     birth_cohort,
+    has_youth_national_team_selection,
     parse_birth_year,
     wilson_confidence_interval,
 )
@@ -37,3 +38,26 @@ def test_wilson_confidence_interval_narrows_with_larger_n():
     small_lower, small_upper = wilson_confidence_interval(5, 10)
     large_lower, large_upper = wilson_confidence_interval(500, 1000)
     assert (large_upper - large_lower) < (small_upper - small_lower)
+
+
+def test_has_youth_national_team_selection_true_for_u17():
+    assert has_youth_national_team_selection("U17|A") is True
+
+
+def test_has_youth_national_team_selection_false_for_a_only():
+    """A-team-only selection is likely a *consequence* of strong J1 performance
+    (post-treatment), not an early-ability signal available before pathway
+    outcomes played out."""
+    assert has_youth_national_team_selection("A") is False
+
+
+def test_has_youth_national_team_selection_false_for_u23_only():
+    assert has_youth_national_team_selection("U23") is False
+
+
+def test_has_youth_national_team_selection_false_for_blank():
+    assert has_youth_national_team_selection("") is False
+
+
+def test_has_youth_national_team_selection_true_for_multiple_youth_categories():
+    assert has_youth_national_team_selection("U15|U16|U19") is True
