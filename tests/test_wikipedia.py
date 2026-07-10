@@ -1,7 +1,11 @@
 from jfa_talent_analysis.sources.wikipedia import (
     build_wikipedia_queries,
+    extract_lead_birth_date,
+    extract_national_team_context,
+    extract_pathway_context,
+    looks_like_junk_title,
+    parse_extract_response,
     parse_wikipedia_search_results,
-    parse_retry_after,
     summarize_wikipedia_candidates,
 )
 
@@ -56,6 +60,136 @@ def test_summarize_wikipedia_candidates_joins_fields():
     ]
 
 
-def test_parse_retry_after_defaults_to_five_seconds():
-    assert parse_retry_after("2") == 2.0
-    assert parse_retry_after("") == 5.0
+def test_parse_extract_response_returns_none_for_missing_page():
+    data = {"query": {"pages": {"-1": {"ns": 0, "title": "存在しないページ", "missing": ""}}}}
+
+    assert parse_extract_response(data) is None
+
+
+def test_parse_extract_response_returns_extract_text():
+    data = {"query": {"pages": {"123": {"pageid": 123, "extract": "本文テキスト"}}}}
+
+    assert parse_extract_response(data) == "本文テキスト"
+
+
+def test_extract_pathway_context_falls_back_to_whole_text_without_headings():
+    text = "見出しのない本文だけの記事。"
+
+    assert extract_pathway_context(text) == text
+
+
+def test_extract_pathway_context_captures_flat_rireki_section():
+    # Matches the real 伊藤遼哉 article structure: one flat 来歴 section holds everything,
+    # followed by an unrelated 人物 section that should be excluded.
+    text = (
+        "伊藤 遼哉は東京都出身のプロサッカー選手。\n\n"
+        "== 来歴 ==\n"
+        "スイスに移住し、FCチューリッヒでプレー。その後バイエルン・ミュンヘンの下部組織に入団。\n\n"
+        "== 人物 ==\n"
+        "趣味は読書。"
+    )
+
+    context = extract_pathway_context(text)
+
+    assert "バイエルン・ミュンヘン" in context
+    assert "趣味は読書" not in context
+
+
+def test_extract_pathway_context_includes_nested_subsection_under_matching_heading():
+    # Matches the real 三笘薫 article structure: a level-3 筑波大学 subsection continues
+    # the level-2 幼少期 section's pathway story, followed by an unrelated クラブ経歴
+    # section (also level 2) covering pro-career details that should be excluded.
+    text = (
+        "三笘薫は日本のプロサッカー選手。\n\n"
+        "== 幼少期 ==\n"
+        "さぎぬまSCでプレーしたのち川崎フロンターレU-10に加入した。\n\n"
+        "=== 筑波大学 ===\n"
+        "スポーツ推薦で筑波大学体育専門学群へ進学。\n\n"
+        "== クラブ経歴 ==\n\n"
+        "=== 川崎フロンターレ ===\n"
+        "2020年に川崎フロンターレに入団。プロとしてデビューした。"
+    )
+
+    context = extract_pathway_context(text)
+
+    assert "川崎フロンターレU-10" in context
+    assert "筑波大学体育専門学群" in context
+    assert "プロとしてデビュー" not in context
+
+
+def test_extract_national_team_context_captures_flat_daihyokeireki_section():
+    # Matches the real 遠藤航 article structure: a flat 代表経歴 section, followed by
+    # an unrelated 人物 section that should be excluded.
+    text = (
+        "遠藤航は日本のプロサッカー選手。\n\n"
+        "== クラブ経歴 ==\n"
+        "2010年、湘南ベルマーレでJリーグデビューを果たす。\n\n"
+        "== 代表経歴 ==\n"
+        "2015年8月2日の北朝鮮戦で代表初出場を果たした。\n\n"
+        "== 人物 ==\n"
+        "プレースタイルはボランチ。"
+    )
+
+    context = extract_national_team_context(text)
+
+    assert "代表初出場" in context
+    assert "湘南ベルマーレ" not in context
+    assert "プレースタイル" not in context
+
+
+def test_extract_national_team_context_includes_nested_subsections_under_daihyoreki():
+    # Matches the real 中谷進之介 article structure: 代表歴 with nested 出場大会 and
+    # 試合数 subsections, followed by an unrelated 脚注 section that should be excluded.
+    text = (
+        "中谷進之介は日本のプロサッカー選手。\n\n"
+        "== 代表歴 ==\n"
+        "国際Aマッチ初出場 - 2021年3月31日 モンゴル代表戦\n\n"
+        "=== 出場大会 ===\n"
+        "U-15日本代表\n2011年 - AFC U-16選手権2012 (予選)\n\n"
+        "=== 試合数 ===\n"
+        "国際Aマッチ 5試合0得点（2021年 - 2022年）\n\n"
+        "== 脚注 ==\n"
+        "注釈は省略。"
+    )
+
+    context = extract_national_team_context(text)
+
+    assert "国際Aマッチ初出場" in context
+    assert "U-15日本代表" in context
+    assert "5試合0得点" in context
+    assert "注釈は省略" not in context
+
+
+def test_looks_like_junk_title_flags_list_and_character_pages():
+    # Real false-positive matches found at full population scale (see
+    # docs/pathway_source_pilot_2026-07-03.md and
+    # docs/national_team_pilot_2026-07-03.md): the fuzzy search fallback surfaced
+    # these pages for obscure players with no article of their own.
+    assert looks_like_junk_title("日本大学の人物一覧")
+    assert looks_like_junk_title("イナズマイレブンGOの登場人物")
+    assert looks_like_junk_title("兄弟スポーツ選手一覧")
+
+
+def test_looks_like_junk_title_allows_normal_biography_titles():
+    assert not looks_like_junk_title("三笘薫")
+    assert not looks_like_junk_title("中谷進之介")
+
+
+def test_extract_lead_birth_date_parses_standard_lead_sentence():
+    text = "三笘 薫（みとま かおる、1997年5月20日 - ）は、大分県日田市生まれのプロサッカー選手。"
+
+    assert extract_lead_birth_date(text) == "1997-05-20"
+
+
+def test_extract_lead_birth_date_returns_none_without_a_date():
+    text = "日本大学の人物一覧では、様々な分野で活躍する卒業生を紹介する。"
+
+    assert extract_lead_birth_date(text) is None
+
+
+def test_extract_lead_birth_date_ignores_dates_outside_the_lead_window():
+    # A date buried far past the lead sentence (e.g. inside a long list article)
+    # should not be picked up as if it were the subject's own birth date.
+    text = "見出しの本文。" * 60 + "1999年3月3日に関連イベントが開催された。"
+
+    assert extract_lead_birth_date(text) is None

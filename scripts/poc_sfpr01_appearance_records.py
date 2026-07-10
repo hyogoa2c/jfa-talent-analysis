@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from jfa_talent_analysis.pipeline import LEAGUE_FRAME_IDS
 from jfa_talent_analysis.sources.jleague_data_site import (
     create_competition_frames,
     create_competitions,
@@ -12,12 +13,6 @@ from jfa_talent_analysis.sources.jleague_data_site import (
     sfpr01_search_url,
     write_appearance_sample,
 )
-
-LEAGUE_FRAME_IDS = {
-    "J1": "1",
-    "J2": "2",
-    "J3": "3",
-}
 
 
 def parse_args() -> argparse.Namespace:

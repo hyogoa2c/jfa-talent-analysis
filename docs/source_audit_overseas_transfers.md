@@ -37,13 +37,14 @@ Then audit Wikidata coverage:
 ```bash
 uv run python scripts/audit_wikidata_reappearance_candidates.py \
   --input data/processed/reappearance_candidates_2023_2025_gap2.csv \
+  --output data/interim/source_audit/wikidata_reappearance_candidates_2023_2025_gap2.csv \
   --limit 20
 ```
 
 The audit output is local-only and gitignored:
 
 ```text
-data/interim/source_audit/wikidata_reappearance_candidates.csv
+data/interim/source_audit/wikidata_reappearance_candidates_2023_2025_gap2.csv
 ```
 
 For manual review, build a queue CSV from the audit output:
@@ -72,13 +73,29 @@ The audit script adds two review workflow columns:
 | `audit_status` | Machine-readable status for downstream filtering. |
 | `manual_review_reason` | Reason a row should remain in the manual review queue. |
 
+It also adds occupation, birth date, and in-gap overlap columns to support classification
+and manual review:
+
+| Column | Meaning |
+|---|---|
+| `wikidata_footballer_person_count` | Count of matched persons whose Wikidata occupation (`P106`) includes association football player (`Q937857`). Used to catch same-name matches to a non-footballer. |
+| `wikidata_birth_dates` | Pipe-joined distinct birth dates (`P569`, truncated to `YYYY-MM-DD`) across matched persons. Convenience hint for identity resolution; not used in classification. |
+| `wikidata_foreign_team_in_gap_count` | Count of distinct foreign `P54` team stints whose period overlaps the J.League observation gap (the seasons strictly between `previous_observed_season` and `reappearance_season`). |
+| `wikidata_foreign_teams_in_gap` | Pipe-joined `team (country)` strings for those in-gap foreign stints. |
+
+In-gap overlap is based on the `P580`/`P582` (start/end) qualifiers where present, and is
+conservative: a stint with a missing start date has an unknown overlap and is not counted as
+in-gap, and `wikidata_foreign_team_in_gap_count`/`wikidata_foreign_teams_in_gap` are left blank
+entirely when `previous_observed_season` or `reappearance_season` cannot be parsed as an
+integer.
+
 Current statuses:
 
 | Status | Meaning |
 |---|---|
-| `candidate_foreign_stint` | One Wikidata person match and at least one foreign-club `P54` team. Treat as candidate evidence. |
-| `no_wikidata_foreign_stint` | One Wikidata person match, but no foreign-club `P54` team. Do not treat as proof of no overseas stint. |
-| `needs_manual_review` | No person match, multiple person matches, or a katakana Japanese name without a foreign-club hint. |
+| `candidate_foreign_stint` | One Wikidata person match, the match is a footballer, and at least one foreign-club `P54` team. Treat as candidate evidence. These rows also enter the manual review queue (reason `foreign_hint_needs_verification`) for human confirmation. |
+| `no_wikidata_foreign_stint` | One Wikidata person match, the match is a footballer, but no foreign-club `P54` team. Do not treat as proof of no overseas stint. |
+| `needs_manual_review` | No person match, multiple person matches, a single person match that is not tagged as a footballer occupation, or a katakana Japanese name without a foreign-club hint. |
 
 ## Initial Wikidata Findings
 
@@ -160,6 +177,11 @@ human review step should select the correct player page before filling `manual_d
 
 ## Manual Review Entry Rules
 
+The queue now also contains `candidate_foreign_stint` rows (reason
+`foreign_hint_needs_verification`), not only `needs_manual_review` rows, so a Wikidata
+foreign-club hint is confirmed by a human rather than auto-accepted. The entry rules below are
+unchanged for reviewers; apply them the same way regardless of `audit_status`.
+
 Manual review should fill only these fields:
 
 | Field | Rule |
@@ -186,12 +208,46 @@ Decision examples:
 | Correct player page is found but club history is incomplete. | `identity_resolved_no_decision` | `Identity resolved; source does not cover gap seasons clearly.` |
 | Several same-name players remain plausible. | `unresolved` | `Multiple candidates; cannot resolve identity from available pages.` |
 
+Queue safety guarantees:
+
+- Rebuilding the queue with `build_overseas_manual_review_queue.py` preserves existing
+  `wikipedia_*`, `manual_decision`, `manual_note`, and `evidence_url` values for rows that
+  are still in the rebuilt queue, and warns on stderr about reviewed rows that would be
+  dropped.
+- `enrich_manual_review_queue_with_wikipedia.py --limit N` enriches only the first N rows
+  but always writes the full queue back, so a partial run never truncates the file.
+
 Run the validator before committing manual edits:
 
 ```bash
 uv run python scripts/validate_overseas_manual_review_queue.py \
   --input data/manual/overseas_transfer_manual_review_queue_2023_2025_gap2.csv
 ```
+
+## Building the moved_overseas Outcome
+
+Once queue rows have decisions, materialize a `moved_overseas` outcome table:
+
+```bash
+uv run python scripts/build_overseas_transfer_outcomes.py \
+  --input data/manual/overseas_transfer_manual_review_queue_2023_2025_gap2.csv \
+  --output data/processed/overseas_transfer_outcomes_2023_2025_gap2.csv
+```
+
+Every queue row is kept in the output, and `moved_overseas` is set from `manual_decision`:
+
+| `manual_decision` | `moved_overseas` |
+|---|---|
+| `confirmed_foreign_stint` | `1` |
+| `confirmed_no_foreign_stint` | `0` |
+| `identity_resolved_no_decision`, `unresolved`, or blank | `""` (unknown) |
+
+This table only covers rows that entered the manual review queue. The 56 candidates with
+`audit_status == no_wikidata_foreign_stint` are deliberately excluded rather than defaulted to
+`moved_overseas=0`: a missing Wikidata `P54` hint is not proof of no overseas stint (see
+Interpretation Rules below), so labeling them would silently overstate recall. Any future full
+`moved_overseas` feature (e.g. for `docs/data_collection_plan.md`'s outcome features) should
+treat rows outside this table as missing, not negative.
 
 ## Interpretation Rules
 
@@ -204,3 +260,10 @@ uv run python scripts/validate_overseas_manual_review_queue.py \
   birth date, and career chronology still matter.
 - Keep the manual review queue as a first-class output rather than forcing every row into an
   automated positive or negative label.
+- When cross-checking an "absent season" against Wikipedia during manual review, read the
+  league-competition column specifically. Wikipedia's per-year total often combines league,
+  league cup, and Emperor's Cup appearances (e.g. `リーグ戦 / リーグ杯 / 天皇杯 / 期間通算`);
+  our appearance counts are J1/J2/J3 league fixtures only (see
+  `docs/data_collection_plan.md`), so a nonzero combined total does not contradict a `0`
+  league appearance in our data. Confirmed during review of player 8646 (山下達也): Wikipedia's
+  2022 combined total was 2, but the J1 league column was 0, matching our source exactly.

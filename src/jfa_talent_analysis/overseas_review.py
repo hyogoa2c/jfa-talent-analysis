@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from jfa_talent_analysis.pipeline import parse_int
 
 ALLOWED_MANUAL_DECISIONS = {
     "",
@@ -8,6 +9,8 @@ ALLOWED_MANUAL_DECISIONS = {
     "identity_resolved_no_decision",
     "unresolved",
 }
+
+MANUAL_REVIEW_STATUSES = {"needs_manual_review", "candidate_foreign_stint"}
 
 MANUAL_REVIEW_COLUMNS = [
     "source_player_id",
@@ -21,6 +24,8 @@ MANUAL_REVIEW_COLUMNS = [
     "reappearance_minutes",
     "wikidata_person_ids",
     "wikidata_foreign_teams",
+    "wikidata_foreign_teams_in_gap",
+    "wikidata_birth_dates",
     "audit_status",
     "manual_review_reason",
     "wikipedia_titles",
@@ -29,6 +34,19 @@ MANUAL_REVIEW_COLUMNS = [
     "manual_decision",
     "manual_note",
     "evidence_url",
+]
+
+MANUAL_ENTRY_COLUMNS = [
+    "manual_decision",
+    "manual_note",
+    "evidence_url",
+]
+
+PRESERVED_REVIEW_COLUMNS = [
+    "wikipedia_titles",
+    "wikipedia_urls",
+    "wikipedia_search_error",
+    *MANUAL_ENTRY_COLUMNS,
 ]
 
 
@@ -61,7 +79,14 @@ def validate_manual_review_rows(rows: list[dict[str, str]]) -> list[str]:
 
 
 def build_manual_review_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
-    manual_rows = [row for row in rows if row.get("audit_status") == "needs_manual_review"]
+    manual_rows: list[dict[str, str]] = []
+    for row in rows:
+        audit_status = row.get("audit_status")
+        if audit_status not in MANUAL_REVIEW_STATUSES:
+            continue
+        if audit_status == "candidate_foreign_stint" and not row.get("manual_review_reason"):
+            row = {**row, "manual_review_reason": "foreign_hint_needs_verification"}
+        manual_rows.append(row)
     manual_rows.sort(
         key=lambda row: (
             parse_int(row.get("absent_seasons", "")) * -1,
@@ -76,34 +101,46 @@ def build_manual_review_row(row: dict[str, str]) -> dict[str, str]:
     values = {
         column: row.get(column, "")
         for column in MANUAL_REVIEW_COLUMNS
-        if column
-        not in {
-            "wikipedia_titles",
-            "wikipedia_urls",
-            "wikipedia_search_error",
-            "manual_decision",
-            "manual_note",
-            "evidence_url",
-        }
+        if column not in set(PRESERVED_REVIEW_COLUMNS)
     }
-    values.update(
-        {
-            "wikipedia_titles": "",
-            "wikipedia_urls": "",
-            "wikipedia_search_error": "",
-            "manual_decision": "",
-            "manual_note": "",
-            "evidence_url": "",
-        }
-    )
+    values.update({column: "" for column in PRESERVED_REVIEW_COLUMNS})
     return values
 
 
-def parse_int(value: str) -> int:
-    try:
-        return int(value)
-    except ValueError:
-        return 0
+def merge_existing_review_entries(
+    rows: list[dict[str, str]], existing_rows: list[dict[str, str]]
+) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+    """Carry Wikipedia enrichment and manual review entries from an existing queue.
+
+    Returns the merged rows plus existing reviewed rows that are no longer in the
+    rebuilt queue, so callers can warn instead of silently dropping manual work.
+    """
+    existing_by_key = {review_key(row): row for row in existing_rows}
+    merged: list[dict[str, str]] = []
+    for row in rows:
+        existing = existing_by_key.get(review_key(row))
+        if existing is not None:
+            row = {
+                **row,
+                **{column: existing.get(column, "") for column in PRESERVED_REVIEW_COLUMNS},
+            }
+        merged.append(row)
+
+    new_keys = {review_key(row) for row in rows}
+    dropped_reviewed = [
+        row
+        for row in existing_rows
+        if review_key(row) not in new_keys and has_manual_entry(row)
+    ]
+    return merged, dropped_reviewed
+
+
+def review_key(row: dict[str, str]) -> tuple[str, str]:
+    return (row.get("source_player_id", ""), row.get("reappearance_season", ""))
+
+
+def has_manual_entry(row: dict[str, str]) -> bool:
+    return any(row.get(column, "").strip() for column in MANUAL_ENTRY_COLUMNS)
 
 
 def looks_like_url(value: str) -> bool:

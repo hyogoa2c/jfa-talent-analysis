@@ -260,9 +260,27 @@ Current implementation status:
 - Ambiguous diagnostics are written at unresolved appearance-context level, including season, league, team, shirt number, appearances, minutes, and goals.
 - `scripts/build_reappearance_candidates.py` flags players who reappear in a target window after an observed J.League appearance gap. This is useful for candidate discovery, but it is not proof of overseas transfer.
 - The collection script supports multiple competitions inside one league frame, which is needed for 2015 and 2016 J1 two-stage seasons.
+- A 2014-2025 SFPR01 availability audit confirmed the J1/J2/J3 frames contain only league
+  competitions (one per season, plus the 2015/2016 J1 1st/2nd stages). Playoff and
+  championship matches live in other frames, so league minutes are not double-counted;
+  the 2015/2016 championship matches are simply outside the collected league totals.
 - J3 is automatically excluded before 2014 in the multi-season driver.
 - Current derived features are based only on seasons included in the input file, so first-observed season, first-J1 season, and cumulative U21/U23 minutes are observation-window measures until multi-season collection is run.
-- A 2013 smoke attempt found no SFPR01 competition frames for that year, so 2005-2013 backfill requires a separate source-availability audit before large-scale collection.
+- A full 2005-2013 SFPR01 availability audit (`scripts/audit_sfpr01_season_availability.py
+  --start-season 2005 --end-season 2013`) confirmed zero competition frames for every season
+  and league in that range, not just 2013. This was cross-checked directly against the SFPR01
+  search page's own season `<select>` dropdown, whose options span only 2014 through the
+  current season (plus youth/special entries) — 2005-2013 are not offered as choices at all.
+  This is a hard boundary of the SFPR01 endpoint's dataset, not a request-format or
+  collection-code issue: **SFPR01 has no appearance-record data before 2014.** 2005-2013
+  backfill for the primary population (defined above as players active from 2005 onward)
+  therefore requires an entirely different source (e.g. archived league records, JFA/club
+  official histories, or third-party databases from the candidate list in
+  `docs/source_audit_overseas_transfers.md`, subject to the same terms-of-use checks), not
+  further collection from this source. Until that source is identified, treat 2014 as the
+  practical start of the appearance/outcome-feature observation window and the 2005-2013
+  portion of the primary population definition as aspirational rather than currently
+  collectible.
 - 2020-2022 collection is available through SFPR01, but should be treated as a COVID-period block because league/team counts differ from surrounding seasons.
 
 ### Step 3: Pathway Classification
@@ -327,6 +345,27 @@ Output:
 data/processed/player_pathway_outcomes.csv
 ```
 
+**Built 2026-07-07** via `scripts/build_player_pathway_outcomes.py`: one row per
+player (4,037 rows) joining collapsed player-season features (career minutes,
+`reached_j1`, first J1 season/age — collapsed from
+`player_season_features_2014_2025_J1_J2_J3.csv`'s per-season rows) with
+`pathway_category` and `any_national_team_selection`/`national_team_categories`
+(each resolved from the classifier's auto-label, overridden by the human review
+queue's `reviewed_*` value where present — see
+`docs/pathway_source_pilot_2026-07-03.md`/`docs/national_team_pilot_2026-07-03.md`'s
+Labeling Phase sections) and `moved_overseas` (from the existing 2023-2025
+reappearance-gap manual review queue).
+
+3,403 of 4,037 players (84.3%) have a resolved `pathway_category` and
+`any_national_team_selection`; the remaining 634 have `identity_not_confirmed`
+(no reliable Wikipedia match at the identity-verification step). `moved_overseas`
+is far sparser (33 players) since it currently only covers the narrow
+2023-2025 observed-reappearance-gap population, not the full 4,037 — extending
+overseas-transfer coverage to the full population, and the JFA per-occasion
+squad-page spot-check `docs/national_team_pilot_2026-07-03.md` recommends for
+the "no evidence found" majority, both remain future work before this table
+should be treated as final for modeling.
+
 ## Initial Analysis Targets
 
 ### Descriptive Analysis
@@ -361,6 +400,7 @@ data/processed/player_pathway_outcomes.csv
 | Incomplete youth histories | Store confidence and source coverage |
 | Conflicting pathway claims | Preserve source-specific claims, resolve only in processed layer |
 | Site terms restrictions | Document source permissions before automated scraping |
+| No SFPR01 appearance data before 2014 (confirmed) | Treat 2014 as the practical collection start; source a separate 2005-2013 provider before extending the primary population's start year in analysis |
 
 ## Terms and Compliance Checklist
 

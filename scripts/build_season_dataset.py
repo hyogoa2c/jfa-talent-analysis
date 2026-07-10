@@ -5,7 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-DEFAULT_LEAGUES = ("J1", "J2", "J3")
+from jfa_talent_analysis.pipeline import DEFAULT_LEAGUES
 
 
 def parse_args() -> argparse.Namespace:

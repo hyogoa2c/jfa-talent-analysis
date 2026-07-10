@@ -4,6 +4,8 @@ import argparse
 import csv
 from pathlib import Path
 
+from jfa_talent_analysis.matching import normalize_name
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -50,10 +52,6 @@ def main() -> None:
 def read_csv(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as file:
         return list(csv.DictReader(file))
-
-
-def normalize_name(value: str) -> str:
-    return " ".join(value.split())
 
 
 if __name__ == "__main__":

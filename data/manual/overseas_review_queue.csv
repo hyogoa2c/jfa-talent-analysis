@@ -1,0 +1,197 @@
+source_player_id,name_ja,name_en,wikipedia_title,moved_overseas_wiki,overseas_confidence,overseas_reason,overseas_evidence,reviewed_moved_overseas,reviewer_note
+10110,米本 拓司,YONEMOTO Takuji,米本拓司,yes,needs_review,weak_country_move_signal_only,米本自身は入団会見時に自身のプレーの特徴を「タイプとして似ている浅利（悟）選手が目標」「守備を得意とするので、相手の攻撃の芽をつむプレーに磨きをかけたい」とコメントしている,0,無関係（入団会見コメント）
+10140,三平 和司,MITSUHIRA Kazushi,三平和司,yes,needs_review,weak_country_move_signal_only,FC東京の練習に参加をするなど複数クラブから注目されたが、一番早いタイミングで獲得オファーを受けた湘南への加入を決め、2009年8月に翌シーズンからの湘南への加入内定が発表された,0,国内複数クラブから注目も最終的に湘南（国内）加入
+10142,山本 脩斗,Shuto YAMAMOTO,山本脩斗,yes,needs_review,weak_country_move_signal_only,さらに2019年は安西が夏にポルトガルへ移籍すると、同時期に加入した小池裕太がポジションを確保したため、自身の出場はわずか6試合に留まった,0,安西という別選手のポルトガル移籍に関する記述
+10397,武岡 優斗,Yuto TAKEOKA,武岡優斗,yes,needs_review,weak_country_move_signal_only,2020年2月、レノファ山口FCのタイキャンプに古賀俊太郎と共に練習生として参加し、キャンプ終了後正式加入が認められた,0,国内クラブのタイ合宿への練習生参加、移籍ではない
+10479,山中 亮輔,YAMANAKA Ryosuke,山中亮輔,yes,needs_review,weak_country_move_signal_only,8月10日、トルコリーグ1部、イスタンブール・バシャクシェヒルFKから完全移籍でのオファーが来ていることを認めたが残留した,0,トルコクラブのオファーを認めたが残留
+10502,犬飼 智也,INUKAI Tomoya,犬飼智也,yes,needs_review,weak_country_move_signal_only,加入後は昌子源と植田直通の日本代表コンビを前にポジションを奪うことは出来ず、W杯明けの植田移籍後に代役として期待されたが、韓国代表チョン・スンヒョンが加入したためにレギュラーとして活躍することは無かった,0,韓国代表選手が加入したという競合選手の記述
+10523,深井 脩平,Shuhei FUKAI,深井脩平,yes,needs_review,weak_country_move_signal_only,2021年2月8日にマレーシアのクランタン・ユナイテッドFCへの移籍を発表,1,マレーシア・クランタン・ユナイテッドFCへの移籍を発表
+10529,飯田 健巳,Tatsumi IIDA,飯田健巳,yes,needs_review,weak_country_move_signal_only,登録ウインドー適用の例外措置としての加入のため、飯田は6月15日付けで選手登録が抹消されたが、7月20日付けで再登録された,0,登録ウインドー例外措置の話、海外移籍ではない
+10561,矢島 慎也,YAJIMA Shinya,矢島慎也,yes,needs_review,weak_country_move_signal_only,2013年シーズンに入ると、開幕から興梠慎三、阪野豊史の加入もありベンチ外が続いていたが、ベンチ入りのチャンスを掴むと5月18日サガン鳥栖戦にアディショナルタイムに途中出場すると、リーグ戦初ゴールを決めた,0,無関係（興梠慎三加入によるベンチ外の話）
+10908,山田 大記,Hiroki YAMADA,山田大記,yes,needs_review,retracted_language_present,磐田側は残留を希望したが、山田の強い海外移籍の意志を容認し、同年7月24日に公式に完全移籍が発表された,1,完全移籍が発表された（残留希望は却下された選択肢）
+10923,シュミット ダニエル,SCHMIDT Daniel,シュミット・ダニエル,yes,needs_review,retracted_language_present,2019年7月1日、ジュピラー・プロ・リーグ・シント＝トロイデンVVへの完全移籍が発表され、7月13日の鹿島アントラーズ戦が仙台での最後の試合となった,1,ジュピラー・プロ・リーグへ完全移籍が発表された
+11011,梅鉢 貴秀,Takahide UMEBACHI,梅鉢貴秀,yes,needs_review,weak_country_move_signal_only,2023年1月20日、オーストラリアのサザーランド・シャークスFCへの移籍が発表された,1,オーストラリア・サザーランド・シャークスFCへの移籍が発表された
+11037,岩上 祐三,Yuzo IWAKAMI,岩上祐三,yes,needs_review,weak_country_move_signal_only,2025年7月9日、オーストラリアのサウス・メルボルンFCへの加入が発表された,1,オーストラリア・サウス・メルボルンFCへの加入が発表された
+11070,上福元 直人,KAMIFUKUMOTO Naoto,上福元直人,yes,needs_review,weak_country_move_signal_only,加入後は韓国代表ソン・ボムグンから即座にポジションを奪うと、シーズン終了までの全11試合に出場した,0,韓国代表選手からポジションを奪ったという競合選手の記述
+11183,沼田 圭悟,Keigo NUMATA,沼田圭悟,yes,needs_review,retracted_language_present,2011年にはサンパウロ州選手権セリエA1（1部相当）所属のパウリスタFCの入団テストに合格したが、怪我の為に契約は見送られた,0,入団テスト合格も怪我で契約見送り、移籍不成立
+11191,林 彰洋,HAYASHI Akihiro,林彰洋,yes,needs_review,retracted_language_present,2008年3月にリーグ・アンのFCメスの入団テストを受験するも不合格,0,入団テスト不合格
+11234,木下 康介,KINOSHITA Kosuke,木下康介,yes,needs_review,retracted_language_present,=== 海外挑戦 ===,1,フライブルクと複数年プロ契約を締結（フルコンテキストで確認）
+11280,前田 尚輝,Naoki MAEDA,前田尚輝,yes,needs_review,weak_country_move_signal_only,2021年2月6日、フィンランド・ウッコネン（2部）のムサン・サラマへの移籍が発表された,1,フィンランド・ムサン・サラマへの移籍が発表された
+11287,富居 大樹,Daiki TOMII,富居大樹,yes,needs_review,weak_country_move_signal_only,谷がガンバに復帰した2023シーズンは、代わって韓国代表ソン・ボムグンが加入,0,韓国代表選手が加入したという競合選手の記述
+11292,渋谷 飛翔,SHIBUYA Tsubasa,渋谷飛翔,yes,needs_review,weak_country_move_signal_only,2018シーズンからは、オーストラリア代表ミッチェル・ランゲラックの加入もあってベンチ入りすら厳しくなった,0,オーストラリア代表選手が加入したという競合選手の記述
+11341,太田 岳志,OTA Gakuji,太田岳志,yes,needs_review,weak_country_move_signal_only,夏には韓国代表歴のある具聖潤が加入したが、出場機会を争い、14試合に出場した,0,韓国代表歴のある選手が加入したという競合選手の記述
+11884,高瀬 証,Akira TAKASE,高瀬証,yes,needs_review,weak_country_move_signal_only,2007年よりアルビレックス新潟シンガポールに入団した,1,アルビレックス新潟シンガポールに入団（シンガポールでプレーする実質的な海外移籍）
+11978,前 寛之,MAE Hiroyuki,前寛之,yes,needs_review,weak_country_move_signal_only,2014年7月、タイ・ディヴィジョン1リーグのコーンケンFCへ期限付き移籍,1,タイ・コーンケンFCへ期限付き移籍
+11990,伊佐 耕平,ISA Kohei,伊佐耕平,yes,needs_review,weak_country_move_signal_only,本人曰く「上下関係なく誰にでもズバズバ行けるタイプ」で、動画内では新加入の後輩選手を優しく迎え入れたり、時には先輩選手を弄る姿も見せている,0,無関係（人柄に関する記述）
+12096,鈴木 優磨,SUZUKI Yuma,鈴木優磨,yes,needs_review,retracted_language_present,2019年7月15日、ベルギー1部のシント＝トロイデンVVとクラブ間合意したことを発表した,1,シント＝トロイデンVVとクラブ間合意を発表
+12102,浦田 樹,Itsuki URATA,浦田樹,yes,needs_review,retracted_language_present,2019年3月2日、ウクライナ・プレミアリーグのFCゾリャ・ルハーンシクに加入することが発表された,1,FCゾリャ・ルハーンシクへの加入が発表された
+12136,手塚 康平,TEZUKA Kohei,手塚康平,yes,needs_review,weak_country_move_signal_only,2015年、ニュージーランド・オネハンガ・スポーツに加入,1,ニュージーランド・オネハンガ・スポーツに加入
+12158,高木 利弥,Toshiya TAKAGI,高木利弥,yes,needs_review,weak_country_move_signal_only,2023年7月1日、カンボジア・リーグ所属のティフィ・アーミーFCへ移籍したことを発表された,1,カンボジア・ティフィ・アーミーFCへ移籍
+1484,曽ヶ端 準,Hitoshi SOGAHATA,曽ヶ端準,yes,needs_review,weak_country_move_signal_only,2017年は韓国代表のクォン・スンテが加入し、開幕直後はレギュラー争いで敗れるもシーズン後半からレギュラーを勝ち取った,0,韓国代表選手が加入したという競合選手の記述
+15765,鎌田 大地,Daichi KAMADA,鎌田大地,yes,needs_review,retracted_language_present,2017年6月24日にブンデスリーガのアイントラハト・フランクフルトに完全移籍することでクラブ間が合意したことが発表された,1,アイントラハト・フランクフルトへの完全移籍が合意（鎌田大地、著名な実例）
+15766,福満 隆貴,Takaki FUKUMITSU,福満隆貴,yes,needs_review,weak_country_move_signal_only,加入1年目から中嶋雄大と並ぶチーム最多タイの8得点を記録,0,無関係（国内での得点記録）
+15808,西村 拓真,NISHIMURA Takuma,西村拓真,yes,needs_review,weak_country_move_signal_only,2024年1月10日、スイススーパーリーグ・セルヴェットFCへ期限付き移籍することが発表された,1,スイス・セルヴェットFCへ期限付き移籍
+15900,黒川 淳史,KUROKAWA Atsushi,黒川淳史,yes,needs_review,weak_country_move_signal_only,2025年2月、ブルガリアプロサッカーリーグのスパルタク・ヴァルナへの期限付き移籍が発表された,1,ブルガリア・スパルタク・ヴァルナへ期限付き移籍
+15902,波多野 豪,HATANO Go,波多野豪,yes,needs_review,weak_country_move_signal_only,2022年は降格したベガルタ仙台から元ポーランド代表ヤクブ・スウォビィクが加入,0,元ポーランド代表選手が加入したという競合選手の記述
+15907,冨安 健洋,Takehiro TOMIYASU,冨安健洋,yes,needs_review,retracted_language_present,2018年1月8日、ベルギー1部のシント＝トロイデンVVに移籍することが発表された,1,シント＝トロイデンVVへの移籍が発表された（冨安健洋、著名な実例）
+15913,森島 司,MORISHIMA Tsukasa,森島司,yes,needs_review,weak_country_move_signal_only,2019年12月、広島加入時の監督である森保一が指揮するEAFF E-1サッカー選手権2019に出場する日本代表に初選出され、12月10日の中国戦で代表初出場,0,代表招集（E-1選手権）の話、クラブ移籍ではない
+1615,中村 俊輔,Shunsuke NAKAMURA,中村俊輔,yes,needs_review,retracted_language_present,ケガが癒えた直後の同年7月、イタリアのセリエAのレッジーナに移籍,1,セリエAレッジーナへ移籍（中村俊輔、著名な実例）
+19465,渡辺 皓太,WATANABE Kota,渡辺皓太,yes,needs_review,weak_country_move_signal_only,キャプテン就任直後だったこともあり、ヴェルディサポーターから不満の声も上がり、ヴェルディの公式サイトでは「渡辺皓太選手移籍に関して永井秀樹監督から東京ヴェルディを支えてくださる皆様へ」というタイトルで声明を発表する事態となった,0,国内移籍騒動、海外の言及なし
+19610,柳 育崇,YANAGI Yasutaka,柳育崇,yes,needs_review,weak_country_move_signal_only,2017年に専修大学からアルビレックス新潟シンガポールへ加入,1,アルビレックス新潟シンガポールへ加入
+19690,久保 建英,Takefusa KUBO,久保建英,yes,needs_review,weak_country_move_signal_only,川崎フロンターレアカデミーから移籍しスペインに渡る,1,スペインに渡る（久保建英、著名な実例）
+2184,土屋 征夫,Yukio TSUCHIYA,土屋征夫,yes,needs_review,weak_country_move_signal_only,ブラジルでプレーする土屋の存在を知ったヴェルディ川崎から練習参加のオファーが届き帰国、1997年にV川崎とプロ契約を結んだ,1,帰国前にブラジルでプレーしていたことを確認できる記述
+23130,茂木 秀,MOGI Shu,茂木秀,yes,needs_review,weak_country_move_signal_only,同年5月26日、登録ウインドーの適用例外措置で、GKが負傷により不足したJ3リーグFC今治に期限付き移籍先が変更された,0,登録ウインドー例外措置の話、国内クラブ間の移籍
+23186,小松 駿太,Hayata KOMATSU,小松駿太,yes,needs_review,weak_country_move_signal_only,2023年、韓国・K3リーグの慶州韓国水力原子力FCへ完全移籍,1,韓国K3リーグへ完全移籍
+23194,髙橋 壱晟,TAKAHASHI Issei,髙橋壱晟,yes,needs_review,weak_country_move_signal_only,元々大学進学も考えていたが、クラブスタッフやパラグアイ代表のアランダの説得もあり、千葉への入団を決めた,0,パラグアイ代表選手に説得され国内クラブ（千葉）へ入団した、という記述
+23215,河田 篤秀,KAWATA Atsushi,河田篤秀,yes,needs_review,weak_country_move_signal_only,9月23日の北海道コンサドーレ札幌戦（札幌ドーム）、前半30分に札幌ゴールキーパーのク・ソンユンとの接触プレーにより負傷退場した富山貴光との交代によって途中出場すると、2点ビハインドの展開で後半80分にJリーグ移籍後初ゴール、さらに87分に同点ゴールを挙げて引き分けに持ち込んだことで呂比須ワグナー監督からの信頼を獲得,0,無関係（対戦相手GKとの接触プレー）
+23232,谷口 智紀,Tomoki TANIGUCHI,谷口智紀,yes,needs_review,weak_country_move_signal_only,2025年7月、カンボジア・リーグのティフィー・アーミーFCに移籍,1,カンボジア・ティフィー・アーミーFCに移籍
+23258,塚川 孝輝,TSUKAGAWA Koki,塚川孝輝,yes,needs_review,weak_country_move_signal_only,2026年1月15日、タイ王国のPTプラチュワップFCに加入することが発表された,1,タイ王国のPTプラチュワップFCに加入
+23383,藤本 寛也,Kanya FUJIMOTO,藤本寛也,yes,needs_review,weak_country_move_signal_only,2020年8月5日、ポルトガルリーグ1部のジル・ヴィセンテへの期限付き移籍が発表された,1,ポルトガル1部ジル・ヴィセンテへ期限付き移籍
+2779,山本 英臣,YAMAMOTO Hideomi,山本英臣,yes,needs_review,weak_country_move_signal_only,広島側が1本止められた状態での4-4の5人目として登場し、これを落ち着いて左側へ決めてチーム加入20年目で初のメジャータイトル獲得に貢献した,0,無関係（PK戦の記述）
+29247,谷口 海斗,TANIGUCHI Kaito,谷口海斗,yes,needs_review,weak_country_move_signal_only,2026年1月30日、オーストラリアのセントラルコースト・マリナーズFCへの移籍加入が正式に発表された,1,オーストラリア・セントラルコースト・マリナーズFCへ移籍
+29257,山口 一真,YAMAGUCHI Kazuma,山口一真,yes,needs_review,retracted_language_present,ブンデスリーガのフォルトゥナ・デュッセルドルフにも練習参加するなど複数クラブから注目されたが、鹿島アントラーズに加入が内定した,0,練習参加止まり、最終的に鹿島アントラーズ（国内）加入
+29275,佐野 翼,Tsubasa SANO,佐野翼,yes,needs_review,weak_country_move_signal_only,2017年、順天堂大学からアルビレックス新潟シンガポールへ加入,1,アルビレックス新潟シンガポールへ加入
+29293,坪井 清志郎,TSUBOI Kiyoshiro,坪井清志郎,yes,needs_review,weak_country_move_signal_only,2021年、アルビレックス新潟シンガポールに期限付き移籍,1,アルビレックス新潟シンガポールへ期限付き移籍
+29344,浅川 隼人,ASAKAWA Hayato,浅川隼人,yes,needs_review,weak_country_move_signal_only,途中加入ながらチーム3位タイの6得点を記録し、残留に貢献した,0,無関係（得点記録）
+29441,松岡 大起,MATSUOKA Daiki,松岡大起,yes,needs_review,retracted_language_present,2022年終了後、海外移籍を試みたものの、目標であるヨーロッパからのオファーは無く、2023年もチームに残留,0,海外移籍を試みたがオファーなく国内残留
+29445,倍井 謙,MASUI Ken,倍井謙,yes,needs_review,weak_country_move_signal_only,2026年1月28日（日本時間1月29日）、ベルギーのKベールスホットVAに2025-26シーズン終了までの期限付き移籍で加入した,1,ベルギー・KベールスホットVAへ期限付き移籍
+3127,玉田 圭司,Keiji TAMADA,玉田圭司,yes,needs_review,weak_country_move_signal_only,当時「ワールドカップ出場が夢」と語っていた玉田は、翌年に控えるドイツワールドカップでの代表選出を目指してJ1チームの移籍先を探すこととなる,0,ワールドカップ代表選出を目指すという話、国内クラブ探しの文脈
+3165,相馬 崇人,Takahito SOMA,相馬崇人,yes,needs_review,retracted_language_present,浦和との3年契約を満了し、念願の欧州移籍を模索していた2008年のシーズンオフ、ドイツ・ブンデスリーガ2部のフライブルクから獲得を前提にした練習参加のオファーを受けるも交渉が長引いたために渡独直前で消滅,0,フライブルクとの交渉が渡独直前で消滅
+32388,佐野 海舟,Kaishu SANO,佐野海舟,yes,needs_review,retracted_language_present,またシーズン終了後には、ドイツ1部のヴェルダー・ブレーメンからオファーを受けたが、残留した,0,ヴェルダー・ブレーメンのオファーを受けたが残留
+32719,中村 帆高,NAKAMURA Hotaka,中村帆高,yes,needs_review,retracted_language_present,コロナ禍によるリーグ戦中断とその後の過密日程に加え、右サイドバックの室屋成が海外移籍したことにより、右サイドバックとしては中村拓海と、左サイドバックとしては小川諒也とポジションを分け合う形となった,0,室屋成という別選手の海外移籍に関する記述
+37534,武田 英寿,TAKEDA Hidetoshi,武田英寿,yes,needs_review,weak_country_move_signal_only,6月15日、J2第19節モンテディオ山形戦で、後半アディショナルタイムに移籍後初得点の直接フリーキックを決め、3-4の逆転勝利に貢献した,0,無関係（国内移籍後初ゴールの記述）
+37949,横山 歩夢,Ayumu YOKOYAMA,横山歩夢,yes,needs_review,weak_country_move_signal_only,2025年2月4日、2024-25シーズン終了までの期限付き移籍でベルギーのヨング・ヘンク（KRCゲンクのリザーブチーム）に加わることになった,1,ベルギー・ヨング・ヘンクへ期限付き移籍
+4273,小笠原 満男,Mitsuo OGASAWARA,小笠原満男,yes,needs_review,retracted_language_present,2005年シーズン途中にイタリア・セリエAのレッチェからのオファーを受け移籍を志願したが、優勝争いをしている最中ということもあり、クラブがオファーを断り破談に終わった,0,レッチェのオファーをクラブが拒否し破談
+4381,遠藤 保仁,Yasuhito ENDO,遠藤保仁,yes,needs_review,weak_country_move_signal_only,翌2002年に監督に就任した西野朗の下、攻撃的なスタイルを標榜するチームの中心選手になり、移籍3年目の2003年に初めてJリーグベストイレブンを受賞する,0,国内移籍（ガンバ大阪）3年目の話
+44767,宮崎 鴻,MIYAZAKI Ko,宮崎鴻,yes,needs_review,weak_country_move_signal_only,3月16日、J2第5節の水戸ホーリーホック戦で後半33分から途中出場し、アディショナルタイムに移籍後初ゴールをマーク,0,無関係（国内移籍後初ゴールの記述）
+44972,岩渕 弘人,IWABUCHI Hiroto,岩渕弘人,yes,needs_review,weak_country_move_signal_only,同年4月20日のJ2第12節ロアッソ熊本戦で、前半30分の輪笠祐士のゴールをアシスト、前半アディショナルタイムには移籍後初ゴールを記録した,0,無関係（国内移籍後初ゴールの記述）
+45029,深川 大輔,FUKAGAWA Daisuke,深川大輔,yes,needs_review,weak_country_move_signal_only,2025年1月8日、香港流浪足球会への移籍を発表,1,香港流浪足球会への移籍を発表
+49780,安斎 颯馬,ANZAI Soma,安斎颯馬,yes,needs_review,weak_country_move_signal_only,2026年1月24日、ポルトガルのFCペナフィエルに2025-26シーズン終了までの期限付き移籍で加入することが発表された,1,ポルトガル・FCペナフィエルへ期限付き移籍
+5818,坂田 大輔,Daisuke SAKATA,坂田大輔,yes,needs_review,weak_country_move_signal_only,目標としていたリーグ戦での二桁得点も達成し、イタリア・SSラツィオへの移籍交渉を進めていたが、負傷により立ち消えとなった,0,SSラツィオとの移籍交渉が負傷で立ち消え
+6249,菅野 孝憲,SUGENO Takanori,菅野孝憲,yes,needs_review,weak_country_move_signal_only,するとク・ソンユンが兵役のため、韓国へ移籍すると第2節からレギュラーに定着,0,韓国代表選手（ク・ソンユン）が兵役で韓国へ移籍、という競合選手の記述
+6419,今野 泰幸,Yasuyuki KONNO,今野泰幸,yes,needs_review,weak_country_move_signal_only,2004年に「J1であること」、「若手の出場機会が多い」、「まだタイトルを取った事が無いチームで、チームと共に成長できると思った」ことが決め手となり、J1のFC東京に完全移籍した,0,国内移籍（FC東京）の話
+6444,山本 海人,Kaito YAMAMOTO,山本海人,yes,needs_review,weak_country_move_signal_only,しかし、2016年になると韓国代表の金承奎の加入により控えに降格し、6年ぶりにリーグ戦の出場機会なしに終わった,0,韓国代表選手が加入したという競合選手の記述
+6656,松井 謙弥,Kenya MATSUI,松井謙弥,yes,needs_review,weak_country_move_signal_only,2023年3月22日、台湾社会人甲級サッカーリーグの台中Futuroへの移籍が発表された,1,台湾・台中Futuroへ移籍
+6679,梶山 陽平,Yohei KAJIYAMA,梶山陽平,yes,needs_review,weak_country_move_signal_only,2013年1月1日、ギリシャ・スーパーリーグのパナシナイコスFCへ期限付き移籍,1,ギリシャ・パナシナイコスFCへ期限付き移籍
+6816,荻 晃太,Kota OGI,荻晃太,yes,needs_review,weak_country_move_signal_only,しかし、韓国代表のキム・スンギュが同時期に加入したこともあり出場機会は無かった,0,韓国代表GKが加入したという競合選手の記述
+6836,徳重 健太,TOKUSHIGE Kenta,徳重健太,yes,needs_review,weak_country_move_signal_only,その後は山本海人や韓国代表のキム・スンギュらが加入し、出場機会が減少した,0,韓国代表選手らが加入したという競合選手の記述
+6849,山形 辰徳,Tatsunori YAMAGATA,山形辰徳,yes,needs_review,weak_country_move_signal_only,2004シーズンはアルビレックス新潟シンガポールに期限付き移籍した,1,アルビレックス新潟シンガポールへ期限付き移籍
+6857,田中 佑昌,Yusuke TANAKA,田中佑昌,yes,needs_review,weak_country_move_signal_only,アビスパ福岡入団からしばらくは髪型はミディアムヘアだったが、2007年頃から長髪にし、後ろで髪を結ぶスタイルを今でも続けている,0,無関係（髪型に関する記述）
+7090,前田 俊介,Shunsuke MAEDA,前田俊介,yes,needs_review,weak_country_move_signal_only,FC東京監督の大熊清は「前で時間を作れるタイプ」「（控え組主体の）練習試合をすると一番結果を出している」と評価し、第90回天皇杯4回戦対千葉戦で加入以来初の先発フル出場を果たした,0,無関係（監督評とフル出場の記述）
+7198,大井 健太郎,Kentaro OI,大井健太郎,yes,needs_review,weak_country_move_signal_only,2023年1月30日、イースタン・ライオンズSC（オーストラリア）への移籍が発表された,1,オーストラリア・イースタン・ライオンズSCへ移籍
+7213,内村 圭宏,Yoshihiro UCHIMURA,内村圭宏,yes,needs_review,weak_country_move_signal_only,愛媛FCに加入した2007年の新加入選手紹介記者会見で内村は「走る部分は自信がないが、これから頑張りたい」と発言しているが、2010年の札幌に移籍後の新体制発表会見では「持ち味は走り回ること」、「走ったら調子が出るタイプ」と発言しており、愛媛時代の当時の監督望月一仁の指導方針が成長を促した,0,国内移籍（愛媛→札幌）会見での発言の話
+7305,尾崎 瑛一郎,Eiichiro OZAKI,尾崎瑛一郎,yes,needs_review,weak_country_move_signal_only,2007年には新潟シンガポールに完全移籍したが、同年限りで解雇される,1,新潟シンガポールへ完全移籍
+7311,石井 謙伍,Kengo ISHII,石井謙伍,yes,needs_review,weak_country_move_signal_only,2018年、タイリーグ2部のサムットサーコーンFCへの完全移籍が発表された,1,タイリーグ2部サムットサーコーンFCへ完全移籍
+7442,徳永 悠平,Yuhei TOKUNAGA,徳永悠平,yes,needs_review,weak_country_move_signal_only,2008年からの長友佑都加入に伴い、FC東京のその時点でのチーム状況や、対戦相手の選手の特長によって徳永・長友がSBの左右を入れ替えて起用されるなど左SBを務める機会も多かったことから、岡田武史日本代表監督からは「DFであればどこでもできて、フィジカルが強い」と評価され、10月8日のアジアカップ予選・香港戦に途中出場しA代表デビュー,0,国内チーム内でのポジション争い、長友加入に関する記述
+7450,菊地 直哉,Naoya KIKUCHI,菊地直哉,yes,needs_review,retracted_language_present,3年時にはオランダのエールディヴィジに所属するフェイエノールトの練習に参加し入団目前までいったが、条件が折り合わず破談となった,0,フェイエノールト練習参加も条件折り合わず破談
+7465,桐畑 和繁,Kazushige KIRIHATA,桐畑和繁,yes,needs_review,weak_country_move_signal_only,しかし、2020年に韓国代表GKキム・スンギュが加入,0,韓国代表GKが加入したという競合選手の記述
+7485,西 大伍,Daigo NISHI,西大伍,yes,needs_review,retracted_language_present,2014年には、ポルトガル1部リーグのCSマリティモへ練習参加し、鹿島の練習始動日に遅れて参加したため、規律違反処分を受けた,0,CSマリティモへの練習参加のみ、移籍は確認できず
+7523,柏木 陽介,Yosuke KASHIWAGI,柏木陽介,yes,needs_review,retracted_language_present,柏木本人がブンデスリーガへの移籍を希望していた ほか、シーズン終了後に広島のJ2降格が決定したことから複数クラブからのオファーがあった が、最終的に広島に残留した,0,ブンデスリーガ移籍希望もオファー含め最終的に広島残留
+7772,西河 翔吾,Shogo NISHIKAWA,西河翔吾,yes,needs_review,weak_country_move_signal_only,しかし、ディフェンダーにパスワークへの参加、足元の技術を求めるミハイロ・ペトロヴィッチ監督のスタイルに対応することが出来ず、半年後の2009年6月には、主力に怪我人が続出していたモンテディオ山形へ再びレンタル移籍した,0,国内移籍（モンテディオ山形）レンタルの話
+7860,長沢 駿,NAGASAWA Shun,長沢駿,yes,needs_review,weak_country_move_signal_only,移籍後2試合目の出場となった8月26日のJ1第24節・横浜FM戦では、元スペイン代表のアンドレス・イニエスタの浮き球パスを外したシーンをスペインメディアの「アス」にネガティブな形で取り上げられた,0,無関係（イニエスタとの接触プレーの報道）
+7974,曽我部 慶太,Keita SOGABE,曽我部慶太,yes,needs_review,weak_country_move_signal_only,タイなど東南アジアクラブのチャレンジを行なったが契約締結には至らず、2017年8月にJFLの奈良クラブへの移籍が発表された,0,東南アジアクラブへの挑戦も契約締結には至らず、国内（奈良クラブ）へ
+8146,興梠 慎三,Shinzo KOROKI,興梠慎三,yes,needs_review,weak_country_move_signal_only,また、2021年は控えに回る事が多く、出場機会に恵まれない時期にペトロヴィッチから「お前は追加タイム1分に出るような選手じゃない」と連絡を受け、2021年オフに約束を果たす形で札幌へ期限付き移籍することとなった,0,国内移籍（札幌）期限付き移籍の話
+8190,柿谷 曜一朗,Yoichiro KAKITANI,柿谷曜一朗,yes,needs_review,retracted_language_present,この活躍によりドイツ1部・ニュルンベルクから移籍オファーを受け、本人曰く「98%くらい（ドイツへ）行く気やった」というが、シーズン終了後に森島寛晃の自宅に招かれ、直々に背番号「8」の継承を要請されたことに感激し、「迷わず、セレッソで8番をつける方を取った」と残留を決意,0,ニュルンベルクのオファーを断り セレッソ残留を決意
+8196,高山 薫,Kaoru TAKAYAMA,高山薫,yes,needs_review,weak_country_move_signal_only,2023年1月20日、台湾社会人甲級サッカーリーグの台中Futuroへの移籍が発表された,1,台湾・台中Futuroへ移籍
+8385,高木 駿,TAKAGI Shun,高木駿,yes,needs_review,weak_country_move_signal_only,加入当初はGKを起点としてビルドアップをしていく大分のサッカースタイルへの戸惑いを見せながらも、開幕節・福岡戦と第2節・東京V戦と2試合連続で先発出場を果たした,0,国内移籍（大分）の話
+8394,大竹 洋平,Yohei OTAKE,大竹洋平,yes,needs_review,weak_country_move_signal_only,2023年12月13日、2024-25シーズンよりアルビレックス新潟シンガポールに完全移籍で加入することが発表された,1,アルビレックス新潟シンガポールへ完全移籍
+8445,水沼 宏太,Kota MIZUNUMA,水沼宏太,yes,needs_review,retracted_language_present,海外移籍を目指しリーガ1（ルーマニア1部リーグ）のFCウニヴェルシタテア・クルジュにテスト参加したが 合意に至らず断念,0,ルーマニアクラブのテスト参加も合意に至らず断念
+8543,千葉 和彦,CHIBA Kazuhiko,千葉和彦,yes,needs_review,retracted_language_present,=== 海外挑戦 ===,1,AGOVVアペルドールンとアマチュア契約を締結（フルコンテキストで確認）
+8616,六反 勇治,ROKUTAN Yuji,六反勇治,yes,needs_review,weak_country_move_signal_only,この年も開幕スタメンに抜擢されたが、5失点と不調なスタートを切り、以降は南や若手の市川暉記とポジションを争いながら出場を続けていたが、夏にオリンピックドイツ代表のスベンド・ブローダーセンが加入すると一気に出場が限られポジションを奪われる形となり、セカンドキーパーに降格した,0,ドイツ五輪代表GKが加入したという競合選手の記述
+8774,島川 俊郎,SHIMAKAWA Toshio,島川俊郎,yes,needs_review,weak_country_move_signal_only,引退後は鳥栖市を拠点とし、かつての在籍クラブを訪れながら愛車での日本一周を行なっていたが、台湾社会人甲級サッカーリーグの台中FUTUROからのオファーを受け、2024年7月20日に同クラブへの入団が発表された,1,台湾・台中FUTUROへの入団が発表された
+8775,仙石 廉,Ren SENGOKU,仙石廉,yes,needs_review,retracted_language_present,スペイン1部リーグのマジョルカからもプロC契約のオファーが届いたが、最終的に国内残留を決断し、酒井宏樹、工藤壮人、武富孝介、山崎正登、比嘉厚平と共にトップチームへ昇格した,0,マジョルカのオファーを受けたが国内残留を決断
+8782,工藤 壮人,Masato KUDO,工藤壮人,yes,needs_review,retracted_language_present,2015年12月29日、メジャーリーグサッカーのバンクーバー・ホワイトキャップスに完全移籍することが発表された,1,MLSバンクーバー・ホワイトキャップスへ完全移籍が発表された
+8783,指宿 洋史,Hiroshi IBUSUKI,指宿洋史,yes,needs_review,retracted_language_present,日本でサッカー指導しているスペイン人サッカーコーチのジョアン・サルバンスの目に止まり、スペイン、セグンダ・ディビシオン（2部）のジローナFCの入団テスト参加を持ちかけられる,1,レアル・サラゴサB/CEサバデル等で実際に長期プレー（フルコンテキストで確認）
+8870,山田 樹,Itsuki YAMADA,山田樹,yes,needs_review,weak_country_move_signal_only,立命館大学を経て、2013年シーズンにアルビレックス新潟シンガポールへ入団した,1,アルビレックス新潟シンガポールへ入団
+8921,三田 啓貴,Hirotaka MITA,三田啓貴,yes,needs_review,weak_country_move_signal_only,2025年2月6日、ポルトガルのUDオリヴェイレンセへの加入が決定,1,ポルトガル・UDオリヴェイレンセへ加入
+8938,齋藤 学,SAITO Manabu,齋藤学,yes,needs_review,retracted_language_present,シーズン終了後は、海外移籍を目指し海外クラブと交渉するも合意には至らず、2017年最初の横浜FMの宮崎キャンプには練習生として参加した,0,海外クラブと交渉するも合意に至らず、練習生参加のみ
+8968,川又 堅碁,KAWAMATA Kengo,川又堅碁,yes,needs_review,weak_country_move_signal_only,高校卒業後はアルビレックス新潟に入団し、2010年はブラジルのサンパウロ州2部リーグに所属するカタンドゥヴェンセに半年間の期限付き移籍,1,ブラジル・カタンドゥヴェンセへ期限付き移籍
+9072,細川 淳矢,Junya HOSOKAWA,細川淳矢,yes,needs_review,weak_country_move_signal_only,仙台と契約満了後は、香港のチームに練習参加するが、Jリーグ合同トライアウトで傷めていた右前十時靭帯を断裂してしまい、オファーを断わった,0,香港クラブへの練習参加もオファーを断った
+9077,小林 亮太,Ryota KOBAYASHI,小林亮太,yes,needs_review,weak_country_move_signal_only,2008年8月、アルビレックス新潟シンガポールに期限付き移籍,1,アルビレックス新潟シンガポールへ期限付き移籍
+9080,酒井 高徳,SAKAI Gotoku,酒井高徳,yes,needs_review,retracted_language_present,2011年12月23日、ブンデスリーガ・VfBシュトゥットガルトへの期限付き移籍が発表された,1,VfBシュトゥットガルトへ期限付き移籍が発表された（酒井高徳、既に検証済み）
+9124,國吉 貴博,Takahiro KUNIYOSHI,國吉貴博,yes,needs_review,weak_country_move_signal_only,2011年にサガン鳥栖に期限付き移籍、鳥栖でもスーパーサブとして起用され、第27節千葉戦では、1得点と後半ロスタイムでのアシストを決めて、鳥栖のJ1昇格に貢献,0,国内移籍（鳥栖）期限付き移籍の話
+9142,當間 建文,Takefumi TOMA,當間建文,yes,needs_review,weak_country_move_signal_only,仙台カップ出場がきっかけでスカウトの目にとまり、ジェフユナイテッド市原・千葉との競合の末「サッカーのスタイルが自分がしたいスタイルと合っている」 ことから2007年、鹿島アントラーズに入団,0,国内クラブ（鹿島）加入の話
+9246,古田 寛幸,Hiroyuki FURUTA,古田寛幸,yes,needs_review,weak_country_move_signal_only,2013年はシーズン開幕前の2月1日にスイススーパーリーグのFCトゥーンより獲得の打診を受け移籍を前提としたトライアルに参加する事が発表された が、最終的に契約合意には至らず 2013年シーズンも引き続き札幌で迎える事となった,0,スイス・FCトゥーンとのトライアルも契約合意に至らず
+9382,阿部 巧,Takumi ABE,阿部巧,yes,needs_review,weak_country_move_signal_only,ザスパクサツ群馬へ移籍後、クラブ発行のマッチデープログラム内インタビューで、ブラックコーヒーが飲めるようになったことと、タイピングの練習を始めたことを告白している,0,無関係（国内移籍後の趣味に関する記述）
+9457,三竿 雄斗,MISAO Yuto,三竿雄斗,yes,needs_review,weak_country_move_signal_only,1月16日、オーストラリアのパース・グローリーFCが2024-25シーズン終了までの契約で岡本拓也とともに三竿の加入を発表した,1,オーストラリア・パース・グローリーFCへ加入
+9608,杉本 健勇,SUGIMOTO Kenyu,杉本健勇,yes,needs_review,weak_country_move_signal_only,スペイン・ヘタフェCFから移籍のオファーが届いたものの熟慮の末、2018年1月11日にC大阪と契約更新に合意したと発表された,0,ヘタフェCFのオファーを受けたが国内（C大阪）残留
+9871,駒井 善成,KOMAI Yoshiaki,駒井善成,yes,needs_review,weak_country_move_signal_only,浦和レッズでも明るい性格ですぐに溶けこみ、2016年に移籍後初のキャンプで同部屋となった槙野智章と同じヘアスタイル“槙野ヘア”へと変身した,0,無関係（ヘアスタイルの記述）
+9958,岡本 拓也,OKAMOTO Takuya,岡本拓也,yes,needs_review,weak_country_move_signal_only,1月16日、オーストラリアのパース・グローリーFCが2024-25シーズン終了までの契約で三竿雄斗とともに岡本の加入を発表した,1,オーストラリア・パース・グローリーFCへ加入
+10093,和田 篤紀,Atsuki WADA,和田篤紀,yes,needs_review,weak_country_move_signal_only,2017年より韓国のソウルイーランドFCと契約した,1,韓国・ソウルイーランドFCと契約
+12037,谷尾 隆博,Takahiro TANIO,谷尾隆博,yes,needs_review,weak_country_move_signal_only,その後はドイツでプレーしていたが、2021年より東海社会人リーグの藤枝市役所サッカー部に加入した,1,帰国前にドイツでプレーしていたことを確認できる記述
+12050,水野 輝,Hikaru MIZUNO,水野輝,yes,needs_review,weak_country_move_signal_only,2015年、アルビレックス新潟シンガポールへ完全移籍,1,アルビレックス新潟シンガポールへ完全移籍
+12052,石井 雄輔,Yusuke ISHII,石井雄輔,yes,needs_review,weak_country_move_signal_only,2015年、カンボジア・リーグのポリス・コミッサリーFCに移籍,1,カンボジア・ポリス・コミッサリーFCへ移籍
+12101,仲村 京雅,Kyoga NAKAMURA,仲村京雅,yes,needs_review,weak_country_move_signal_only,2019年、アルビレックス新潟シンガポールへ完全移籍,1,アルビレックス新潟シンガポールへ完全移籍
+15846,堂安 律,Ritsu DOAN,堂安律,yes,needs_review,retracted_language_present,同年7月にエールディヴィジの名門・PSVアイントホーフェンから正式オファーを受けるが、海外経験がありドイツへ移籍した宇佐美や長谷川健太監督のアドバイスを受けガンバ残留を決断した,1,FCフローニンゲンへ移籍が発表された（堂安律、フルコンテキストで確認、PSVは辞退した別の話）
+19351,粟野 健翔,AWANO Kento,粟野健翔,yes,needs_review,weak_country_move_signal_only,2026年2月6日、Mounties FC Wanderers (オーストラリア、NSW League2)に完全移籍することが発表された,1,オーストラリア・Mounties FC Wanderersへ完全移籍
+19462,平田 拳一朗,Kenichiro HIRATA,平田拳一朗,yes,needs_review,weak_country_move_signal_only,福岡大学卒業後の2014年、スペインに渡りバレンシア州・レヒオナル・プレフェレンテ（5部相当）のミズラータCFと契約を結んだ,1,スペイン・ミズラータCFと契約
+23313,三橋 秀平,Shuhei MITSUHASHI,三橋秀平,yes,needs_review,weak_country_move_signal_only,翌2019年はカンボジア・リーグ、プノンペン・クラウンFCに入団した,1,カンボジア・プノンペン・クラウンFCに入団
+3184,石川 直宏,Naohiro ISHIKAWA,石川直宏,yes,needs_review,weak_country_move_signal_only,同タイプのプレーをする鈴木達也の新加入や大竹洋平などの台頭によるチーム内での競争の活性化もあってか、再び生き生きとしたプレーが見られるようになった,0,無関係（チーム内競争の記述）
+32445,植村 友哉,Tomoya UEMURA,植村友哉,yes,needs_review,weak_country_move_signal_only,2023年3月12日、オーストラリアのBentleigh Cobrasへの移籍が発表された,1,オーストラリア・Bentleigh Cobrasへ移籍
+32483,古賀 貴大,Takahiro KOGA,古賀貴大,yes,needs_review,weak_country_move_signal_only,2021年、アルビレックス新潟シンガポールへ加入した,1,アルビレックス新潟シンガポールへ加入
+32505,桃李 理永,Riyon TORI,桃李理永,yes,needs_review,retracted_language_present,大学3年シーズン後に開催された2024年度MLSスーパードラフトにおいてオーランド・シティSCに指名（3巡目83番）されるも、クラブ・大学関係者と協議の上でプロ契約を保留し大学に残る決断を行う,0,MLSドラフトで指名されたがプロ契約を保留し大学残留
+37832,安部 大晴,Taisei ABE,安部大晴,yes,needs_review,weak_country_move_signal_only,2025年7月25日、スイスのFCルツェルンに買取オプション付きの1シーズンローンで加入することが発表された,1,スイス・FCルツェルンへ加入
+4305,大島 秀夫,Hideo OSHIMA,大島秀夫,yes,needs_review,weak_country_move_signal_only,しかし、2001年に移籍したモンテディオ山形ではレギュラーに定着し、2004年には22得点を挙げ、川崎フロンターレの我那覇和樹と並びJ2の日本人得点王（得点ランク2位タイ）となった,0,国内移籍（山形）の話
+44891,知久 航介,Kosuke CHIKU,知久航介,yes,needs_review,weak_country_move_signal_only,2021年、アルビレックス新潟シンガポールに入団,1,アルビレックス新潟シンガポールに入団
+50490,モヨ マルコム強志,MOYO Malcolmtsuyoshi,モヨマルコム強志,yes,needs_review,weak_country_move_signal_only,2025年、当初は長崎に復帰だったが、2月5日にポルトガルのポルティモネンセSCへの期限付き移籍を発表,1,ポルトガル・ポルティモネンセSCへ期限付き移籍
+54795,齋藤 俊輔,SAITO Shunsuke,齋藤俊輔,yes,needs_review,weak_country_move_signal_only,12月28日、海外クラブへの移籍を視野に入れた交渉・準備を行うことを発表し、翌2026年1月14日、ベルギー・プロ・リーグのKVCウェステルローへ完全移籍することが発表された,1,ベルギー・KVCウェステルローへ完全移籍
+61423,小林 心,KOBAYASHI Kokoro,小林心,yes,needs_review,weak_country_move_signal_only,6月28日、6ポイントマッチのJ2第21節ジュビロ磐田戦、後半アディショナルタイムに移籍後初ゴールとなる決勝点を決め、勝利に貢献した,0,無関係（国内移籍後初ゴールの記述）
+6327,相澤 貴志,Takashi AIZAWA,相澤貴志,yes,needs_review,weak_country_move_signal_only,2010年も中断前までは同様の様子であったが、南アフリカW杯の活躍により川島がリールセSKへ移籍すると4年ぶりに正GKに返り咲き、川島の穴を感じさせない活躍を見せた,0,川島永嗣という別選手の海外移籍に関する記述
+6381,中澤 聡太,Sota NAKAZAWA,中澤聡太,yes,needs_review,weak_country_move_signal_only,西野からの期待は大きく 2008年には完全移籍で加入し、新加入の水本裕貴やミネイロらを押しのけて自身初めてシーズンを通してのレギュラーの座を掴み、ACLや天皇杯などのタイトル獲得に貢献,0,国内移籍（完全移籍で加入）の話
+6735,一柳 夢吾,Yugo ICHIYANAGI,一柳夢吾,yes,needs_review,weak_country_move_signal_only,2013年限りでFC琉球を退団した後はタイでプレーしていたが、2016年よりザスパクサツ群馬に完全移籍し3年ぶりに国内でプレーすることとなった,1,帰国前にタイでプレーしていたことを確認できる記述
+6910,武田 博行,Hiroyuki TAKEDA,武田博行,yes,needs_review,weak_country_move_signal_only,2019年、関西サッカーリーグ1部のFCティアモ枚方へ完全移籍 し、2シーズンを戦いチームがJFLへ昇格するタイミングの2020年11月30日、サッカーには関わり続けることとともに、現役引退が発表された,0,国内（関西サッカーリーグ）への移籍
+7617,柳川 雅樹,Masaki YANAGAWA,柳川雅樹,yes,needs_review,weak_country_move_signal_only,2015年、フィリピン・ユナイテッド・フットボールリーグのグローバルFCへ完全移籍,1,フィリピン・グローバルFCへ完全移籍
+7767,小井手 翔太,Shota KOIDE,小井手翔太,yes,needs_review,weak_country_move_signal_only,2013年にタイ・ディヴィジョン1リーグのナコーンラーチャシーマーFCへ移籍,1,タイ・ナコーンラーチャシーマーFCへ移籍
+7873,細貝 萌,Hajime HOSOGAI,細貝萌,yes,needs_review,retracted_language_present,2010年12月22日、ブンデスリーガ1部の強豪バイエル・レバークーゼンと2013年6月末までの複数年契約で完全移籍し、移籍後2012年6月末まではブンデスリーガ2部のFCアウクスブルクへレンタル移籍する事が決定した,1,バイエル・レバークーゼンへ完全移籍（細貝萌、著名な実例）
+8159,北 一真,Kazuma KITA,北一真,yes,needs_review,weak_country_move_signal_only,2006年は背番号を1から小島がつけていた22に変更し、チーム内外から期待を受けて始まったシーズンであったが、レンタル移籍で加入した高木貴弘が開幕から全試合フルタイム出場を果たし、同シーズンも出場機会が無いまま終えた,0,無関係（レンタル移籍加入選手との出場機会争い）
+8383,征矢 智和,Toshikazu SOYA,征矢智和,yes,needs_review,weak_country_move_signal_only,2012年、アルビレックス新潟シンガポールに加入,1,アルビレックス新潟シンガポールへ加入
+9331,中村 英之,Hideyuki NAKAMURA,中村英之,yes,needs_review,weak_country_move_signal_only,2013年に群馬を退団し、アメリカでのプレーを熱望し渡米したが契約には至らず,0,渡米を熱望したが契約には至らず
+9396,三田 尚央,Hisao MITA,三田尚央,yes,needs_review,weak_country_move_signal_only,2014年に加入し、チーム3位タイとなるリーグ戦32試合に出場するも、この年限りでの現役引退を表明,0,無関係（引退表明の記述）
+9472,加藤 恒平,Kohei KATO,加藤恒平,yes,needs_review,retracted_language_present,アルゼンチン4部リーグのクラブから高評価を受け、契約までこぎつけるも、試合出場に必要なビザが下りず断念し、帰国,0,アルゼンチンクラブと契約寸前もビザ不発給で断念
+9571,原口 元気,Genki HARAGUCHI,原口元気,yes,needs_review,retracted_language_present,2014年5月25日、ドイツ・ブンデスリーガのヘルタ・ベルリンへ完全移籍することが発表された,1,ヘルタ・ベルリンへ完全移籍（原口元気、既に検証済み）
+10170,島村 麗乃,Reino SHIMAMURA,島村麗乃,yes,needs_review,weak_country_move_signal_only,その後流通経済大学を経て、2012年にスペインへ渡りディビシオネス・レヒオナレス（5部リーグ）の CEアルベリック と契約を結んだ,1,スペイン・CEアルベリックと契約
+10337,石川 雅博,Masahiro ISHIKAWA,石川雅博,yes,needs_review,weak_country_move_signal_only,2013年、アルビレックス新潟シンガポールへ完全移籍,1,アルビレックス新潟シンガポールへ完全移籍
+10607,谷 俊勲,Shunkun TANI,谷俊勲,yes,needs_review,weak_country_move_signal_only,2016年、アルビレックス新潟シンガポールに加入,1,アルビレックス新潟シンガポールに加入
+10655,三根 和起,Kazuki MINE,三根和起,yes,needs_review,weak_country_move_signal_only,2016年よりアルビレックス新潟シンガポールへ期限付き移籍により加入した が、2016年シーズン終了後に京都を契約満了により退団,1,アルビレックス新潟シンガポールへ期限付き移籍
+10918,岩﨑 陽平,Yohei IWASAKI,岩﨑陽平,yes,needs_review,retracted_language_present,その後はブラジルのクラブを渡り歩き、マルセロ・オリヴェイラ監督率いるパラナ・クルーベに入団,1,ブラジルのパラナ・クルーベに入団
+11361,山之内 優貴,Yuki YAMANOUCHI,山之内優貴,yes,needs_review,weak_country_move_signal_only,2017年からアルビレックス新潟シンガポールに完全移籍により加入した,1,アルビレックス新潟シンガポールに完全移籍
+11460,中村 祐輝,Yuki NAKAMURA,中村祐輝,yes,needs_review,weak_country_move_signal_only,2012年にはチェコ・ガンブリヌス・リガのFKヴィクトリア・ジジュコフに移籍,1,チェコ・FKヴィクトリア・ジジュコフへ移籍
+11465,金城 クリストファー達樹,Christopher Tatsuki KINJO,金城クリストファー達樹,yes,needs_review,weak_country_move_signal_only,その後ドイツへ渡り、同年7月にフォルトゥナ・デュッセルドルフU-19へ加入,0,フォルトゥナ・デュッセルドルフU-19（プロ入り前の育成年代の欧州移籍、moved_overseasはプロキャリアの海外移籍を対象とするため対象外）
+12016,阪本 翔一朗,Shoichiro SAKAMOTO,阪本翔一朗,yes,needs_review,weak_country_move_signal_only,2017年、アルビレックス新潟シンガポールへ完全移籍,1,アルビレックス新潟シンガポールへ完全移籍
+12149,中川 洋介,Yosuke NAKAGAWA,中川洋介,yes,needs_review,weak_country_move_signal_only,2019年6月14日、アルビレックス新潟シンガポールへ期限付き移籍,1,アルビレックス新潟シンガポールへ期限付き移籍
+15794,熊谷 駿,Shun KUMAGAI,熊谷駿,yes,needs_review,weak_country_move_signal_only,2018年、アルビレックス新潟シンガポールへ完全移籍,1,アルビレックス新潟シンガポールへ完全移籍
+15825,畑中 槙人,Makito HATANAKA,畑中槙人,yes,needs_review,weak_country_move_signal_only,2019年、アルビレックス新潟シンガポールに加入,1,アルビレックス新潟シンガポールに加入
+19483,小林 洵,KOBAYASHI Jun,小林洵,yes,needs_review,weak_country_move_signal_only,2021年12月30日にアルビレックス新潟シンガポールへの加入内定が発表された,1,アルビレックス新潟シンガポールへの加入内定
+19489,鈴木 郁也,Fumiya SUZUKI,鈴木郁也,yes,needs_review,weak_country_move_signal_only,2021年アルビレックス新潟シンガポールに加入したと発表された,1,アルビレックス新潟シンガポールに加入
+19669,宮地 元貴,Genki MIYACHI,宮地元貴,yes,needs_review,weak_country_move_signal_only,2019年4月、アメリカ・ナショナルプレミアサッカーリーグのチャタヌーガFCへの完全移籍が発表された,1,アメリカ・チャタヌーガFCへ完全移籍
+19676,元田 龍矢,Ryuya MOTODA,元田龍矢,yes,needs_review,weak_country_move_signal_only,2017年より、水戸ホーリーホックへ正式に加入し、同年はアルビレックス新潟シンガポールに期限付き移籍,1,アルビレックス新潟シンガポールへ期限付き移籍
+23147,上田 航平,Kohei UEDA,上田航平,yes,needs_review,weak_country_move_signal_only,2020年、台湾社会人甲級サッカーリーグの台中Futuroへ期限付き移籍で加入,1,台湾・台中Futuroへ期限付き移籍
+23148,西 晃佑,Kosuke NISHI,西晃佑,yes,needs_review,weak_country_move_signal_only,その後はドイツで2年間プレーし、2021年2月14日に富山新庄クラブへの完全移籍が発表された,1,帰国前にドイツで2年間プレーしていたことを確認できる記述
+23164,佐藤 遵樹,Junki SATO,佐藤遵樹,yes,needs_review,weak_country_move_signal_only,2018年1月、マルタ共和国・マルタ・ファーストディビジョン（2部）のゼイトゥン・コリンシャンズFC（Zejtun Corinthians F.C.）にプロ契約で加入することが発表された,1,マルタ・ゼイトゥン・コリンシャンズFCへプロ契約で加入
+23293,橋村 龍ジョセフ,Ryujoseph HASHIMURA,橋村龍ジョセフ,yes,needs_review,weak_country_move_signal_only,2019年2月、ブラジルのPSTCへの期限付き移籍が発表された,1,ブラジル・PSTCへ期限付き移籍
+2523,野澤 洋輔,Yosuke NOZAWA,野澤洋輔,yes,needs_review,weak_country_move_signal_only,公式戦の試合出場は無く11月19日に契約満了が発表され、リーグ戦最終節となる11月24日のV・ファーレン長崎戦に後半アディショナルタイム4分に大谷幸輝と交代で出場した,0,無関係（契約満了・国内試合の記述）
+2537,新井場 徹,Toru ARAIBA,新井場徹,yes,needs_review,weak_country_move_signal_only,トップチーム昇格時、夢として「満員の万博を自分のプレーで沸かせたい」と語っていた（入団後の初の満員の試合は1998年5月フランスワールドカップ直前のベルマーレ平塚戦,0,無関係（引用コメント）
+29284,大原 彰輝,Shoki OHARA,大原彰輝,yes,needs_review,weak_country_move_signal_only,2019年、当初は水戸ホーリーホックに登録されていたが、2月にアルビレックス新潟シンガポールへ期限付き移籍,1,アルビレックス新潟シンガポールへ期限付き移籍
+29325,山内 恵太,Keita YAMAUCHI,山内恵太,yes,needs_review,weak_country_move_signal_only,2020年、台湾社会人甲級サッカーリーグの台中Futuroへ移籍,1,台湾・台中Futuroへ移籍
+29549,安彦 考真,Takamasa ABIKO,安彦考真,yes,needs_review,weak_country_move_signal_only,清水エスパルスとサガン鳥栖の入団テストで不合格になると、ブラジル仕込みの技術を披露するつもりがテスト生の高校生に簡単にボールを奪われるなどレベルの高さに萎縮して「古傷のせいで実力が発揮できなかった」 と語った,0,国内クラブ（清水・鳥栖）の入団テスト不合格の話、ブラジルは技術背景の記述
+32374,渡部 大樹,Taiju WATANABE,渡部大樹,yes,needs_review,weak_country_move_signal_only,2021年、スペイン・カタルーニャ州1部のアトレティック・サント・ジャストへ加入,1,スペイン・アトレティック・サント・ジャストへ加入
+32419,川中 健太,Kenta KAWANAKA,川中健太,yes,needs_review,retracted_language_present,2016年、入団テストを経てオーストリア・レギオナルリーガ東部（オーストリア3部）のSVホルンとアマチュア契約を結んだ,1,SVホルンとアマチュア契約を締結
+32739,近藤 蔵波,Kuraba KONDO,近藤蔵波,yes,needs_review,weak_country_move_signal_only,2021年1月20日にアルビレックス新潟シンガポールへの加入が発表された,1,アルビレックス新潟シンガポールへ加入
+37516,国本 玲央,Reo KUNIMOTO,国本玲央,yes,needs_review,weak_country_move_signal_only,2021年、アルビレックス新潟シンガポールへ期限付き移籍,1,アルビレックス新潟シンガポールへ期限付き移籍
+37546,山田 真夏斗,Manato YAMADA,山田真夏斗,yes,needs_review,weak_country_move_signal_only,2023年3月23日、オーストラリアのエルタム・レッドバックスFCへの加入が発表された,1,オーストラリア・エルタム・レッドバックスFCへ加入
+38005,寺沢 優太,TERASAWA Yuta,寺沢優太,yes,needs_review,weak_country_move_signal_only,関東学院大学卒業後は単身ドイツへ渡り、ランデスリーガ・ミッテルライン（6部相当）のヒラル・ベルクハイムへ加入,1,ドイツ・ヒラル・ベルクハイムへ加入
+38089,梁 賢柱,RYANG Hyonju,梁賢柱,yes,needs_review,weak_country_move_signal_only,2026年、アルビレックス新潟シンガポールに完全移籍,1,アルビレックス新潟シンガポールへ完全移籍
+39175,鍬田 一雅,Kazuma KUWATA,鍬田一雅,yes,needs_review,weak_country_move_signal_only,地元高校卒業後、福岡のRAFAサッカーアカデミーを経てスペインに渡りADアルコルコンと契約を結んだ,1,スペイン・ADアルコルコンと契約
+45013,藤田 雄士,Yuto FUJITA,藤田雄士,yes,needs_review,weak_country_move_signal_only,しかし5試合の出場にとどまり、7月3日に韓国K3リーグの抱川シチズンFCに期限付き移籍となった,1,韓国K3リーグ・抱川シチズンFCへ期限付き移籍
+45015,伊東 進之輔,Shinnosuke ITO,伊東進之輔,yes,needs_review,weak_country_move_signal_only,10月1日、中国サッカーリーグ第4節対NTN岡山サッカー部戦で移籍後初の公式戦ベンチ入り、ハーフタイム明けの後半0分から初出場を果たしたが、同シーズンの福山の公式戦におけるベンチ入りおよび試合出場はこの試合のみとなり、福山がリーグ優勝し進出した全国地域サッカーチャンピオンズリーグ20236試合でもベンチ入りを果たせず、シーズン終了とともに移籍期間満了で北九州へ復帰となる,0,「中国サッカーリーグ」は中国地方の国内リーグ（福山シティFC、分類器修正済み）
+49342,種田 陽,Haruhi TANEDA,種田陽,yes,needs_review,weak_country_move_signal_only,しかしアメリカの大学へ進学が決まったことから5月19日付けで双方合意で契約を解除した後、6月1日をもってチームを退団した,0,アメリカの大学へ進学、サッカークラブ移籍ではない
+49596,大森 大地,Daichi OMORI,大森大地,yes,needs_review,weak_country_move_signal_only,2021年12月29日、アルビレックス新潟シンガポール加入内定が発表された,1,アルビレックス新潟シンガポール加入内定
+49603,赤塚 怜,Rei AKATSUKA,赤塚怜,yes,needs_review,weak_country_move_signal_only,IPU環太平洋大学に進学するも2年時に中退し、2017年7月にドイツ・フェアバンツリーガのヴィクトリア・ケルスターバッハに加入,1,ドイツ・ヴィクトリア・ケルスターバッハへ加入
+49690,髙橋 隆大,Ryuta TAKAHASHI,髙橋隆大,yes,needs_review,weak_country_move_signal_only,シーズンが開幕しても新天地が決まっていなかったが、3月4日にブラジルリーグ3部に所属するグアラニFCに完全移籍することがガンバ大阪とギラヴァンツ北九州のホームページより発表された,1,ブラジル・グアラニFCへ完全移籍
+49696,下川 雅人,Masato SHIMOKAWA,下川雅人,yes,needs_review,weak_country_move_signal_only,2021年に1部リーグ（モンテネグロ・プルヴァ・リーガ）のOFKチトーグラードに移籍,1,モンテネグロ・OFKチトーグラードへ移籍
+50491,水口 飛呂,MIZUGUCHI Hiro,水口飛呂,yes,needs_review,weak_country_move_signal_only,高校卒業後、環太平洋大学へ進学し、サッカー部（IPU・環太平洋大学）で3年生のと期にトップチームに昇格すると、中国選抜やプレーオフ選抜の一員としてデンソーカップに出場し活躍した姿がレノファ山口FC関係者の目に止まり、2023年5月、2024年からの山口加入と2023年JFA・Jリーグ特別指定選手の承認が発表され、4試合出場した,0,国内クラブ（レノファ山口FC）加入、JFA特別指定選手の話
+54815,吉本 武,Takeshi YOSHIMOTO,吉本武,yes,needs_review,weak_country_move_signal_only,2025年8月4日、シンガポールのBGタンピネス・ローバースFCへの完全移籍が発表された,1,シンガポール・BGタンピネス・ローバースFCへ完全移籍
+54829,石橋 克之,Katsuyuki ISHIBASHI,石橋克之,yes,needs_review,weak_country_move_signal_only,2024年7月3日、韓国K3リーグの抱川シチズンFCに期限付き移籍,1,韓国K3リーグ・抱川シチズンFCへ期限付き移籍
+8299,遊佐 克美,Katsumi YUSA,遊佐克美,yes,needs_review,retracted_language_present,2010年1月からパラグアイに渡りパラグアイ2部のクラブの入団テストを受け、同年3月にパラグアイ2部のスポルティボ・サン・ロレンソと契約している,1,スポルティボ・サン・ロレンソと契約（パラグアイ）
+8729,安藤 駿介,ANDO Shunsuke,安藤駿介,yes,needs_review,weak_country_move_signal_only,その後、2016年にはロンドン五輪でも対戦経験のある韓国代表のチョン・ソンリョンが加入し、引き続き控えGKとしての立場が続いている,0,韓国代表選手が加入したという競合選手の記述
+9274,笠川 永太,Eita KASAGAWA,笠川永太,yes,needs_review,weak_country_move_signal_only,12月、アルビレックス新潟シンガポールへの完全移籍が発表された,1,アルビレックス新潟シンガポールへ完全移籍

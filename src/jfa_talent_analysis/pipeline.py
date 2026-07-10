@@ -3,7 +3,6 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
-
 DEFAULT_LEAGUES = ("J1", "J2", "J3")
 J3_START_SEASON = 2014
 LEAGUE_FRAME_IDS = {

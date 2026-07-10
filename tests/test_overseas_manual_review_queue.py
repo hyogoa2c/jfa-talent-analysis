@@ -1,10 +1,19 @@
 from jfa_talent_analysis.overseas_review import (
+    MANUAL_REVIEW_COLUMNS,
     build_manual_review_rows,
+    merge_existing_review_entries,
     validate_manual_review_rows,
 )
 
 
-def test_build_manual_review_rows_filters_and_adds_manual_columns():
+def test_manual_review_columns_places_new_wikidata_columns_after_foreign_teams():
+    foreign_teams_index = MANUAL_REVIEW_COLUMNS.index("wikidata_foreign_teams")
+
+    assert MANUAL_REVIEW_COLUMNS[foreign_teams_index + 1] == "wikidata_foreign_teams_in_gap"
+    assert MANUAL_REVIEW_COLUMNS[foreign_teams_index + 2] == "wikidata_birth_dates"
+
+
+def test_build_manual_review_rows_includes_candidate_foreign_stint_with_default_reason():
     rows = [
         {
             "source_player_id": "1",
@@ -18,6 +27,8 @@ def test_build_manual_review_rows_filters_and_adds_manual_columns():
             "reappearance_minutes": "461",
             "wikidata_person_ids": "Q982163",
             "wikidata_foreign_teams": "Hannover 96 (ドイツ)",
+            "wikidata_foreign_teams_in_gap": "Hannover 96 (ドイツ)",
+            "wikidata_birth_dates": "1991-05-09",
             "audit_status": "candidate_foreign_stint",
             "manual_review_reason": "",
         },
@@ -36,11 +47,45 @@ def test_build_manual_review_rows_filters_and_adds_manual_columns():
             "audit_status": "needs_manual_review",
             "manual_review_reason": "no_wikidata_person_match|katakana_name",
         },
+        {
+            "source_player_id": "3",
+            "name_ja": "対象外",
+            "name_en": "",
+            "previous_observed_season": "2022",
+            "reappearance_season": "2024",
+            "absent_seasons": "3",
+            "audit_status": "no_wikidata_foreign_stint",
+            "manual_review_reason": "",
+        },
     ]
 
     manual_rows = build_manual_review_rows(rows)
 
+    assert [row["source_player_id"] for row in manual_rows] == ["1", "2"]
     assert manual_rows == [
+        {
+            "source_player_id": "1",
+            "name_ja": "原口 元気",
+            "name_en": "Genki HARAGUCHI",
+            "previous_observed_season": "2014",
+            "reappearance_season": "2024",
+            "absent_seasons": "9",
+            "reappearance_leagues": "Ｊ１リーグ",
+            "reappearance_teams": "浦和",
+            "reappearance_minutes": "461",
+            "wikidata_person_ids": "Q982163",
+            "wikidata_foreign_teams": "Hannover 96 (ドイツ)",
+            "wikidata_foreign_teams_in_gap": "Hannover 96 (ドイツ)",
+            "wikidata_birth_dates": "1991-05-09",
+            "audit_status": "candidate_foreign_stint",
+            "manual_review_reason": "foreign_hint_needs_verification",
+            "wikipedia_titles": "",
+            "wikipedia_urls": "",
+            "wikipedia_search_error": "",
+            "manual_decision": "",
+            "manual_note": "",
+            "evidence_url": "",
+        },
         {
             "source_player_id": "2",
             "name_ja": "シュミット ダニエル",
@@ -53,6 +98,8 @@ def test_build_manual_review_rows_filters_and_adds_manual_columns():
             "reappearance_minutes": "450",
             "wikidata_person_ids": "",
             "wikidata_foreign_teams": "",
+            "wikidata_foreign_teams_in_gap": "",
+            "wikidata_birth_dates": "",
             "audit_status": "needs_manual_review",
             "manual_review_reason": "no_wikidata_person_match|katakana_name",
             "wikipedia_titles": "",
@@ -61,8 +108,25 @@ def test_build_manual_review_rows_filters_and_adds_manual_columns():
             "manual_decision": "",
             "manual_note": "",
             "evidence_url": "",
-        }
+        },
     ]
+
+
+def test_build_manual_review_rows_keeps_existing_reason_for_candidate_foreign_stint():
+    rows = [
+        {
+            "source_player_id": "1",
+            "name_ja": "原口 元気",
+            "reappearance_season": "2024",
+            "absent_seasons": "9",
+            "audit_status": "candidate_foreign_stint",
+            "manual_review_reason": "multiple_wikidata_person_matches",
+        },
+    ]
+
+    manual_rows = build_manual_review_rows(rows)
+
+    assert manual_rows[0]["manual_review_reason"] == "multiple_wikidata_person_matches"
 
 
 def test_build_manual_review_rows_sorts_larger_gaps_first():
@@ -140,3 +204,113 @@ def test_validate_manual_review_rows_requires_note_for_unresolved():
     )
 
     assert errors == ["line 2 source_player_id=1: unresolved requires manual_note"]
+
+
+def test_merge_existing_review_entries_carries_manual_and_wikipedia_columns():
+    rebuilt = [
+        {
+            "source_player_id": "1",
+            "reappearance_season": "2024",
+            "wikipedia_titles": "",
+            "wikipedia_urls": "",
+            "wikipedia_search_error": "",
+            "manual_decision": "",
+            "manual_note": "",
+            "evidence_url": "",
+        }
+    ]
+    existing = [
+        {
+            "source_player_id": "1",
+            "reappearance_season": "2024",
+            "wikipedia_titles": "選手A",
+            "wikipedia_urls": "https://ja.wikipedia.org/wiki/選手A",
+            "wikipedia_search_error": "",
+            "manual_decision": "confirmed_foreign_stint",
+            "manual_note": "Career chronology lists a foreign club.",
+            "evidence_url": "https://example.com/profile",
+        }
+    ]
+
+    merged, dropped = merge_existing_review_entries(rebuilt, existing)
+
+    assert dropped == []
+    assert merged[0]["manual_decision"] == "confirmed_foreign_stint"
+    assert merged[0]["manual_note"] == "Career chronology lists a foreign club."
+    assert merged[0]["evidence_url"] == "https://example.com/profile"
+    assert merged[0]["wikipedia_titles"] == "選手A"
+
+
+def test_merge_existing_review_entries_keeps_new_wikidata_columns_from_rebuilt_row():
+    # Older queues built before wikidata_foreign_teams_in_gap / wikidata_birth_dates
+    # existed should still merge cleanly: the merge is key-based (source_player_id,
+    # reappearance_season), and only the preserved wikipedia/manual columns are copied
+    # from the existing row, so the freshly rebuilt row's new columns pass through.
+    rebuilt = [
+        {
+            "source_player_id": "1",
+            "reappearance_season": "2024",
+            "wikidata_foreign_teams_in_gap": "Hannover 96 (ドイツ)",
+            "wikidata_birth_dates": "1991-05-09",
+            "wikipedia_titles": "",
+            "wikipedia_urls": "",
+            "wikipedia_search_error": "",
+            "manual_decision": "",
+            "manual_note": "",
+            "evidence_url": "",
+        }
+    ]
+    existing = [
+        {
+            "source_player_id": "1",
+            "reappearance_season": "2024",
+            "wikipedia_titles": "選手A",
+            "wikipedia_urls": "https://ja.wikipedia.org/wiki/選手A",
+            "wikipedia_search_error": "",
+            "manual_decision": "confirmed_foreign_stint",
+            "manual_note": "Career chronology lists a foreign club.",
+            "evidence_url": "https://example.com/profile",
+        }
+    ]
+
+    merged, dropped = merge_existing_review_entries(rebuilt, existing)
+
+    assert dropped == []
+    assert merged[0]["manual_decision"] == "confirmed_foreign_stint"
+    assert merged[0]["wikidata_foreign_teams_in_gap"] == "Hannover 96 (ドイツ)"
+    assert merged[0]["wikidata_birth_dates"] == "1991-05-09"
+
+
+def test_merge_existing_review_entries_leaves_new_rows_blank():
+    rebuilt = [
+        {"source_player_id": "2", "reappearance_season": "2025", "manual_decision": ""}
+    ]
+
+    merged, dropped = merge_existing_review_entries(rebuilt, [])
+
+    assert dropped == []
+    assert merged[0]["manual_decision"] == ""
+
+
+def test_merge_existing_review_entries_reports_dropped_reviewed_rows():
+    existing = [
+        {
+            "source_player_id": "9",
+            "reappearance_season": "2023",
+            "manual_decision": "unresolved",
+            "manual_note": "Multiple candidates.",
+            "evidence_url": "",
+        },
+        {
+            "source_player_id": "10",
+            "reappearance_season": "2023",
+            "manual_decision": "",
+            "manual_note": "",
+            "evidence_url": "",
+        },
+    ]
+
+    merged, dropped = merge_existing_review_entries([], existing)
+
+    assert merged == []
+    assert [row["source_player_id"] for row in dropped] == ["9"]
