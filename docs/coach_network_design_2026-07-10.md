@@ -63,14 +63,27 @@ coaches (名将 tier: 黒田剛, 山田耕介, 中野雄二…) and for any coac
 career — precisely the coaches of the head institutions this design prioritizes. Long-tail
 institution coaches will often lack articles; those get institution-level linkage only.
 
-## Pilot in progress
+## Pilot results (completed 2026-07-10)
 
-A 15-institution pilot (5 universities / 5 high schools / 5 J-club academies, drawn from the
-head of the concentration distribution) is testing whether 2000-2025 head-coach timelines
-are reconstructable per institution type, written incrementally to
-`data/interim/coach_network/institution_coach_pilot.md`. Scale-up decisions (how many
-institutions, which types first) wait on its results, per this project's standard
-audit→pilot→tool→verify sequence.
+See `docs/institution_coach_pilot_2026-07-10.md` for the full 15-institution report
+(coordinator-verified). Headline numbers — average 2000-2025 coverage by type:
+
+| type | fully (≥90%) | mostly | poorly (<60%) | avg coverage |
+|---|---|---|---|---|
+| high schools | 5/5 | 0 | 0 | **~99%** |
+| universities | 2/5 | 2/5 | 1/5 | ~74% |
+| J-club academies | 1/5 | 1/5 | 3/5 | ~51% |
+
+High schools inverted the pilot's expectation (名将 culture = coach biographies chain
+cleanly); J-academies are the hard category as predicted, except FC東京U-18 (~95%, a
+purpose-built 歴代監督 Wikipedia table). Method discoveries worth building into any scaled
+run: (1) chain through COACHES' biographies rather than institution articles; (2) check
+official per-season staff pages first for universities (法政's `hoseifc.com/club/season/
+YYYY/` pattern); (3) archived JFA Premier League year-specific team pages are the best
+J-academy source but have unstable URL slots across years (a real crawling cost); (4) the
+schema needs a `role_type` field (総監督/ディレクター vs on-field 監督 duality confirmed at
+multiple institutions); (5) store tenures as April-start seasons and treat ±1-year source
+disagreements as expected noise.
 
 ## Analytical cautions carried forward
 
