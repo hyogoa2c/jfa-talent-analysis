@@ -1,8 +1,11 @@
 from jfa_talent_analysis.pathway_outcome_analysis import (
     birth_cohort,
+    earliest_youth_selection_age,
+    has_a_team_selection,
     has_youth_national_team_selection,
     parse_birth_year,
     wilson_confidence_interval,
+    youth_category_count,
 )
 
 
@@ -61,3 +64,24 @@ def test_has_youth_national_team_selection_false_for_blank():
 
 def test_has_youth_national_team_selection_true_for_multiple_youth_categories():
     assert has_youth_national_team_selection("U15|U16|U19") is True
+
+
+def test_youth_category_count():
+    assert youth_category_count("U15|U16|U19") == 3
+    assert youth_category_count("U17|A") == 1
+    assert youth_category_count("A|U23") == 0
+    assert youth_category_count("") == 0
+
+
+def test_earliest_youth_selection_age():
+    assert earliest_youth_selection_age("U15|U16|U19") == 15
+    assert earliest_youth_selection_age("U18|A") == 18
+    assert earliest_youth_selection_age("A|U23") == 25
+    assert earliest_youth_selection_age("") == 25
+
+
+def test_has_a_team_selection():
+    assert has_a_team_selection("U17|A") is True
+    assert has_a_team_selection("A") is True
+    assert has_a_team_selection("U23") is False
+    assert has_a_team_selection("") is False

@@ -136,6 +136,10 @@ Wikipedia full-extract corpus and derived evidence (see [the revision proposal](
 - `extract_j1_debuts_from_wikipedia.py` - parse J.League/J1 debut lines and validate against SFPR01 in-window ground truth; this cross-validation exposed and fixed a features bug where zero-appearance J1 roster registrations counted as reaching J1 (24% of reached_j1=1 rows)
 - `label_overseas_stints.py` - classify senior-career foreign-club stints from career prose, extending moved_overseas beyond the 33-player manual queue; all 196 needs_review rows human-reviewed 2026-07-09 (see [the review record](docs/overseas_needs_review_2026-07-09.md), which also documents a "中国" (China vs. the domestic Chugoku regional league) classifier bug found and fixed mid-review
 
+Exploratory modeling (docs/data_collection_plan.md's "Later Modeling"):
+
+- `exploratory_modeling.py` - Random Forest vs logistic comparison on pre-career features (permutation importance + partial dependence in place of SHAP, whose numba dependency lacks Python 3.13 support); headline finding: RF does not beat logistic on any outcome (no hidden nonlinear structure), and the overseas outcome's birth-year effect is non-monotonic (a 1990-1997 birth-cohort peak the linear models miss)
+
 Step 5 analysis-ready dataset (docs/data_collection_plan.md):
 
 - `build_player_pathway_outcomes.py` - join collapsed player-season features with resolved pathway_category, any_national_team_selection, and moved_overseas outcomes into `data/processed/player_pathway_outcomes.csv`, one row per player (4,037 rows). Resolution prefers a human review queue's `reviewed_*` value over the classifier's auto-label; `pathway_category_source`/`national_team_selection_source` record which applied (`human_reviewed` / `auto_high_confidence` / `identity_not_confirmed`). `moved_overseas` is populated only for the narrow 2023-2025 reappearance-gap queue (33 players) — blank elsewhere, not assumed negative.
