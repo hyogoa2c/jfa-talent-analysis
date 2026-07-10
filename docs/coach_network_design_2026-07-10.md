@@ -85,6 +85,28 @@ schema needs a `role_type` field (総監督/ディレクター vs on-field 監�
 multiple institutions); (5) store tenures as April-start seasons and treat ±1-year source
 disagreements as expected noise.
 
+## Coach-tenure table schema (fixed 2026-07-11, scale-up phase)
+
+`institution,coach_name,role_type,from_year,to_year,source_urls,confidence,notes`
+
+- `from_year`/`to_year`: season starting April of that year; empty `to_year` = currently
+  serving. Non-consecutive stints by the same coach are separate rows (real case: 島田貴裕
+  held ガンバ大阪ユース監督 in three separate periods).
+- `role_type`: 監督 / 総監督 / アカデミーダイレクター兼監督 / ヘッドコーチ etc. — concurrent
+  director-vs-field-coach rows may OVERLAP in years by design (法政大学, セレッソ大阪U-18).
+- `confidence`: high / medium-high / medium / low. ±1-year cross-source disagreements are
+  noted in `notes`, with the better-sourced year in the year columns.
+- Gaps are the ABSENCE of rows (documented in the accompanying notes files), never guessed.
+
+Files under `data/interim/coach_network/` (gitignored):
+`pilot_coach_tenures.csv` (the 15 pilot institutions converted, 65 rows) and
+`hs_batchN_coach_tenures.csv` + `hs_batchN_notes.md` per scaled batch.
+
+Scale-up targets (fixed 2026-07-11): top-30 high schools by distinct-player count after
+alias normalization (市立船橋高=船橋市立船橋高 merged ranks #6+#11), minus the 5 piloted →
+25 new schools in 3 subagent batches (10/10/5). Top-40 schools cover ~48% of the 1,835
+players with any high-school stint; the 462-school long tail is deliberately deferred.
+
 ## Analytical cautions carried forward
 
 - What the primary linkage measures is "was at institution X while coach Y was head coach" —
