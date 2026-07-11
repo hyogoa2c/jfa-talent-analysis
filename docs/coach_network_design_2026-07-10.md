@@ -143,11 +143,13 @@ Same method as the high-school target list: normalize institution-name suffixes
 (`サッカー部`/`体育会サッカー部`/`蹴球部`/`ア式蹴球部`/`体育会蹴球部`) on
 `player_institution_stints.csv` rows containing `大学` (excluding rows that are actually
 high schools with "大学" embedded in their proper name, e.g. 流通経済大学付属柏高等学校),
-rank by distinct-player count, and take the top 30 minus the 5 already piloted
-(流通経済大学/明治大学/国士舘大学/法政大学/筑波大学) → 25 new universities. Top-30
-universities cover 1,446 of 1,951 distinct players with any university stint (74%).
+rank by distinct-player count, and take the top 35 minus the 5 already piloted
+(流通経済大学/明治大学/国士舘大学/法政大学/筑波大学) → 30 new universities. Top-35
+universities cover 1,554 of 1,951 distinct players with any university stint (80%).
 
-25 new targets in 3 batches of 10/10/5, by rank:
+30 new targets in 3 batches of 10/10/10, by rank (corrected 2026-07-11 — an earlier draft
+of this section said "25 new, 10/10/5" but the batch lists below were always 30/10-10-10;
+this line now matches what was actually run):
 - **Batch 1**: 福岡大学, 早稲田大学, 桐蔭横浜大学, 阪南大学, 駒澤大学, 中央大学, 関西大学,
   順天堂大学, 東洋大学, 専修大学
 - **Batch 2**: 大阪体育大学, 日本体育大学, 立命館大学, 関西学院大学, 鹿屋体育大学,
