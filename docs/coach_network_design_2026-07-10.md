@@ -107,6 +107,60 @@ alias normalization (市立船橋高=船橋市立船橋高 merged ranks #6+#11),
 25 new schools in 3 subagent batches (10/10/5). Top-40 schools cover ~48% of the 1,835
 players with any high-school stint; the 462-school long tail is deliberately deferred.
 
+### High-school scale-up: completed (2026-07-11)
+
+All 30 target high schools done — 5 pilot + 25 across 3 batches (10/10/5). 148 tenure rows
+total (pilot 65 + batch1 40 + batch2 30 + batch3 13). Per-batch source coverage improved
+batch-over-batch (~79% → ~87% → ~91%), likely because later batches happened to draw more
+famous/well-documented programs rather than a genuine method improvement. Files:
+`hs_batch{1,2,3}_coach_tenures.csv` + matching `_notes.md`, gitignored under
+`data/interim/coach_network/`.
+
+New structural patterns found beyond the pilot's director/field-coach duality and
+founder-emeritus patterns:
+- **Figurehead-監督** (国見高等学校): a football-inexperienced teacher installed as nominal
+  監督 solely to satisfy 全国高等学校体育連盟 eligibility rules, while real authority sits
+  with a 総監督.
+- **Celebrity hire** (昌平高等学校・玉田圭司): an ex-pro parachuted into a head-coach role
+  with zero prior high-school coaching experience, won a title in one season, then left.
+- **Scandal-driven dismissal** (千葉県立八千代高等学校・岡本一洋): mid-tenure firing for a
+  conduct incident; the coach's full name had to be sourced from unofficial blog
+  identification since the original news reporting anonymized him.
+- **Cross-institution advisor edges**: the same person appears as head coach at one
+  institution and an informal outside advisor at another (古沼貞雄: 帝京高等学校's longtime
+  coach also advises 矢板中央高等学校) — a real network edge beyond simple employment.
+- **Unresolved title-vs-authority gap** (静岡県立藤枝東高等学校, 2022-2023): a coach moved to
+  a "ヘッドオブコーチング" title with no named 監督 successor found in any source — recorded
+  as a genuine gap, not guessed.
+- Coverage does not track institutional fame uniformly: 藤枝東 (長谷部誠's alma mater, one of
+  the most historically prestigious programs in the dataset) still only reached ~70%,
+  because press coverage clusters around its single most decorated coach rather than the
+  full timeline.
+
+### University scale-up targets (fixed 2026-07-11)
+
+Same method as the high-school target list: normalize institution-name suffixes
+(`サッカー部`/`体育会サッカー部`/`蹴球部`/`ア式蹴球部`/`体育会蹴球部`) on
+`player_institution_stints.csv` rows containing `大学` (excluding rows that are actually
+high schools with "大学" embedded in their proper name, e.g. 流通経済大学付属柏高等学校),
+rank by distinct-player count, and take the top 30 minus the 5 already piloted
+(流通経済大学/明治大学/国士舘大学/法政大学/筑波大学) → 25 new universities. Top-30
+universities cover 1,446 of 1,951 distinct players with any university stint (74%).
+
+25 new targets in 3 batches of 10/10/5, by rank:
+- **Batch 1**: 福岡大学, 早稲田大学, 桐蔭横浜大学, 阪南大学, 駒澤大学, 中央大学, 関西大学,
+  順天堂大学, 東洋大学, 専修大学
+- **Batch 2**: 大阪体育大学, 日本体育大学, 立命館大学, 関西学院大学, 鹿屋体育大学,
+  関東学院大学, びわこ成蹊スポーツ大学, 神奈川大学, 立正大学, 東海学園大学
+- **Batch 3**: 仙台大学, 中京大学, 京都産業大学, 大阪学院大学, 東京国際大学, 産業能率大学,
+  東京学芸大学, 拓殖大学, 東海大学, 日本大学
+
+Expect lower coverage than the high-school batches: the pilot already found universities
+medium-cost/medium-yield (~74% average across the 5 piloted programs, vs. high schools'
+~99%), driven by sparser official per-season staff pages for less prominent programs and by
+university coaching staff overlapping with employment at the university's broader athletic
+department (making searches noisier than the single-sport-focused high-school case).
+
 ## Analytical cautions carried forward
 
 - What the primary linkage measures is "was at institution X while coach Y was head coach" —
