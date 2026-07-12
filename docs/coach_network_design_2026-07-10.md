@@ -63,6 +63,43 @@ coaches (名将 tier: 黒田剛, 山田耕介, 中野雄二…) and for any coac
 career — precisely the coaches of the head institutions this design prioritizes. Long-tail
 institution coaches will often lack articles; those get institution-level linkage only.
 
+### Build reality (2026-07-11): auto-resolution is ~60% reliable, needs a research pass
+
+`scripts/build_coach_attribute_candidates.py` auto-fetched Wikipedia extracts and parsed the
+所属クラブ (own playing career) list for all 195 named coaches. Findings that shaped the
+approach:
+- The prose-based `overseas_classification` is too NOISY on coach articles (a coach's article
+  is dominated by their coaching career and the players they developed — 黒田剛's 18k-char
+  article false-positived as "played overseas" off text about his players). The reliable
+  overseas/top-flight signal is the parsed CLUB LIST (are any of the coach's own clubs
+  foreign / top-flight), not prose classification.
+- Title auto-resolution (name → article) is only ~60% reliable: ~76 of 195 grabbed the WRONG
+  page (date pages like "5月7日", club pages like "福岡大学サッカー部", even a comedian for
+  南健司). So the attribute build is NOT fully automatic — it needs a per-coach research pass
+  (delegated to a Sonnet subagent) that confirms the correct article using the coach's
+  institution + era as identity anchors, with the ~120 trustworthy auto-resolutions (title
+  contains the coach name; 72 with clean club lists) as a fast-path scaffold.
+- Top-flight definition fixed: **J1 (1993+) OR JSL Division 1 (pre-1993 top flight)** — many
+  of these coaches played in the 1970s-80s, so JSL-D1 experience counts as top-flight; the
+  literal-J1 debut extractor alone would undercount the older generation.
+
+Output: `data/interim/coach_network/coach_attributes.csv` (played_professionally,
+played_top_flight, played_overseas, own_national_team, top_flight_era, ...).
+
+### J-youth coverage gap quantified (2026-07-11) — motivates the J-academy scale-up
+
+Once the player↔coach exposure was built, the coverage-by-pathway funnel exposed a large,
+non-random gap. Of the full outcome population, the share of players with an identified
+primary development coach is: **university 71%, high school 39%, but J-club-academy only 18%**
+(535 of 653 J-youth-pathway players have NO development-coach data, because only 5 academies
+were researched). Since j_club_academy is the pathway most central to the original research
+question ("育成段階での指導者関与の効果"), analyzing coach effects on the current data alone
+would effectively measure "university coach effects." This motivated a J-youth U-18 scale-up
+batch (15 new academies: 東京ヴェルディ, 京都, 清水, 鹿島, 大分, 神戸, 浦和, 広島, 鳥栖,
+横浜FC, 札幌, 大宮, 川崎, 千葉, 名古屋 — top-15 by distinct J-youth players, adding ~244
+players of coverage), run in parallel with the coach-attribute build. J-academies remain the
+hardest tier (~51% pilot coverage, unstable JFA-archive URLs), so expect lower yield here.
+
 ## Pilot results (completed 2026-07-10)
 
 See `docs/institution_coach_pilot_2026-07-10.md` for the full 15-institution report
