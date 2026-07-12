@@ -245,3 +245,46 @@ New structural patterns beyond the high-school phase:
   effects), which is exactly what the network representation surfaces.
 - The selection-effect lesson from the player analysis (youth_selected controls) applies
   here doubly: strong institutions attract both strong players and strong coaches.
+
+## Phase C findings (2026-07-11/12): does a coach's own playing pedigree matter?
+
+Full pipeline built and run end-to-end: 340 coach-tenure rows across 86 institutions
+(pilot + HS×3 + university×3 + J-youth×1) → player↔coach exposure join → per-player
+"primary development coach" (head coach at the terminal pathway-stage institution, greatest
+stint×tenure overlap; 1,974 players) → each coach's OWN playing attributes researched from
+Wikipedia (`coach_attributes.csv`, 255 coaches: played_professionally / played_top_flight =
+J1 or JSL-D1 / played_overseas / own_national_team). Analysis in
+`scripts/analyze_coach_pathway_effects.py`, run on all cohorts and a censoring-controlled
+mature cohort (birth 1988-1998).
+
+**Key confound found and controlled — right-censoring.** Ex-top-flight coaches start their
+tenures later (median 2013 vs 2011) and coach later-born players (median birth 1997 vs 1995)
+who have had fewer years to reach J1. The naive comparison therefore understates elite-coach
+outcomes; restricting to the mature cohort removes most of the artifact.
+
+**Headline (mature cohort, censoring-controlled):**
+- A coach having *any professional playing career* has a modest POSITIVE association with
+  player outcomes — reached_j1 45% vs 41%, and national-team selection **50% vs 39%**.
+- But having been *elite specifically* adds nothing on top: `own_national_team` (the coach
+  was himself an international) is FLAT across every outcome (J1 42% vs 43%, NT 46% vs 45%).
+  `played_top_flight` is flat on J1 (43% vs 42%) though positive on producing NT players
+  (51% vs 40%).
+- `played_overseas` is (weakly, n=49) NEGATIVE — but small-n and confounded; not reliable.
+
+**Within-institution top_flight comparison stays negative (明治 −35%, 法政 −25%) — but the
+cause is illuminating, not systematic.** Drilling in: at 明治大学 the two highest-yield
+development coaches are 栗田大輔 (83% J1) and 神川明彦 (71% J1) — both celebrated
+university-football developers who never played professionally — versus 井澤千秋 (40% J1, an
+ex-JSL-D1 player coaching an earlier cohort). Same shape at 法政. So the "negative" is not
+"elite background hurts"; it is that **development skill is an individual-coach property
+orthogonal to the coach's own playing pedigree** — non-player coaches like 栗田/神川 are
+living proof that great developers need not have been great players.
+
+**Bottom line for the original research question:** development-stage coaches clearly vary in
+their players' outcomes (the FC東京U-18 20pp within-academy J1 spread, the Meiji coach
+contrasts), but a coach's OWN elite playing background does NOT explain that variation — at
+most, having played professionally at all carries a weak positive signal for producing
+national-team players. The signal that matters is individual coaching quality, which this
+pedigree variable does not capture. All results remain descriptive/exploratory: era- and
+coach-identity confounding is controlled only bluntly (birth-cohort restriction), not via a
+full model with coach/institution/cohort fixed effects.
