@@ -17,6 +17,7 @@ SOURCE_FILES = [
     ("uni_batch1", "uni_batch1_coach_tenures.csv"),
     ("uni_batch2", "uni_batch2_coach_tenures.csv"),
     ("uni_batch3", "uni_batch3_coach_tenures.csv"),
+    ("jyouth_batch1", "jyouth_batch1_coach_tenures.csv"),
 ]
 
 OUTPUT_COLUMNS = [
