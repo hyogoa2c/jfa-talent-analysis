@@ -163,6 +163,42 @@ medium-cost/medium-yield (~74% average across the 5 piloted programs, vs. high s
 university coaching staff overlapping with employment at the university's broader athletic
 department (making searches noisier than the single-sport-focused high-school case).
 
+### University scale-up: completed (2026-07-11)
+
+All 35 target universities done — 5 pilot + 30 across 3 batches (10/10/10). 177 tenure rows
+total (pilot 65 + uni_batch1 39 + uni_batch2 39 + uni_batch3 34 — pilot total includes non-
+university institutions too; the 30 new universities alone contributed 112 rows). Batch
+coverage: batch1 ~86%, batch2 ~66% (~84% excluding two weak outliers), batch3 ~70% (~84%
+excluding two weak outliers). Files: `uni_batch{1,2,3}_coach_tenures.csv` + matching
+`_notes.md`, gitignored under `data/interim/coach_network/`.
+
+Key finding across all three batches: **coverage is not predicted by institutional
+prominence.** Several nationally-successful, currently-prominent programs (立命館大学 ~10%,
+京都産業大学 ~19%, 東京学芸大学 ~8%) had almost no searchable pre-2020s coaching history,
+while some far less famous programs reached ~100%. The actual driver appears to be whether
+any individual — an OB association, a famous alumnus with their own Wikipedia page, or a
+diligent team-site maintainer — happened to informally document the program's history; team
+prominence and documentation effort are only weakly correlated.
+
+New structural patterns beyond the high-school phase:
+- **部長** (faculty administrative advisor) and **副部長兼GM** as university-specific
+  `role_type` values, distinct from the high-school phase's pure 監督/総監督/ヘッドコーチ set.
+- **Corporate/J-club dispatch model**: some university programs are staffed via a formal
+  partnership with a J-league club (関東学院大学↔横浜F・マリノス, 産業能率大学↔湘南ベルマーレ),
+  producing high coach turnover instead of the "franchise coach" pattern that otherwise
+  dominates both the high-school and university phases.
+- **Longest single tenure found in the project**: 拓殖大学's 玉井朗, a professor-coach with
+  33+ consecutive years in the role.
+- **University-vs-affiliated-school name confusion** is a distinct disambiguation-risk
+  category from simple similarly-named-university confusion (e.g. an affiliated high
+  school's own site can look like the university's official athletic-department site);
+  caught by cross-checking league names (大学/インカレ vs 高校/高円宮杯 references).
+- Coach-network edges directly linking pilot, high-school, and university layers were
+  found repeatedly (e.g. 池上礼一: 明治大学[pilot]→立教大学→立命館大学[batch2]; 加茂周:
+  関西学院大学[batch2]↔大阪学院大学[batch3]; 専修大学[batch1]'s 源平貴久 named as a direct
+  mentor in J1/national-team player 長澤和輝's own Wikipedia prose) — an early, encouraging
+  signal for the eventual network analysis.
+
 ## Analytical cautions carried forward
 
 - What the primary linkage measures is "was at institution X while coach Y was head coach" —
