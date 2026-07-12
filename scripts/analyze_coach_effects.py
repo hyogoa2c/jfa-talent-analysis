@@ -57,9 +57,13 @@ def main() -> None:
         subset=["source_player_id", "coach_name", "normalized_institution"]
     )
 
+    # Outcome column encodings differ (a historical artifact of how each was
+    # built): reached_j1_ever and moved_overseas_final are "1"/"0", while
+    # any_national_team_selection is "yes"/"no"/"unclear"/"". Verified against
+    # data/processed/player_pathway_outcomes.csv before trusting these.
     merged = exposures.merge(outcomes, on="source_player_id", how="left")
     merged["reached_j1_ever"] = merged["reached_j1_ever"] == "1"
-    merged["moved_overseas_final"] = merged["moved_overseas_final"] == "yes"
+    merged["moved_overseas_final"] = merged["moved_overseas_final"] == "1"
     merged["any_national_team_selection"] = merged["any_national_team_selection"] == "yes"
 
     print(f"exposure rows (deduplicated)={len(merged)}")
