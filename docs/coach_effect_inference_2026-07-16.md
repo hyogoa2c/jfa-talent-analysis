@@ -56,3 +56,22 @@ Top: 中央大学×佐藤健 (+45pp, n=10), 明治大学×栗田大輔 (+26pp, n
 - The identifiable core is small (527 of 1,974 attributed players) and university-heavy;
   J-academy units mostly fell below the 10-player floor because primary-coach attribution
   splits academy players across many short-tenured coaches.
+
+## Plan 2 addendum (same day): the lineage graph
+
+`scripts/build_coach_lineage.py` matches each verified coach article's own playing stints
+against the 86 researched institutions' tenure timelines: **27 mentored_by edges** (coach A
+played under researched coach B — years overlapping), 74 alumni edges, 16 mover edges.
+Interactive visualization published as a Claude artifact (coach_lineage_network.html).
+
+- Largest confirmed lineage: **坂本康博 (大阪体育大学, 1973–2017) → 黒田剛・島田貴裕・松尾元太**;
+  his grand-students (players attributed to those three) reached J1 at 64% (n=22).
+- Other multi-student mentors: 小嶺忠敏 (国見), 大澤英雄 (国士舘), 桐田英樹 (東京学芸大),
+  志波芳則 (東福岡).
+- Players whose primary coach is **in-lineage** (his own developer is in our tenure table)
+  reached J1 at **71% vs 41%** in the mature cohort — but n=17, in-lineage coaches skew
+  toward strong institutions, and edge coverage is era-biased (a missing edge means "tenure
+  table doesn't reach that era", not "no relationship"). Suggestive, not established.
+- The 国見 unnamed-figurehead row is now excluded as a gap placeholder everywhere
+  (`is_gap_placeholder`), removing 3 spurious mentor edges and one fake coach from the
+  exposure join.
