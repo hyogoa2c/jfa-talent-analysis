@@ -84,3 +84,9 @@ def test_gap_placeholder_role_type_alone_is_detected():
 
 def test_real_coach_row_is_not_a_gap_placeholder():
     assert is_gap_placeholder("風間八宏", "監督") is False
+
+
+def test_unnamed_figurehead_is_a_gap_placeholder():
+    """The 国見 figurehead row names a real but unidentified person — unusable
+    as an identifiable coach for exposure or lineage purposes."""
+    assert is_gap_placeholder("(氏名不詳・サッカー未経験の教諭)", "監督") is True
