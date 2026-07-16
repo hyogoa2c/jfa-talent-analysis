@@ -106,9 +106,9 @@ def main() -> None:
         grand = df[df["primary_dev_coach"].isin(students)]
         if len(grand) == 0:
             continue
-        rows.append((mentor, students, grand))
-    rows.sort(key=lambda r: -len(r[2]))
-    for mentor, students, grand in rows:
+        rows.append((mentor, grand))
+    rows.sort(key=lambda r: -len(r[1]))
+    for mentor, grand in rows:
         print(f"  {mentor} — student-coaches with attributed players: "
               f"{', '.join(sorted(set(grand['primary_dev_coach'])))}")
         print(f"    grand-students reached_j1: {rate(grand, 'reached_j1')}")
