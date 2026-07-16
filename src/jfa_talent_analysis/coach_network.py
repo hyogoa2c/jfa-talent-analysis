@@ -85,8 +85,14 @@ def is_gap_placeholder(coach_name: str, role_type: str) -> bool:
     coach_name="不明" row to make the gap and its dated bounds visible. These
     must never be joined as a real coach exposure (a player wasn't "coached
     by 不明" — several different people happen to share that placeholder
-    name across institutions, which would silently merge them)."""
-    return coach_name.startswith("不明") or role_type == "その他(記載)"
+    name across institutions, which would silently merge them). 氏名不詳
+    covers the 国見 figurehead-監督 row: a real but unnamed person, equally
+    unusable as an identifiable coach."""
+    return (
+        coach_name.startswith("不明")
+        or "氏名不詳" in coach_name
+        or role_type == "その他(記載)"
+    )
 
 
 def years_overlap(
