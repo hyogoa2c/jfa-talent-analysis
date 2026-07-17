@@ -121,3 +121,36 @@ bios (堀孝史 1991 selection with 0 caps; 布部陽功 name + Jan-Mar 2016 U-1
 - **Lineage graph grew 117 → 130 edges** (mentored_by 27 → 31): the era-fill tenures +
   new playing histories mechanically connected 柴田慎吾 ← 佐々木直人 (柏U-18 2003), and
   安達亮/永井俊太 ← 布啓一郎 (市立船橋) — 布啓一郎 becomes a multi-mentee mentor.
+
+## ジェフ lead verified + CRITICAL data-quality finding (2026-07-17)
+
+The era-fill batch's in-flight ジェフ lead is now closed: **神戸清雄 = ジェフユナイテッド市原
+ユース監督 1996** (single year), confirmed by INAC神戸's official 2024 appointment release
+carrying his verbatim self-reported career history (1995 サテライト監督兼トップコーチ →
+**1996 ユース監督** → 1997 トップコーチ兼サテライト). His Wikipedia lumps 1994-1996 as
+"コーチ", but its cited source (J.League Data Site staff_id=208) was fetched directly and has
+no year-by-year youth roles — the club release is the higher-resolution source. Tenure row +
+attribute row (本田技研 JSL1部 1984-1990, 60 games; 1989 FIFA futsal World Championship
+squad — futsal, so own_national_team=no) added; canonical 360 rows, attributes 268.
+One real join gained: 山本英臣 (JEF youth 1996-1998) correctly attributes to 神戸清雄.
+
+**The 1996 row exposed a serious pre-existing attribution artifact.** Yearless player stints
+(no from/to year in the club-history line) join EVERY tenure at their institution
+(`years_overlap` open-bound semantics — by design), and `select_primary_dev_coach` then
+breaks the all-equal tie by *first-seen order in the canonical file*. Adding a 1996 tenure
+made this visible: 2010s JEF players "joined" a 1996 coach. Quantified over all 2,048
+primary attributions: **47% rest on real year overlap, 9% yearless with a single candidate,
+44% (900 players) yearless with 2+ candidates — i.e. an arbitrary deterministic pick**,
+concentrated in universities (639/900), exactly where the significance-test core lives.
+The planned birth-year imputation (design doc: HS 15-18, univ 18-22) was never implemented
+in this join path.
+
+**Sensitivity test — the headline p=0.001 does not survive.** Dropping the 900 arbitrary
+attributions collapses the identifiable core from 528 players / 24 units / 11 institutions
+to **83 / 4 / 2**, and the J1 coach-FE test there is null (LR 1.1/2df, permutation p=0.37).
+This does not *refute* the coach effect (the reduced test is nearly powerless) but it shows
+the previous core was mostly built on contaminated assignments. Worse, yearlessness is
+plausibly notability-correlated (obscure players have thinner Wikipedia club lines), so
+piling yearless players onto the first-listed coach can inflate the observed FE statistic
+in a way the within-cell permutation does not replicate. **The p=0.001 claim is suspended
+pending re-attribution via birth-year imputation.**
