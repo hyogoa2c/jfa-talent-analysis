@@ -58,6 +58,47 @@ def test_j_academy_names_pass_through_unchanged():
     assert normalize_institution_name("ガンバ大阪ユース") == "ガンバ大阪ユース"
 
 
+def test_academy_space_and_hyphen_variants_collapse():
+    """Real corpus variants: internal spaces ("京都サンガF.C. U-18") and missing
+    U-hyphen ("名古屋グランパスU18") split one team into several join keys."""
+    assert normalize_institution_name("京都サンガF.C. U-18") == "京都サンガF.C.U-18"
+    assert normalize_institution_name("FC東京 U-18") == "FC東京U-18"
+    assert normalize_institution_name("名古屋グランパスU18") == "名古屋グランパスU-18"
+    assert normalize_institution_name("大宮アルディージャU18") == "大宮アルディージャユース"
+
+
+def test_renamed_academy_aliases_map_to_researched_name():
+    """Historical club names are the same continuing team: 読売日本SC→ヴェルディ,
+    京都パープルサンガ→京都サンガF.C., グランパスエイト→グランパス,
+    レッドダイヤモンズ→レッズ, 札幌 without the 北海道 prefix."""
+    assert normalize_institution_name("読売日本SCユース") == "東京ヴェルディユース"
+    assert normalize_institution_name("東京ヴェルディ1969ユース") == "東京ヴェルディユース"
+    assert normalize_institution_name("京都パープルサンガユース") == "京都サンガF.C.U-18"
+    assert normalize_institution_name("名古屋グランパスエイトユース") == "名古屋グランパスU-18"
+    assert normalize_institution_name("浦和レッドダイヤモンズユース") == "浦和レッズユース"
+    assert normalize_institution_name("コンサドーレ札幌U-18") == "北海道コンサドーレ札幌U-18"
+    assert normalize_institution_name("柏レイソルユース") == "柏レイソルU-18"
+    assert normalize_institution_name("ジェフユナイテッド市原ユース") == (
+        "ジェフユナイテッド市原・千葉U-18"
+    )
+
+
+def test_leading_parse_junk_is_stripped():
+    assert normalize_institution_name("2011 - 2013年度 鹿島アントラーズユース") == (
+        "鹿島アントラーズユース"
+    )
+    assert normalize_institution_name("同年10月 京都サンガF.C.U-18") == "京都サンガF.C.U-18"
+    assert normalize_institution_name("：柏レイソルU-18") == "柏レイソルU-18"
+
+
+def test_similarly_named_but_different_clubs_are_not_aliased():
+    """ヴェルディS.S.相模原 and 札幌ジュニアFC are separate clubs; 読売日本SCユースS
+    is the junior section (現・ヴェルディジュニア), not the U-18 team."""
+    assert normalize_institution_name("ヴェルディS.S.相模原ユース") != "東京ヴェルディユース"
+    assert normalize_institution_name("札幌ジュニアFCユース") != "北海道コンサドーレ札幌U-18"
+    assert normalize_institution_name("読売日本SCユースS") != "東京ヴェルディユース"
+
+
 def test_years_overlap_handles_open_ended_ranges():
     assert years_overlap(2010, 2013, 2012, None) is True
     assert years_overlap(2010, 2013, 2020, None) is False

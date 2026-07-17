@@ -21,6 +21,47 @@ ADMIN_PREFIX_RE = re.compile(r"^\S{0,6}?(?:都|道|府|県|市|区|町|村)立")
 
 HIGH_SCHOOL_ABBREVIATIONS = ("高等学校", "高校")
 
+# Leading fragments the club-history line parser occasionally leaves glued to an
+# institution name ("2011 - 2013年度 鹿島アントラーズユース", "同年10月 京都サンガ…",
+# "シーズン途中 -   ヴィッセル神戸 U-18", "：柏レイソルU-18") — each a real corpus case.
+LEADING_JUNK_RE = re.compile(
+    r"^(?:[：:‐\-\s]+|\d{4}(?:\s*-\s*\d{4})?年度?\s*|同年\d{0,2}月?\s*|シーズン途中\s*)+"
+)
+
+# "U18" / "U 18" → "U-18" so hyphenation variance can't split a team in two.
+U_BRACKET_RE = re.compile(r"U\s?(\d{2})")
+
+# Renamed / historically-named J-academy teams mapped onto the researched
+# canonical name. Keys are written in POST-normalization form (spaces removed,
+# U-18 hyphenated), values are names as they appear in the coach-tenure table.
+# Only continuity-verified renames belong here (読売日本SCユース really is the
+# team that became 東京ヴェルディユース); similarly-named but DIFFERENT clubs
+# (ヴェルディS.S.相模原ユース, 札幌ジュニアFCユース, 千葉SCユース) must NOT be
+# added. 読売日本SCユースS is the junior section (現・ヴェルディジュニア), not
+# the U-18 team — also excluded.
+ACADEMY_ALIASES = {
+    "コンサドーレ札幌U-18": "北海道コンサドーレ札幌U-18",
+    "コンサドーレ札幌ユースU-18": "北海道コンサドーレ札幌U-18",
+    "東京ヴェルディ1969ユース": "東京ヴェルディユース",
+    "ヴェルディ1969ユース": "東京ヴェルディユース",
+    "ヴェルディユース": "東京ヴェルディユース",
+    "読売日本SCユース": "東京ヴェルディユース",
+    "浦和レッドダイヤモンズユース": "浦和レッズユース",
+    "京都パープルサンガユース": "京都サンガF.C.U-18",
+    "名古屋グランパスエイトU-18": "名古屋グランパスU-18",
+    "名古屋グランパスエイトユース": "名古屋グランパスU-18",
+    "柏レイソルユース": "柏レイソルU-18",
+    "ヴィッセル神戸ユース": "ヴィッセル神戸U-18",
+    "セレッソ大阪ユース": "セレッソ大阪U-18",
+    "大宮アルディージャU-18": "大宮アルディージャユース",
+    "ジェフユナイテッド千葉U-18": "ジェフユナイテッド市原・千葉U-18",
+    "ジェフユナイテッド千葉ユース": "ジェフユナイテッド市原・千葉U-18",
+    "ジェフユナイテッド市原ユース": "ジェフユナイテッド市原・千葉U-18",
+    "ジェフユナイテッド市原・千葉ユース": "ジェフユナイテッド市原・千葉U-18",
+    "サンフレッチェ広島F.Cユース": "サンフレッチェ広島ユース",
+    "サンフレッチェ広島FCユース": "サンフレッチェ広島ユース",
+}
+
 
 def normalize_institution_name(name: str) -> str:
     """Canonical join key for an institution name, absorbing the known sources
@@ -30,11 +71,13 @@ def normalize_institution_name(name: str) -> str:
     and a leading prefecture/city administrative qualifier.
 
     Deliberately NOT a general-purpose fuzzy matcher: it only strips patterns
-    confirmed safe against the current ~70-institution coach-tenure roster (see
+    confirmed safe against the current ~86-institution coach-tenure roster (see
     tests). Adding new institutions later should re-verify no unintended
     collisions arise (e.g. two different schools sharing an administrative
     prefix once stripped)."""
-    normalized = name
+    normalized = LEADING_JUNK_RE.sub("", name)
+    normalized = normalized.replace(" ", "").replace("　", "")
+    normalized = U_BRACKET_RE.sub(r"U-\1", normalized)
     for suffix in CLUB_SUFFIXES:
         if normalized.endswith(suffix):
             normalized = normalized[: -len(suffix)]
@@ -44,7 +87,7 @@ def normalize_institution_name(name: str) -> str:
     match = ADMIN_PREFIX_RE.match(normalized)
     if match:
         normalized = normalized[match.end() :]
-    return normalized
+    return ACADEMY_ALIASES.get(normalized, normalized)
 
 
 @dataclass(frozen=True)
