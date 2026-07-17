@@ -29,6 +29,43 @@ PATHWAY_TO_STAGE = {
 }
 
 
+def school_year_cohort(birth_date: str) -> int | None:
+    """Japanese fiscal-year birth cohort from a YYYY/MM/DD (or YYYY-MM-DD)
+    birth date: children born January-March (早生まれ) belong to the school
+    cohort of the previous calendar year. Returns None when the date can't be
+    parsed."""
+    parts = birth_date.replace("-", "/").split("/")
+    if len(parts) < 2:
+        return None
+    try:
+        year, month = int(parts[0]), int(parts[1])
+    except ValueError:
+        return None
+    return year if month >= 4 else year - 1
+
+
+# Institution-stage → (entry offset, final-year offset) from the school-year
+# cohort, in April-start fiscal years: cohort c enters high school (and a
+# J-club U-18 team, same age band) in fiscal year c+16 and finishes in c+18;
+# university runs c+19 through c+22. Verified against a recorded case:
+# 山本英臣 (born 1980/05, cohort 1980) has a recorded ジェフ youth stint of
+# exactly 1996-1998 = c+16..c+18.
+STAGE_YEAR_OFFSETS = {
+    "high_school": (16, 18),
+    "j_club_academy": (16, 18),
+    "university": (19, 22),
+}
+
+
+def impute_stint_years(stage: str, cohort: int) -> tuple[int, int]:
+    """Expected [from_year, to_year] of a stint at a stage-typed institution
+    for a player of the given school-year cohort. The Japanese school system's
+    rigid age banding makes this a tight approximation (±1 year, comparable to
+    the tenure table's own known source noise)."""
+    entry, final = STAGE_YEAR_OFFSETS[stage]
+    return cohort + entry, cohort + final
+
+
 def year_overlap(
     stint_from: int | None,
     stint_to: int | None,

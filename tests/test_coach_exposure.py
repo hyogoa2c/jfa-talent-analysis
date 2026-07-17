@@ -1,6 +1,8 @@
 from jfa_talent_analysis.coach_exposure import (
+    impute_stint_years,
     institution_stage,
     role_rank,
+    school_year_cohort,
     select_primary_dev_coach,
     year_overlap,
 )
@@ -10,6 +12,32 @@ def test_institution_stage_classification():
     assert institution_stage("早稲田大学") == "university"
     assert institution_stage("青森山田高等学校") == "high_school"
     assert institution_stage("FC東京U-18") == "j_club_academy"
+
+
+def test_school_year_cohort_uses_april_fiscal_boundary():
+    assert school_year_cohort("2000/05/01") == 2000
+    assert school_year_cohort("2000/04/01") == 2000
+    # 早生まれ: January-March births belong to the previous school cohort.
+    assert school_year_cohort("2001/03/31") == 2000
+    assert school_year_cohort("2001-02-15") == 2000
+
+
+def test_school_year_cohort_unparseable_returns_none():
+    assert school_year_cohort("") is None
+    assert school_year_cohort("2000") is None
+    assert school_year_cohort("unknown/xx") is None
+
+
+def test_impute_stint_years_matches_recorded_case():
+    # 山本英臣 (born 1980/05, cohort 1980) has a RECORDED ジェフ youth stint of
+    # exactly 1996-1998 — the imputation must reproduce it.
+    cohort = school_year_cohort("1980/05/12")
+    assert impute_stint_years("j_club_academy", cohort) == (1996, 1998)
+
+
+def test_impute_stint_years_stage_ranges():
+    assert impute_stint_years("high_school", 2000) == (2016, 2018)
+    assert impute_stint_years("university", 2000) == (2019, 2022)
 
 
 def test_year_overlap_counts_inclusive_years():

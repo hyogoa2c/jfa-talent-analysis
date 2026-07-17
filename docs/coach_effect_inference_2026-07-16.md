@@ -154,3 +154,42 @@ plausibly notability-correlated (obscure players have thinner Wikipedia club lin
 piling yearless players onto the first-listed coach can inflate the observed FE statistic
 in a way the within-cell permutation does not replicate. **The p=0.001 claim is suspended
 pending re-attribution via birth-year imputation.**
+
+## RETRACTION: coach-effect p=0.001 does not survive proper attribution (2026-07-17)
+
+Birth-cohort year imputation is now implemented (`school_year_cohort` +
+`impute_stint_years` in coach_exposure.py, tests included): a fully yearless stint gets
+its years from the player's April-boundary school cohort (HS / J-youth = c+16..c+18,
+university = c+19..c+22; reproduces 山本英臣's recorded 1996-1998 ジェフ youth stint
+exactly). All 1,725 formerly yearless stints at researched institutions were imputed
+(birth_date coverage is 100%), and provenance is recorded per exposure row
+(`stint_year_basis` = recorded / imputed_from_birth). Effects: exposure rows 9,220 →
+4,264 (chronologically impossible joins eliminated), primary attributions 2,048 → 1,946,
+spot checks correct (岡野洵 now correctly attributes to no one — his 2013-2015 JEF years
+fall in the documented 2000-2018 gap).
+
+**Result: the headline claim "individual coach effects on J1 attainment are real
+(permutation p=0.001)" is retracted.** With defensible attribution the identifiable core
+actually GROWS (610 players / 29 units / 13 institutions vs the old 528/24/11), yet the
+coach-FE test is null: J1 LR 20.8/16df, χ² p=0.19, permutation **p=0.30**; national team
+permutation p=0.97. The old p=0.001 was manufactured by the attribution artifact: yearless
+(= less notable) players were deterministically piled onto the first-listed coach of their
+institution, creating outcome-correlated unit assignments that the within-cell permutation
+could not replicate. Value-added spreads shrink from ±45pp to ±24pp max (compatible with
+noise; 中央大学×佐藤健 remains the top unit at +14pp, n=17).
+
+Downstream findings attenuate consistently:
+- Phase-C attribute contrasts: the within-institution "top-flight coaches −22.5pp" pattern
+  (and the 明治 栗田/井澤 story built on it) disappears → mean **+1.3pp** across 7
+  institutions; marginals are near-flat (any-pro J1 45% vs 43% in the mature cohort).
+- Lineage: in-lineage coaches' student J1 rate falls from the suggestive 71% vs 41% to
+  **52% vs 43%** (CI [35,67], n=33) — no longer distinguishable.
+
+**What is unaffected**: every pathway-level result (university penalty across all three
+outcomes, selection-effect analysis, era interaction) — none of it uses coach attribution.
+
+Revised answer to the coach-involvement RQ: with the current data we find **no detectable
+individual-coach fixed effect** on J1 attainment (p≈0.30 at 610-player/29-unit power); the
+earlier positive claim was an artifact. Attribution fragmentation at J academies and
+attenuation from ±1y imputation noise limit power, so this is "no evidence", not "evidence
+of absence".
