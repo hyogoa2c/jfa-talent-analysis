@@ -75,3 +75,21 @@ Interactive visualization published as a Claude artifact (coach_lineage_network.
 - The 国見 unnamed-figurehead row is now excluded as a gap placeholder everywhere
   (`is_gap_placeholder`), removing 3 spurious mentor edges and one fake coach from the
   exposure join.
+
+## Era-gap deepening result (2026-07-17)
+
+Targeted pre-2015 gap-filling at the 5 highest-loss researched academies (柏/マリノス/ジェフ/
+浦和/ヴェルディ, 150 gap players) recovered 19 tenure rows (14 named coaches). Canonical
+table now 359 rows. J-youth primary-coach coverage 52% → **57%**. Highlights: 柏レイソルU-18
+1993-2020 nearly fully reconstructed via a specialist fan archive cross-verified against
+coach bios (also corrected 下平隆宏's tenure to 2010-2015 and contradicted the pilot's
+"no U-18 tenure" note on 吉田達磨); ヴェルディ 2015-16 closed by official club releases.
+ジェフ was stopped mid-research by user decision (one in-flight unverified lead: 神戸清雄 =
+ユース監督 1996, no source captured — manual follow-up candidate). マリノス 2004-2016 (13y)
+and ヴェルディ 1997-2007 are documented as structurally unresolvable online.
+
+The significance-test core did NOT grow (still 528 players / 24 units): recovered players
+split across many short-tenured coaches, so no new unit crossed the 10-player floor — the
+known J-academy attribution-fragmentation problem, now measured. The p=0.001 result is
+unchanged. The 14 new era-fill coaches have no attribute rows yet (Phase-C table); flagged
+as follow-up.
