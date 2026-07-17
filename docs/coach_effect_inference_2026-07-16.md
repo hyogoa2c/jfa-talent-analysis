@@ -93,3 +93,31 @@ split across many short-tenured coaches, so no new unit crossed the 10-player fl
 known J-academy attribution-fragmentation problem, now measured. The p=0.001 result is
 unchanged. The 14 new era-fill coaches have no attribute rows yet (Phase-C table); flagged
 as follow-up.
+
+## Era-fill coach attributes complete — attribute coverage now 100% (2026-07-17)
+
+The era-fill follow-up is closed. Per-entity research (Sonnet subagent, 12 coaches — the
+"14" in the previous section double-counted 下平隆宏 who already had a row, and the combined
+布部/永井 transition row) filled every missing Phase-C attribute row:
+`era_fill_coach_attributes.csv`, merged into `coach_attributes.csv` (255 → 267 rows).
+Coordinator independently re-verified 3 load-bearing rows against the coaches' Wikipedia
+bios (堀孝史 1991 selection with 0 caps; 布部陽功 name + Jan-Mar 2016 U-18 tenure;
+濱吉正則 "選手経験は特になく" + Slovenia 3rd division) — all exact matches.
+
+- **Every player with an identifiable primary development coach (2,047) now joins to an
+  attribute row (100%, previously the era-fill coaches were missing).**
+- Two data corrections fell out of the identity work: the Tassiy table's 布部洋一 is a
+  misspelling of **布部陽功** (own bio: U-18 監督 Jan-Mar 2016 before moving to the top
+  team), and 永井俊太's tenure extends to **2016-2017** (own bio) — the combined transition
+  row was split into two properly-sourced rows.
+- Attribute findings: 9/12 played professionally, 6/12 top flight (安達亮 and 筒井紀章 held
+  J1 registrations with zero recorded appearances — counted as no), 4/12 overseas
+  (吉田達磨 Singapore, 布部陽功 Brazil, 藤吉信次 China, 濱吉正則 Slovenia amateur), and
+  堀孝史 is the only full-national-team selection (1991, 0 caps — same convention as the
+  existing 倉又寿雄 row).
+- **Conclusions unchanged** after rerunning the full pipeline: J1 permutation p=0.001
+  (LR 47.1/13df), national-team permutation p=0.31 (χ² p≈0.05 remains anti-conservative),
+  own_national_team still flat, any-pro-experience still weakly positive.
+- **Lineage graph grew 117 → 130 edges** (mentored_by 27 → 31): the era-fill tenures +
+  new playing histories mechanically connected 柴田慎吾 ← 佐々木直人 (柏U-18 2003), and
+  安達亮/永井俊太 ← 布啓一郎 (市立船橋) — 布啓一郎 becomes a multi-mentee mentor.
