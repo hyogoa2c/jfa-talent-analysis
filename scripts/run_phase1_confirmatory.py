@@ -42,7 +42,7 @@ F_OVERSEAS_SEQUENTIAL = f"{F_OVERSEAS_YOUTH} + reached_j1"
 F_A_TEAM = f"a_team_selected ~ {PATHWAY_TERM} + {COHORT_SPLINE_TERM}"
 F_A_TEAM_YOUTH = f"{F_A_TEAM} + youth_selected"
 
-REPORT_TERMS = ("pathway_category", "youth_selected", "reached_j1", "position_mode")
+REPORT_TERMS = ("pathway_category", "youth", "reached_j1", "position_mode")
 FALSE_NEGATIVE_RATE = 0.022  # JFA spot-check (docs/jfa_national_team_spot_check_2026-07-08.md)
 
 
@@ -206,8 +206,14 @@ def main() -> None:
     m_primary_youth = fit_logit(
         clustered, F_PRIMARY_YOUTH, "J1到達＋youth_selected調整", "final_institution"
     )
+    m_primary_youth_fine = fit_logit(
+        clustered,
+        f"{F_PRIMARY_YOUTH} + youth_cat_count + earliest_youth_age",
+        "J1到達＋youth細分化（感度）",
+        "final_institution",
+    )
     lines += ["## 2. 主アウトカム: J1到達", ""]
-    lines += or_section([m_primary, m_primary_full, m_primary_youth])
+    lines += or_section([m_primary, m_primary_full, m_primary_youth, m_primary_youth_fine])
     rd_frames = []
     for label, fit in [("J1到達・主", m_primary), ("J1到達＋youth調整", m_primary_youth)]:
         section, frame = rd_section(
@@ -392,6 +398,7 @@ def main() -> None:
         m_primary,
         m_primary_full,
         m_primary_youth,
+        m_primary_youth_fine,
         m_overseas,
         m_overseas_full,
         m_overseas_youth,
