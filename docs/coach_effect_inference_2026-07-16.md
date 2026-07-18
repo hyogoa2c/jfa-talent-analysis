@@ -1,5 +1,22 @@
 # Do development coaches matter? A significance test (2026-07-16)
 
+> ## ⚠️ RETRACTION NOTICE (2026-07-17)
+>
+> **The headline result of this document — "individual coach effects on J1 attainment are
+> real (permutation p=0.001)" — has been RETRACTED.** The p=0.001 was an artifact of the
+> primary-coach attribution: yearless player stints joined every tenure at their institution
+> and the tie-break degenerated to file order, deterministically piling less-notable players
+> onto the first-listed coach (44% of attributions were affected). After birth-cohort year
+> imputation produced a defensible attribution, the identifiable core GREW (610 players / 29
+> units / 13 institutions) yet the coach fixed-effect test is null: **J1 permutation p≈0.30,
+> national team p≈0.97**. The current conclusion is: *no detectable individual-coach effect
+> beyond institution and birth cohort with the present data* — which is non-detection, not
+> evidence of absence.
+>
+> Everything below is preserved as the historical record of the analysis, the artifact's
+> discovery, and the retraction (see "RETRACTION" section near the end for the full
+> post-correction numbers). For current canonical results, see `docs/results_canonical.md`.
+
 Follow-up to `docs/coach_network_design_2026-07-10.md`'s Phase C, which established that a
 coach's own elite playing pedigree does NOT explain player outcomes, while leaving open
 whether the observed coach-to-coach differences (明治's 栗田 83% vs 井澤 40% J1 rate, the

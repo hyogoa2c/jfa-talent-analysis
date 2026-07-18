@@ -2,6 +2,20 @@
 
 Research repository for quantitative analysis of Japanese football talent-development pathways, coach networks, and player career outcomes.
 
+## Research Status (2026-07-18)
+
+- **Canonical results live in [docs/results_canonical.md](docs/results_canonical.md)** — when any
+  other document (including this README) disagrees with it, the canonical document wins.
+- The Phase 1 research plan and pre-specified analysis plan are in
+  [docs/research_plan_phase1.md](docs/research_plan_phase1.md); the external mid-study review
+  that motivated them is [docs/review_results.md](docs/review_results.md).
+- Scope note: this is an exploratory observational study of **final pre-professional pathway vs.
+  career outcomes among players observed in J1/J2/J3 (2014-2025)** — not a causal evaluation of
+  the Japanese development system, and not generalizable to the full development population.
+- The coach-effect claim "permutation p=0.001" is **retracted** (attribution artifact); the
+  current result is non-detection (p≈0.30). Coach research is frozen pending better data
+  (see the retraction notice in [docs/coach_effect_inference_2026-07-16.md](docs/coach_effect_inference_2026-07-16.md)).
+
 ## Project Layout
 
 - `docs/` - research notes and study design documents
@@ -138,14 +152,15 @@ Wikipedia full-extract corpus and derived evidence (see [the revision proposal](
 
 Exploratory modeling (docs/data_collection_plan.md's "Later Modeling"):
 
-- `exploratory_modeling.py` - Random Forest vs logistic comparison on pre-career features (permutation importance + partial dependence in place of SHAP, whose numba dependency lacks Python 3.13 support); headline finding: RF does not beat logistic on any outcome (no hidden nonlinear structure), and the overseas outcome's birth-year effect is non-monotonic (a 1990-1997 birth-cohort peak the linear models miss)
+- `exploratory_modeling.py` - Random Forest vs logistic comparison on pre-career features (permutation importance + partial dependence in place of SHAP, whose numba dependency lacks Python 3.13 support); headline finding: with the current features/sample/settings RF shows no clear predictive improvement over logistic (not proof that nonlinear structure is absent), and the overseas outcome's birth-year effect is non-monotonic (a 1990-1997 birth-cohort peak the linear models miss)
 
 Step 5 analysis-ready dataset (docs/data_collection_plan.md):
 
-- `build_player_pathway_outcomes.py` - join collapsed player-season features with resolved pathway_category, any_national_team_selection, and moved_overseas outcomes into `data/processed/player_pathway_outcomes.csv`, one row per player (4,037 rows). Resolution prefers a human review queue's `reviewed_*` value over the classifier's auto-label; `pathway_category_source`/`national_team_selection_source` record which applied (`human_reviewed` / `auto_high_confidence` / `identity_not_confirmed`). `moved_overseas` is populated only for the narrow 2023-2025 reappearance-gap queue (33 players) — blank elsewhere, not assumed negative.
+- `build_player_pathway_outcomes.py` - join collapsed player-season features with resolved pathway_category, any_national_team_selection, and moved_overseas outcomes into `data/processed/player_pathway_outcomes.csv`, one row per player (4,037 rows). Resolution prefers a human review queue's `reviewed_*` value over the classifier's auto-label; `pathway_category_source`/`national_team_selection_source` record which applied (`human_reviewed` / `auto_high_confidence` / `identity_not_confirmed`). `moved_overseas` (manual-queue column) covers only the narrow 2023-2025 reappearance-gap queue (33 players); the analysis outcome is `moved_overseas_final` (career-wide Wikipedia classifier + human review, 3,408/4,037 players).
 
 ## Starting Point
 
+- [Canonical results](docs/results_canonical.md) and [Phase 1 research plan / SAP](docs/research_plan_phase1.md)
 - [Research session note](docs/research_session_2026-06-26_jfa_talent_development.md)
-- [Data collection plan](docs/data_collection_plan.md)
+- [Data collection plan](docs/data_collection_plan.md) (historical; the observation window and eligibility now live in the Phase 1 plan)
 - [Overseas transfer source audit and review runbook](docs/source_audit_overseas_transfers.md)
