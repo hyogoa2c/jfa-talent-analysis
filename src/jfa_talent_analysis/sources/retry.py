@@ -13,17 +13,19 @@ def request_with_retry(
     timeout: int = 30,
     retries: int = 3,
     backoff_seconds: float = 1.0,
+    encoding: str = "utf-8",
 ) -> tuple[int, str | None, str]:
     """Fetch a request, retrying transient server errors and network failures.
 
     Retries 429 and 5xx responses plus connection-level errors with exponential
     backoff, honoring Retry-After on 429. Other HTTP errors raise immediately.
-    Returns (status, content-type, body).
+    Returns (status, content-type, body). `encoding` defaults to utf-8; pass
+    e.g. "cp932" for Shift_JIS sources such as the pre-2014 J.League archive.
     """
     for attempt in range(retries + 1):
         try:
             with urlopen(request, timeout=timeout) as response:
-                content = response.read().decode("utf-8", errors="replace")
+                content = response.read().decode(encoding, errors="replace")
                 return response.status, response.headers.get("content-type"), content
         except HTTPError as error:
             if error.code not in RETRYABLE_STATUS_CODES or attempt >= retries:
