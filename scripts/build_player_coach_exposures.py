@@ -5,6 +5,11 @@ import csv
 from collections import Counter
 from pathlib import Path
 
+from jfa_talent_analysis.coach_exposure import (
+    impute_stint_years,
+    institution_stage,
+    school_year_cohort,
+)
 from jfa_talent_analysis.coach_network import (
     is_gap_placeholder,
     normalize_institution_name,
@@ -18,6 +23,7 @@ OUTPUT_COLUMNS = [
     "normalized_institution",
     "stint_from_year",
     "stint_to_year",
+    "stint_year_basis",
     "coach_name",
     "role_type",
     "tenure_from_year",
@@ -53,6 +59,16 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("data/interim/coach_network/player_coach_exposures.csv"),
     )
+    parser.add_argument(
+        "--outcomes",
+        type=Path,
+        default=Path("data/processed/player_pathway_outcomes.csv"),
+        help=(
+            "player_pathway_outcomes.csv, used for birth_date so that fully "
+            "yearless stints can have their years imputed from the school-year "
+            "cohort instead of joining every tenure at the institution"
+        ),
+    )
     return parser.parse_args()
 
 
@@ -68,6 +84,12 @@ def main() -> None:
         stint_rows = list(csv.DictReader(file))
     with args.tenures.open(encoding="utf-8", newline="") as file:
         tenure_rows = list(csv.DictReader(file))
+    with args.outcomes.open(encoding="utf-8", newline="") as file:
+        cohort_by_player = {
+            row["source_player_id"]: school_year_cohort(row["birth_date"])
+            for row in csv.DictReader(file)
+            if row.get("birth_date")
+        }
 
     gap_placeholder_count = sum(
         1 for row in tenure_rows if is_gap_placeholder(row["coach_name"], row["role_type"])
@@ -83,6 +105,7 @@ def main() -> None:
     exposures: list[dict[str, str]] = []
     stints_at_researched_institutions = 0
     stints_with_no_year_overlap = 0
+    basis_counts: Counter[str] = Counter()
 
     for stint in stint_rows:
         if stint["registration_formality"] == "1":
@@ -94,6 +117,23 @@ def main() -> None:
         stints_at_researched_institutions += 1
         stint_from = parse_year(stint["from_year"])
         stint_to = parse_year(stint["to_year"])
+        if stint_from is not None or stint_to is not None:
+            year_basis = "recorded"
+        else:
+            # A fully yearless stint would otherwise join every tenure ever
+            # held at the institution (and the primary-coach tie-break would
+            # degenerate to file order — the attribution artifact documented
+            # in docs/coach_effect_inference_2026-07-16.md). The school
+            # system's rigid age banding lets us impute the years from the
+            # player's birth cohort instead.
+            cohort = cohort_by_player.get(stint["source_player_id"])
+            if cohort is not None:
+                stage = institution_stage(normalized)
+                stint_from, stint_to = impute_stint_years(stage, cohort)
+                year_basis = "imputed_from_birth"
+            else:
+                year_basis = "yearless"
+        basis_counts[year_basis] += 1
         matched_any = False
         for tenure in tenures:
             tenure_from = parse_year(tenure["from_year"])
@@ -107,8 +147,9 @@ def main() -> None:
                     "name_ja": stint["name_ja"],
                     "institution": stint["institution"],
                     "normalized_institution": normalized,
-                    "stint_from_year": stint["from_year"],
-                    "stint_to_year": stint["to_year"],
+                    "stint_from_year": "" if stint_from is None else str(stint_from),
+                    "stint_to_year": "" if stint_to is None else str(stint_to),
+                    "stint_year_basis": year_basis,
                     "coach_name": tenure["coach_name"],
                     "role_type": tenure["role_type"],
                     "tenure_from_year": tenure["from_year"],
@@ -134,6 +175,10 @@ def main() -> None:
         f"  of which no coach found for the stint's exact years="
         f"{stints_with_no_year_overlap} "
         f"({stints_with_no_year_overlap / stints_at_researched_institutions * 100:.1f}%)"
+    )
+    print(
+        "stint year basis at researched institutions: "
+        + ", ".join(f"{k}={v}" for k, v in basis_counts.most_common())
     )
     print(f"exposure rows written={len(exposures)}")
     print(f"distinct players with >=1 coach exposure={len(distinct_players)}")

@@ -93,3 +93,103 @@ split across many short-tenured coaches, so no new unit crossed the 10-player fl
 known J-academy attribution-fragmentation problem, now measured. The p=0.001 result is
 unchanged. The 14 new era-fill coaches have no attribute rows yet (Phase-C table); flagged
 as follow-up.
+
+## Era-fill coach attributes complete — attribute coverage now 100% (2026-07-17)
+
+The era-fill follow-up is closed. Per-entity research (Sonnet subagent, 12 coaches — the
+"14" in the previous section double-counted 下平隆宏 who already had a row, and the combined
+布部/永井 transition row) filled every missing Phase-C attribute row:
+`era_fill_coach_attributes.csv`, merged into `coach_attributes.csv` (255 → 267 rows).
+Coordinator independently re-verified 3 load-bearing rows against the coaches' Wikipedia
+bios (堀孝史 1991 selection with 0 caps; 布部陽功 name + Jan-Mar 2016 U-18 tenure;
+濱吉正則 "選手経験は特になく" + Slovenia 3rd division) — all exact matches.
+
+- **Every player with an identifiable primary development coach (2,047) now joins to an
+  attribute row (100%, previously the era-fill coaches were missing).**
+- Two data corrections fell out of the identity work: the Tassiy table's 布部洋一 is a
+  misspelling of **布部陽功** (own bio: U-18 監督 Jan-Mar 2016 before moving to the top
+  team), and 永井俊太's tenure extends to **2016-2017** (own bio) — the combined transition
+  row was split into two properly-sourced rows.
+- Attribute findings: 9/12 played professionally, 6/12 top flight (安達亮 and 筒井紀章 held
+  J1 registrations with zero recorded appearances — counted as no), 4/12 overseas
+  (吉田達磨 Singapore, 布部陽功 Brazil, 藤吉信次 China, 濱吉正則 Slovenia amateur), and
+  堀孝史 is the only full-national-team selection (1991, 0 caps — same convention as the
+  existing 倉又寿雄 row).
+- **Conclusions unchanged** after rerunning the full pipeline: J1 permutation p=0.001
+  (LR 47.1/13df), national-team permutation p=0.31 (χ² p≈0.05 remains anti-conservative),
+  own_national_team still flat, any-pro-experience still weakly positive.
+- **Lineage graph grew 117 → 130 edges** (mentored_by 27 → 31): the era-fill tenures +
+  new playing histories mechanically connected 柴田慎吾 ← 佐々木直人 (柏U-18 2003), and
+  安達亮/永井俊太 ← 布啓一郎 (市立船橋) — 布啓一郎 becomes a multi-mentee mentor.
+
+## ジェフ lead verified + CRITICAL data-quality finding (2026-07-17)
+
+The era-fill batch's in-flight ジェフ lead is now closed: **神戸清雄 = ジェフユナイテッド市原
+ユース監督 1996** (single year), confirmed by INAC神戸's official 2024 appointment release
+carrying his verbatim self-reported career history (1995 サテライト監督兼トップコーチ →
+**1996 ユース監督** → 1997 トップコーチ兼サテライト). His Wikipedia lumps 1994-1996 as
+"コーチ", but its cited source (J.League Data Site staff_id=208) was fetched directly and has
+no year-by-year youth roles — the club release is the higher-resolution source. Tenure row +
+attribute row (本田技研 JSL1部 1984-1990, 60 games; 1989 FIFA futsal World Championship
+squad — futsal, so own_national_team=no) added; canonical 360 rows, attributes 268.
+One real join gained: 山本英臣 (JEF youth 1996-1998) correctly attributes to 神戸清雄.
+
+**The 1996 row exposed a serious pre-existing attribution artifact.** Yearless player stints
+(no from/to year in the club-history line) join EVERY tenure at their institution
+(`years_overlap` open-bound semantics — by design), and `select_primary_dev_coach` then
+breaks the all-equal tie by *first-seen order in the canonical file*. Adding a 1996 tenure
+made this visible: 2010s JEF players "joined" a 1996 coach. Quantified over all 2,048
+primary attributions: **47% rest on real year overlap, 9% yearless with a single candidate,
+44% (900 players) yearless with 2+ candidates — i.e. an arbitrary deterministic pick**,
+concentrated in universities (639/900), exactly where the significance-test core lives.
+The planned birth-year imputation (design doc: HS 15-18, univ 18-22) was never implemented
+in this join path.
+
+**Sensitivity test — the headline p=0.001 does not survive.** Dropping the 900 arbitrary
+attributions collapses the identifiable core from 528 players / 24 units / 11 institutions
+to **83 / 4 / 2**, and the J1 coach-FE test there is null (LR 1.1/2df, permutation p=0.37).
+This does not *refute* the coach effect (the reduced test is nearly powerless) but it shows
+the previous core was mostly built on contaminated assignments. Worse, yearlessness is
+plausibly notability-correlated (obscure players have thinner Wikipedia club lines), so
+piling yearless players onto the first-listed coach can inflate the observed FE statistic
+in a way the within-cell permutation does not replicate. **The p=0.001 claim is suspended
+pending re-attribution via birth-year imputation.**
+
+## RETRACTION: coach-effect p=0.001 does not survive proper attribution (2026-07-17)
+
+Birth-cohort year imputation is now implemented (`school_year_cohort` +
+`impute_stint_years` in coach_exposure.py, tests included): a fully yearless stint gets
+its years from the player's April-boundary school cohort (HS / J-youth = c+16..c+18,
+university = c+19..c+22; reproduces 山本英臣's recorded 1996-1998 ジェフ youth stint
+exactly). All 1,725 formerly yearless stints at researched institutions were imputed
+(birth_date coverage is 100%), and provenance is recorded per exposure row
+(`stint_year_basis` = recorded / imputed_from_birth). Effects: exposure rows 9,220 →
+4,264 (chronologically impossible joins eliminated), primary attributions 2,048 → 1,946,
+spot checks correct (岡野洵 now correctly attributes to no one — his 2013-2015 JEF years
+fall in the documented 2000-2018 gap).
+
+**Result: the headline claim "individual coach effects on J1 attainment are real
+(permutation p=0.001)" is retracted.** With defensible attribution the identifiable core
+actually GROWS (610 players / 29 units / 13 institutions vs the old 528/24/11), yet the
+coach-FE test is null: J1 LR 20.8/16df, χ² p=0.19, permutation **p=0.30**; national team
+permutation p=0.97. The old p=0.001 was manufactured by the attribution artifact: yearless
+(= less notable) players were deterministically piled onto the first-listed coach of their
+institution, creating outcome-correlated unit assignments that the within-cell permutation
+could not replicate. Value-added spreads shrink from ±45pp to ±24pp max (compatible with
+noise; 中央大学×佐藤健 remains the top unit at +14pp, n=17).
+
+Downstream findings attenuate consistently:
+- Phase-C attribute contrasts: the within-institution "top-flight coaches −22.5pp" pattern
+  (and the 明治 栗田/井澤 story built on it) disappears → mean **+1.3pp** across 7
+  institutions; marginals are near-flat (any-pro J1 45% vs 43% in the mature cohort).
+- Lineage: in-lineage coaches' student J1 rate falls from the suggestive 71% vs 41% to
+  **52% vs 43%** (CI [35,67], n=33) — no longer distinguishable.
+
+**What is unaffected**: every pathway-level result (university penalty across all three
+outcomes, selection-effect analysis, era interaction) — none of it uses coach attribution.
+
+Revised answer to the coach-involvement RQ: with the current data we find **no detectable
+individual-coach fixed effect** on J1 attainment (p≈0.30 at 610-player/29-unit power); the
+earlier positive claim was an artifact. Attribution fragmentation at J academies and
+attenuation from ±1y imputation noise limit power, so this is "no evidence", not "evidence
+of absence".
