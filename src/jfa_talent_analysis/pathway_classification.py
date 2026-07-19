@@ -64,6 +64,31 @@ CLUB_STAGES = {"jfa_academy", "j_club_academy", "grassroots_club"}
 # language is present.
 INCIDENTAL_SCHOOLING_RE = re.compile(r"寮生活|寮に入|誘われ")
 
+# --- Guards added by the Phase 1b era-1 pilot (2026-07-19). Pre-2014-only players'
+# articles are dominated by post-playing careers, which created three silent-wrong
+# modes on the 20-player pilot that Phase 1's golden 22 never hit
+# (docs/pre2014_pathway_pilot_2026-07-19.md):
+
+# (1) Coaching-role mentions ("U-15監督に就任", "アカデミースタッフ") matched
+# J_CLUB_ACADEMY_RE even though they describe the player's later job, not their own
+# development. Mask the keyword when a staff-role noun follows within a few chars.
+COACHING_ROLE_MASK_RE = re.compile(
+    r"(?:ジュニアユース|ユース|アカデミー|スクール|U-?1[2-8])"
+    r"(?:の)?(?:監督|コーチ|スタッフ|ダイレクター|ディレクター|GM)"
+)
+
+# (2) University entered AFTER first pro entry (released young, then enrolled — a
+# common early-2000s career shape: 石原卓 2007 Marinos -> released -> 2009 中京大学).
+# When both a pro-entry year and a later university-entry year are present, the
+# university is not the pre-professional pathway; flag instead of trusting priority.
+PRO_ENTRY_YEAR_RE = re.compile(r"(\d{4})年[^。]{0,25}?(?:入団|加入|昇格|プロ契約)")
+UNIVERSITY_ENTRY_YEAR_RE = re.compile(r"(\d{4})年[^。]{0,20}?大学[^。]{0,10}?(?:入学|進学|入部)")
+
+# (3) Dual enrollment written as ユース（○○高校）: the parenthesized school is the
+# academy's partner school, not an independent high-school pathway (吉澤佑哉's
+# 鹿島アントラーズユース（鹿島高校）). The priority rule alone picks high_school here.
+YOUTH_DUAL_ENROLLMENT_RE = re.compile(r"ユース[（(][^（）()]{0,20}高(?:等学校|校)[）)]")
+
 
 PATHWAY_LABEL_COLUMNS = [
     "source_player_id",
@@ -99,6 +124,10 @@ def classify_pathway_category(context: str) -> PathwayClassification:
     surrounding sentence — plain co-occurrence alone is the normal, correctly-
     resolved case for most bios and is not flagged.
     """
+    # Strip coaching-role phrases first so a later staff job never counts as evidence
+    # of the player's own development (guard 1, era-1 pilot).
+    context = COACHING_ROLE_MASK_RE.sub("", context)
+
     matched = tuple(name for name in PATHWAY_PRIORITY if CATEGORY_PATTERNS[name].search(context))
 
     if not matched:
@@ -112,6 +141,27 @@ def classify_pathway_category(context: str) -> PathwayClassification:
     best = matched[0]
     has_school_stage = any(name in SCHOOL_STAGES for name in matched)
     has_club_stage = any(name in CLUB_STAGES for name in matched)
+
+    if best == "university":
+        pro_years = [int(m.group(1)) for m in PRO_ENTRY_YEAR_RE.finditer(context)]
+        university_years = [
+            int(m.group(1)) for m in UNIVERSITY_ENTRY_YEAR_RE.finditer(context)
+        ]
+        if pro_years and university_years and min(pro_years) < max(university_years):
+            return PathwayClassification(
+                pathway_category=best,
+                confidence="needs_review",
+                matched_categories=matched,
+                reason="university_entry_after_pro_entry",
+            )
+
+    if best == "high_school" and YOUTH_DUAL_ENROLLMENT_RE.search(context):
+        return PathwayClassification(
+            pathway_category=best,
+            confidence="needs_review",
+            matched_categories=matched,
+            reason="youth_dual_enrollment_school",
+        )
 
     if has_school_stage and has_club_stage and INCIDENTAL_SCHOOLING_RE.search(context):
         return PathwayClassification(
