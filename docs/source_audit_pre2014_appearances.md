@@ -259,6 +259,77 @@ Spot-checks against raw cached HTML (all exact matches, byte-level):
 No parsing anomalies or unhandled page-format variants were encountered in the 1999 pilot; all
 70 pages parsed with a non-empty player table via the same header-row detection logic.
 
+## Full crawl (2026-07-18)
+
+The full 1999-2013 crawl completed with **1,196/1,196 index pages fetched and parsed, 0
+failures** (`--sleep 1.0`, sequential; the 1999 pilot's 70 pages were reused from cache).
+Output: 15 per-year CSVs under `data/interim/pre2014/`, **31,274 player-competition rows**
+total (per-year row counts 1,313-2,384; the 2010-2011 dip mirrors the index's own per-year
+page counts, not a collection gap).
+
+The pagination cumulative-totals assumption ("Pagination anomaly" above) was re-verified at
+scale: of 385 paginated team-seasons found in the crawled cache, a seeded random sample of
+15 (spanning 2000-2013, J1 and J2) was checked player-by-player against the corresponding
+`_1_` first-page file — **all 15 rosters identical in (出場, 時間, 得点), 0 mismatches**
+(17 verified cases cumulative including the pilot's 2).
+
+## Identity resolution to SFIX03 (name x team x year)
+
+`src/jfa_talent_analysis/pre2014_identity.py` +
+`scripts/match_pre2014_appearances_to_sfix03.py` join the crawled rows to the SFIX03
+Japanese player universe (7,162 players, `data/interim/player_universe_sample.csv`) by
+name. Design points, each forced by an observed failure mode:
+
+- **Kanji variant folding** applied to both sides (楢崎/楢﨑, 髙/高, 澤/沢, 將/将, 藪/薮,
+  已/己, ...). The 斎/齋 and 斉/齊 families are kept separate (distinct characters, not
+  old/new forms).
+- **Registered-name alias expansion** of SFIX03 parenthesized forms: given-name change
+  (黒崎 久志（比差支）), family-name change (田渕（花垣） 龍二), full alternate spelling
+  (岩﨑 知瑳（岩崎 知瑳）), and mixed-width brackets (髙山 和真（高山 和真)).
+- **Katakana mononyms are never auto-matched** (review queue only): SFIX03's ビスマルク is
+  a defender born 2002, not the 1999-2003 Kashima/Kobe Brazilian of the same registered
+  name. Same for nickname aliases like 三都主 アレサンドロ（アレックス）.
+- **Age-plausibility filter** (14 ≤ season − birth_year ≤ 50): a same-name universe player
+  born too late/early for the season is a different person (archive 2004 FC東京 中村 亮 vs
+  SFIX03 中村 亮 born 1996) and is dropped from the candidate set. The bounds clear both
+  森本貴幸 (debut at 15) and 三浦知良 (J2 at 46 in 2013). After matching, 0 of the matched
+  rows violate the window.
+- **Variant-spelling siblings force ambiguity even on an exact hit**: with no birth date on
+  the archive side, an exact spelling match is not evidence of which same-name (after
+  folding) universe player played that season.
+
+**Full-run result (all 15 years, 31,274 rows):**
+
+| Bucket | Rows | Share |
+|---|---:|---:|
+| Matched to a unique `source_player_id` | 26,777 (2,310 distinct players) | 85.6% |
+| — exact_name / folded_name / alias_name | 26,587 / 140 / 50 | |
+| Ambiguous (2+ candidates → SFIX04 queue) | 87 | 0.3% |
+| Katakana-mononym / nickname review queue | 92 | 0.3% |
+| Unmatched, katakana-only (non-Japanese players; outside the SFIX03 Japanese universe by construction) | 3,226 | 10.3% |
+| Unmatched, other | 1,092 | 3.5% |
+
+The "unmatched, other" bucket decomposes almost entirely into (a) Korean/Chinese-kanji
+foreign players (柳 想鐵, 洪 明甫, 崔 龍洙, 朴 智星, ...) — correctly outside the Japanese
+universe, (b) satellite-league-only rows, and (c) registered-but-never-played squad members
+with 0 appearances, who have no SFIX03 page. In the 1999 deep-dive, **every unmatched
+Japanese-name row with appearances > 0 was resolved** by a fold/alias fix (小川 雅已/雅己
+was the last); at full scale, non-katakana unmatched rows with appearances > 0 outside the
+satellite league are 301, dominated by the Korean-player names above.
+
+Outputs (all under `data/interim/pre2014/`, gitignored):
+`matched_appearance_records_pre2014.csv` (row-level join with `source_player_id`,
+`match_method`, `birth_date`), plus deduplicated diagnostics
+`pre2014_ambiguous_names.csv`, `pre2014_nickname_candidates.csv`,
+`pre2014_unmatched_names.csv` (with `katakana_only` flag).
+
+Remaining follow-ups for this track: SFIX04 season-history disambiguation of the 87
+ambiguous + 92 nickname rows (extend
+`scripts/suggest_identity_overrides_from_profiles.py`, which needs pre-2014 team-name
+normalization: archive uses full club names like 鹿島アントラーズ, SFIX04 uses short
+names), and competition_label classification (league vs. cup vs. playoff/satellite) before
+any analysis use.
+
 ## Explicitly out of scope for this pilot (flagged, not solved)
 
 - **Identity resolution** (name x team x year → SFIX03 `source_player_id`) — see "Purpose".
