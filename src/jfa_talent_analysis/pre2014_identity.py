@@ -198,20 +198,39 @@ def _lookup(
 
 
 def match_pre2014_records(
-    records: list[dict[str, str]], players: list[dict[str, str]]
+    records: list[dict[str, str]],
+    players: list[dict[str, str]],
+    resolutions: dict[tuple[str, str, str], str] | None = None,
 ) -> Pre2014MatchResult:
     """Match appearance rows (dicts from appearance_records_pre2014_*.csv) to universe rows.
 
     Rows whose name resolves to exactly one universe player are joined; names with 2+
     candidates go to `ambiguous`, names with none to `unmatched` (flagged katakana-only or
     not), and names that only hit a katakana nickname alias to `nickname_candidates`.
+
+    `resolutions` maps (season_year, team_name, player_name) to a source_player_id decided
+    by the SFIX04 season-history pass (scripts/resolve_pre2014_identities_from_sfix04.py);
+    it wins over name matching, mirroring how manual overrides win in `matching.py`.
     """
     index = build_universe_index(players)
+    player_by_id = {player["source_player_id"]: player for player in players}
     result = Pre2014MatchResult()
 
     for record in records:
         name = record["player_name"]
         season_year = int(record["season_year"])
+        if resolutions:
+            resolved_id = resolutions.get(
+                (record["season_year"], record["team_name"], name)
+            )
+            if resolved_id:
+                player = player_by_id.get(resolved_id)
+                if player is None:
+                    raise ValueError(
+                        f"Resolution references unknown source_player_id={resolved_id}"
+                    )
+                result.matched.append(_join(record, player, MATCH_SFIX04))
+                continue
         candidates, match_method = _lookup(index, name)
         candidates = [c for c in candidates if _age_plausible(c, season_year)]
 
@@ -261,6 +280,70 @@ def _join(
         "position": player.get("position", ""),
         "match_method": match_method,
     }
+
+
+MATCH_SFIX04 = "sfix04_history"
+
+# SFIX04 season-history team names are data-site short names (浦和, 市原, G大阪); archive
+# pages carry full club names (浦和レッズ, ジェフユナイテッド市原). Most short names are a
+# substring of the full name once separators are stripped; this table covers the rest:
+# letter abbreviations, era renames (市原/千葉 2005, 平塚/湘南 2000, 草津/群馬 2013), and
+# the Verdy home moves. Values are substrings, ANY of which occurring in the full name
+# counts as the same club.
+SFIX04_TEAM_SUBSTRINGS: dict[str, list[str]] = {
+    "F東京": ["FC東京"],
+    "G大阪": ["ガンバ大阪"],
+    "C大阪": ["セレッソ大阪"],
+    "横浜FM": ["マリノス"],
+    "東京V": ["ヴェルディ"],
+    "V川崎": ["ヴェルディ"],
+    "千葉": ["千葉", "市原"],
+    "市原": ["市原", "千葉"],
+    "湘南": ["湘南", "平塚"],
+    "平塚": ["平塚", "湘南"],
+    "草津": ["草津", "群馬"],
+    "群馬": ["群馬", "草津"],
+}
+
+
+def _team_key(value: str) -> str:
+    return normalize_text(value).replace(" ", "").replace("・", "").replace(".", "")
+
+
+def sfix04_team_matches(short_name: str, archive_team_name: str) -> bool:
+    """True when an SFIX04 short team name refers to the archive page's full club name."""
+    short = _team_key(short_name)
+    full = _team_key(archive_team_name)
+    needles = [_team_key(n) for n in SFIX04_TEAM_SUBSTRINGS.get(short, [short])]
+    return any(needle and needle in full for needle in needles)
+
+
+def resolve_candidates_with_history(
+    candidates: list[dict[str, str]],
+    histories: dict[str, list[dict[str, str]]],
+    *,
+    season_year: str,
+    team_name: str,
+) -> tuple[dict[str, str] | None, str]:
+    """Pick the single candidate whose SFIX04 season history covers (season, team).
+
+    Returns (player, "resolved") when exactly one candidate has a history row for that
+    season at that club, else (None, "none_matched" | "multiple_matched"). Presence of the
+    history row is the criterion (not appearances > 0): SFIX04 lists a season row when the
+    player was registered with the club that year, which is exactly the identity question.
+    """
+    matched = [
+        candidate
+        for candidate in candidates
+        if any(
+            history["season"] == season_year
+            and sfix04_team_matches(history["team_name"], team_name)
+            for history in histories.get(candidate["source_player_id"], [])
+        )
+    ]
+    if len(matched) == 1:
+        return matched[0], "resolved"
+    return None, "none_matched" if not matched else "multiple_matched"
 
 
 def _diagnostic(record: dict[str, str], candidates: list[dict[str, str]]) -> dict[str, str]:

@@ -48,6 +48,16 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("data/interim/pre2014"),
     )
+    parser.add_argument(
+        "--resolutions",
+        type=Path,
+        default=None,
+        help=(
+            "Optional pre2014_identity_resolutions.csv from "
+            "resolve_pre2014_identities_from_sfix04.py; resolved rows win over name "
+            "matching (match_method=sfix04_history)."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -58,9 +68,13 @@ def main() -> None:
     if not input_paths:
         raise SystemExit(f"no appearance_records_pre2014_*.csv found in {args.input_dir}")
     records = [row for path in input_paths for row in read_csv(path)]
-    print(f"players={len(players)} input_files={len(input_paths)} rows={len(records)}")
+    resolutions = read_resolutions(args.resolutions) if args.resolutions else None
+    print(
+        f"players={len(players)} input_files={len(input_paths)} rows={len(records)} "
+        f"resolutions={len(resolutions) if resolutions else 0}"
+    )
 
-    result = match_pre2014_records(records, players)
+    result = match_pre2014_records(records, players, resolutions)
 
     matched_path = args.output_dir / "matched_appearance_records_pre2014.csv"
     write_csv(matched_path, result.matched)
@@ -116,6 +130,14 @@ def dedupe_diagnostics(rows: list[dict[str, str]]) -> list[dict[str, str]]:
             row["competition_label"],
         ),
     )
+
+
+def read_resolutions(path: Path) -> dict[tuple[str, str, str], str]:
+    return {
+        (row["season_year"], row["team_name"], row["player_name"]): row["source_player_id"]
+        for row in read_csv(path)
+        if row["resolution"] == "resolved" and row["source_player_id"]
+    }
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:

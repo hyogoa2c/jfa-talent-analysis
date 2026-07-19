@@ -323,12 +323,32 @@ Outputs (all under `data/interim/pre2014/`, gitignored):
 `pre2014_ambiguous_names.csv`, `pre2014_nickname_candidates.csv`,
 `pre2014_unmatched_names.csv` (with `katakana_only` flag).
 
-Remaining follow-ups for this track: SFIX04 season-history disambiguation of the 87
-ambiguous + 92 nickname rows (extend
-`scripts/suggest_identity_overrides_from_profiles.py`, which needs pre-2014 team-name
-normalization: archive uses full club names like 鹿島アントラーズ, SFIX04 uses short
-names), and competition_label classification (league vs. cup vs. playoff/satellite) before
-any analysis use.
+### SFIX04 season-history disambiguation (2026-07-19)
+
+`scripts/resolve_pre2014_identities_from_sfix04.py` resolves the ambiguous + nickname
+queues against SFIX04 season/team histories (30 candidate profiles fetched once, cached to
+`sfix04_cache/`; decision rule mirrors `suggest_identity_overrides_from_profiles.py`: a
+candidate is accepted only when it is the *only* one whose history covers that season at
+that club). Archive full club names are mapped to SFIX04 short names by
+`sfix04_team_matches` (substring rule + explicit aliases for letter abbreviations and era
+renames: F東京/G大阪/横浜FM, 市原↔千葉 2005, 平塚↔湘南 2000, 草津↔群馬 2013, V川崎/東京V).
+
+Result: **62/104 queue entries resolved**, feeding 110 rows back into the matcher via
+`--resolutions` (`match_method=sfix04_history`) → **matched total 26,887/31,274 (86.0%),
+2,317 distinct players, still 0 age-window violations**. Spot-checked against SFIX04
+directly: 三都主 アレサンドロ resolved as アレックス only for 清水 1999-2001 (his actual
+club-seasons), 田中 マルクス闘莉王 as トゥーリオ only for 広島 2001-2002 — while the same
+mononyms at 大分/甲府/大宮/柏 etc. were correctly rejected as different (foreign) players
+(`none_matched`), exactly the false-positive class the mononym guard exists for.
+
+Remaining queues after this pass: **8 ambiguous rows (4 player-seasons: 田中雄大 川崎
+2011-12, 田中達也 熊本 2012, 松田陸 FC東京 2013, 鈴木翼 山形 2013)** — SFIX04 lists no
+season row for either candidate, consistent with 特別指定/registered-only stints — and 61
+nickname rows that are correctly-rejected foreign mononyms. Both are inert unless a later
+analysis needs those specific rows.
+
+Remaining follow-up for this track: competition_label classification (league vs. cup vs.
+playoff/satellite) before any analysis use.
 
 ## Explicitly out of scope for this pilot (flagged, not solved)
 
