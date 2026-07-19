@@ -2,10 +2,13 @@ from jfa_talent_analysis.pre2014_identity import (
     MATCH_ALIAS,
     MATCH_EXACT,
     MATCH_FOLDED,
+    MATCH_SFIX04,
     expand_name_aliases,
     fold_name,
     is_katakana_only,
     match_pre2014_records,
+    resolve_candidates_with_history,
+    sfix04_team_matches,
 )
 
 
@@ -153,3 +156,53 @@ def test_unmatched_flags_katakana_only() -> None:
     )
     flags = {row["player_name"]: row["katakana_only"] for row in result.unmatched}
     assert flags == {"リカルジーニョ": "true", "架空 選手": "false"}
+
+
+def test_sfix04_team_matches() -> None:
+    assert sfix04_team_matches("鹿島", "鹿島アントラーズ")
+    assert sfix04_team_matches("市原", "ジェフユナイテッド市原")
+    assert sfix04_team_matches("千葉", "ジェフユナイテッド市原")  # 2005 rename
+    assert sfix04_team_matches("F東京", "FC東京")
+    assert sfix04_team_matches("G大阪", "ガンバ大阪")
+    assert sfix04_team_matches("横浜FM", "横浜F・マリノス")
+    assert sfix04_team_matches("東京V", "ヴェルディ川崎")
+    assert sfix04_team_matches("平塚", "湘南ベルマーレ")
+    assert not sfix04_team_matches("横浜FM", "横浜FC")
+    assert not sfix04_team_matches("F東京", "東京ヴェルディ1969")
+    assert not sfix04_team_matches("鹿島", "アビスパ福岡")
+
+
+def test_resolve_candidates_with_history() -> None:
+    candidates = [{"source_player_id": "1"}, {"source_player_id": "2"}]
+    histories = {
+        "1": [{"season": "1999", "team_name": "鹿島"}],
+        "2": [{"season": "1999", "team_name": "福岡"}],
+    }
+    player, resolution = resolve_candidates_with_history(
+        candidates, histories, season_year="1999", team_name="鹿島アントラーズ"
+    )
+    assert resolution == "resolved" and player["source_player_id"] == "1"
+
+    player, resolution = resolve_candidates_with_history(
+        candidates, histories, season_year="1999", team_name="浦和レッズ"
+    )
+    assert player is None and resolution == "none_matched"
+
+    histories["2"] = [{"season": "1999", "team_name": "鹿島"}]
+    player, resolution = resolve_candidates_with_history(
+        candidates, histories, season_year="1999", team_name="鹿島アントラーズ"
+    )
+    assert player is None and resolution == "multiple_matched"
+
+
+def test_resolutions_win_over_name_matching() -> None:
+    players = [
+        universe_player("1", "田中 達也", birth_date="1982/11/27"),
+        universe_player("2", "田中 達也", birth_date="1992/04/07"),
+    ]
+    resolutions = {("1999", "鹿島アントラーズ", "田中 達也"): "1"}
+    result = match_pre2014_records([appearance("田中 達也")], players, resolutions)
+    assert len(result.matched) == 1
+    assert result.matched[0]["source_player_id"] == "1"
+    assert result.matched[0]["match_method"] == MATCH_SFIX04
+    assert not result.ambiguous
