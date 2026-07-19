@@ -24,6 +24,11 @@ import csv
 from collections import Counter
 from pathlib import Path
 
+from jfa_talent_analysis.pre2014_competitions import (
+    CATEGORY_UNCLASSIFIED,
+    LEAGUE_CATEGORIES,
+    classify_competition_label,
+)
 from jfa_talent_analysis.pre2014_identity import match_pre2014_records
 
 
@@ -75,6 +80,29 @@ def main() -> None:
     )
 
     result = match_pre2014_records(records, players, resolutions)
+
+    category_counts = Counter(
+        classify_competition_label(row["competition_label"]) for row in records
+    )
+    print(f"competition categories (all rows): {dict(category_counts.most_common())}")
+    if category_counts.get(CATEGORY_UNCLASSIFIED):
+        unclassified_labels = sorted(
+            {
+                row["competition_label"]
+                for row in records
+                if classify_competition_label(row["competition_label"])
+                == CATEGORY_UNCLASSIFIED
+            }
+        )
+        raise SystemExit(
+            f"unclassified competition labels (extend pre2014_competitions.py): "
+            f"{unclassified_labels}"
+        )
+
+    for row in result.matched:
+        category = classify_competition_label(row["competition_label"])
+        row["competition_category"] = category
+        row["is_league"] = str(category in LEAGUE_CATEGORIES).lower()
 
     matched_path = args.output_dir / "matched_appearance_records_pre2014.csv"
     write_csv(matched_path, result.matched)
