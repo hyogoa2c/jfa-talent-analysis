@@ -158,3 +158,54 @@ def test_build_pathway_review_queue_rows_only_includes_needs_review():
     assert rows[0]["wikipedia_pathway_context"] == "寮生活を送った。"
     assert rows[0]["reviewed_pathway_category"] == ""
     assert rows[0]["reviewer_note"] == ""
+
+
+# --- Guards from the Phase 1b era-1 pilot (docs/pre2014_pathway_pilot_2026-07-19.md).
+# Pre-2014-only players' articles are dominated by post-playing careers, which produced
+# three silent-wrong modes Phase 1's golden 22 never hit.
+
+
+def test_coaching_role_mention_is_not_academy_evidence():
+    # 栗山裕貴: no development history in the article; the only academy-like keyword is
+    # a later coaching job. Must fall through to unknown, not j_club_academy.
+    result = classify_pathway_category("2014年に移籍。同年限りで現役を引退し、U-15監督に就任。")
+    assert result.pathway_category == "unknown"
+    result = classify_pathway_category("引退後はアカデミースタッフを務めた。")
+    assert result.pathway_category == "unknown"
+
+
+def test_coaching_mask_keeps_real_academy_evidence():
+    result = classify_pathway_category("ユースから昇格。引退後はユースコーチに就任。")
+    assert result.pathway_category == "j_club_academy"
+    assert result.confidence == "high"
+
+
+def test_university_entry_after_pro_entry_flags_for_review():
+    # 石原卓: pro entry 2007, released, THEN 2009 university. Priority alone would
+    # silently pick university; the year order must route it to review.
+    result = classify_pathway_category(
+        "高校を経て2007年、横浜F・マリノスへ入団。2008年に戦力外。2009年、中京大学に入学しプレーした。"
+    )
+    assert result.pathway_category == "university"
+    assert result.confidence == "needs_review"
+    assert result.reason == "university_entry_after_pro_entry"
+
+
+def test_university_before_pro_entry_stays_high_confidence():
+    # 平松大志-shaped normal order: university first, pro entry later.
+    result = classify_pathway_category(
+        "帝京高校を経て2002年に中央大学へ進学した。2006年、水戸ホーリーホックへ入団。"
+    )
+    assert result.pathway_category == "university"
+    assert result.confidence == "high"
+
+
+def test_youth_dual_enrollment_school_flags_for_review():
+    # 吉澤佑哉: 鹿島アントラーズユース（鹿島高校） — the parenthesized school is the
+    # academy's partner school, so high_school must not win silently.
+    result = classify_pathway_category(
+        "鹿島アントラーズユース（鹿島高校）から2005年にトップ昇格した。"
+    )
+    assert result.pathway_category == "high_school"
+    assert result.confidence == "needs_review"
+    assert result.reason == "youth_dual_enrollment_school"
