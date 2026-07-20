@@ -282,3 +282,27 @@ def test_university_championship_is_still_university_evidence():
     # Guard against over-masking: 大学選手権 / 大学サッカー is real university play.
     r = classify_pathway_category("流通経済大学に進学し、全日本大学サッカー選手権で優勝。")
     assert r.pathway_category == "university"
+
+
+def test_negated_promotion_su_zu_forms_do_not_flip():
+    # 神山京右/橋本健人 "昇格せず...大学へ", 宇佐美 "昇格はならず...大学に" — classical
+    # ~ず negation forms the first guard missed (mechanism F, extended).
+    r = classify_pathway_category(
+        "横浜FCのアカデミー出身。高校卒業後はトップチームに昇格せず東洋大学に進学。"
+    )
+    assert r.pathway_category != "j_club_academy"
+    r = classify_pathway_category(
+        "セレッソ大阪の下部組織に所属したが、トップ昇格はならず、関西大学に進学した。"
+    )
+    assert r.pathway_category != "j_club_academy"
+
+
+def test_youth_promotion_competing_with_university_routes_to_review():
+    # 矢田旭: "トップチーム昇格が具体化しかけたが" (not a clean negation word) then
+    # university. When university competes, the flip is unreliable -> review, not academy.
+    r = classify_pathway_category(
+        "名古屋グランパスの下部組織で活躍。トップチーム昇格が具体化しかけたが、"
+        "最終的に大学へ進学しゲームメーカーに成長した。"
+    )
+    assert r.confidence == "needs_review"
+    assert r.reason == "youth_promotion_vs_university_ambiguous"

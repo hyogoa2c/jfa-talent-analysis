@@ -40,7 +40,8 @@ PROMOTED_TO_TOP_TEAM_RE = re.compile(r"トップ(?:チーム)?(?:に|へ)?昇格
 # the player did NOT come up through the academy to the top team. Negation words within a
 # short window after 昇格 cancel the signal.
 PROMOTION_NEGATION_RE = re.compile(
-    r"昇格[^。]{0,12}(?:かなわ|叶わ|できな|できず|ならな|至らな|果たせ|なれず|逃し)"
+    r"昇格[^。]{0,12}(?:かなわ|叶わ|できな|できず|ならな|ならず|至らな|至らず|果たせ"
+    r"|なれず|逃し|せず|せぬ|しなかった|ぬまま)"
 )
 
 # "対○○大学戦" / "△△大学戦" is an opponent university team in a match report, not the
@@ -197,6 +198,18 @@ def classify_pathway_category(context: str) -> PathwayClassification:
         and PROMOTED_TO_TOP_TEAM_RE.search(context)
         and not PROMOTION_NEGATION_RE.search(context)
     ):
+        # When university competes with the youth+promotion signal, the flip is only
+        # ~40% correct on the held-out gold (youth→did-not-promote→university→pro is
+        # common and hard to separate from youth→top by phrasing alone). Route to review
+        # instead of auto-labeling; auto-flip only when the competitor is high_school,
+        # where the gold sample found the flip reliably correct.
+        if "university" in matched:
+            return PathwayClassification(
+                pathway_category="university",
+                confidence="needs_review",
+                matched_categories=matched,
+                reason="youth_promotion_vs_university_ambiguous",
+            )
         return PathwayClassification(
             pathway_category="j_club_academy",
             confidence="high",
