@@ -27,13 +27,13 @@
 
 ## 優先順位（週次リミットが厳しい場合はこの順で）
 
-| 優先 | キュー | 行数 | 用途 | なぜこの優先度か |
-|---|---|---|---|---|
-| **1** | `data/manual/phase1_pathway_youth_vs_university_review_queue.csv` | **61** | Phase 1 corrigendum | 中心結果を動かしうる university↔academy 曖昧ケース。ここを固めないと公式 corrigendum が確定しない |
-| **2** | `data/manual/pre2014_pathway_review_queue.csv` | **52** | Phase 1b 確認的（era-1 経路） | Phase 1b の確認的分析標本（born 1981-89）の曝露変数 |
-| 3 | `data/manual/pre2014_national_team_review_queue.csv` | 45 | Phase 1b 探索（era-1 代表） | 代表は副アウトカムで探索的降格済み → 優先度中 |
-| 4 | `data/manual/pre2014_pathway_review_queue_p2.csv` | 88 | 記述専用（born ≤1980 経路） | 確認的分析に入らない記述層 → 後回し可 |
-| 5 | `data/manual/pre2014_national_team_review_queue_p2.csv` | 42 | 記述専用（born ≤1980 代表） | 同上・最も後回し可 |
+| 優先  | キュー                                                            | 行数   | 用途                          | なぜこの優先度か                                                                                  |
+| ----- | ----------------------------------------------------------------- | ------ | ----------------------------- | ------------------------------------------------------------------------------------------------- |
+| **1** | `data/manual/phase1_pathway_youth_vs_university_review_queue.csv` | **61** | Phase 1 corrigendum           | 中心結果を動かしうる university↔academy 曖昧ケース。ここを固めないと公式 corrigendum が確定しない |
+| **2** | `data/manual/pre2014_pathway_review_queue.csv`                    | **52** | Phase 1b 確認的（era-1 経路） | Phase 1b の確認的分析標本（born 1981-89）の曝露変数                                               |
+| 3     | `data/manual/pre2014_national_team_review_queue.csv`              | 45     | Phase 1b 探索（era-1 代表）   | 代表は副アウトカムで探索的降格済み → 優先度中                                                     |
+| 4     | `data/manual/pre2014_pathway_review_queue_p2.csv`                 | 88     | 記述専用（born ≤1980 経路）   | 確認的分析に入らない記述層 → 後回し可                                                             |
+| 5     | `data/manual/pre2014_national_team_review_queue_p2.csv`           | 42     | 記述専用（born ≤1980 代表）   | 同上・最も後回し可                                                                                |
 
 時間が優先 1+2（計 113 行）までしか取れなくても、確認的結果と corrigendum は前進できる。
 3-5 は記述・探索用なので次サイクル以降でよい。
@@ -52,14 +52,14 @@ university を維持）, `wikipedia_pathway_context`。全 61 行が「Jクラ�
 
 `pre2014_pathway_review_queue.csv`（52 行）の `pathway_reason`:
 
-| reason | 確認ポイント |
-|---|---|
-| `no_institution_keyword_found` | 学歴/クラブ語句が本文にない行。①本当に情報なし（プロ後経歴のみ）→ `unknown` のまま、②「〜学園」等の未収録表現で実は情報あり → 正しいカテゴリを記入 |
-| `university_entry_after_pro_entry` | プロ入り後に大学へ進んだ順序を検出。**最初のプロ入り前**の段階（多くは高校）が正解 |
-| `possible_declined_university_offer` | 「大学から誘いを受けたが（プロ入り）」= 大学には**進学していない**。高校等が正解 |
-| `youth_promotion_vs_university_ambiguous` | 優先1 と同じ判断（昇格した→academy / せず→university） |
-| `possible_incidental_schooling_around_club_academy` | 学校とアカデミーが両方あり「寮生活/誘われ」等。新定義に照らし、アカデミー育成の便宜的通学なら `j_club_academy` |
-| `overseas_relocation_language_no_domestic_institution` | 海外アカデミー育ちで国内機関なし。タクソノミー外なので `unknown` か、`reviewer_note` に理由を残す |
+| reason                                                 | 確認ポイント                                                                                                                                       |
+| ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `no_institution_keyword_found`                         | 学歴/クラブ語句が本文にない行。①本当に情報なし（プロ後経歴のみ）→ `unknown` のまま、②「〜学園」等の未収録表現で実は情報あり → 正しいカテゴリを記入 |
+| `university_entry_after_pro_entry`                     | プロ入り後に大学へ進んだ順序を検出。**最初のプロ入り前**の段階（多くは高校）が正解                                                                 |
+| `possible_declined_university_offer`                   | 「大学から誘いを受けたが（プロ入り）」= 大学には**進学していない**。高校等が正解                                                                   |
+| `youth_promotion_vs_university_ambiguous`              | 優先1 と同じ判断（昇格した→academy / せず→university）                                                                                             |
+| `possible_incidental_schooling_around_club_academy`    | 学校とアカデミーが両方あり「寮生活/誘われ」等。新定義に照らし、アカデミー育成の便宜的通学なら `j_club_academy`                                     |
+| `overseas_relocation_language_no_domestic_institution` | 海外アカデミー育ちで国内機関なし。タクソノミー外なので `unknown` か、`reviewer_note` に理由を残す                                                  |
 
 代表キュー（`any_national_team_selection` の値: `yes`/`no`/`unclear`。カテゴリ: `A`/`U23`/
 `U20`/`U19`/`U18`/`U17`/`U16`/`U15`/`university`/`other`）:

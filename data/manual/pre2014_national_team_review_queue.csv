@@ -1,4 +1,4 @@
-source_player_id,name_ja,name_en,tier,wikipedia_title,any_national_team_selection,national_team_categories,national_team_reason,wikipedia_national_team_context,reviewed_any_national_team_selection,reviewed_categories,reviewer_note
+﻿source_player_id,name_ja,name_en,tier,wikipedia_title,any_national_team_selection,national_team_categories,national_team_reason,wikipedia_national_team_context,reviewed_any_national_team_selection,reviewed_categories,reviewer_note
 3242,大和田 真史,Masashi OWADA,pre2014_p1,大和田真史,no,,negation_or_candidate_language_present,"大和田 真史（おおわだ まさし、1981年7月28日 - ）は、茨城県出身の元サッカー選手、サッカー指導者。現役選手時のポジションはDF。
 
 
@@ -111,10 +111,10 @@ Jリーグ初得点 - 2007年6月27日 J2 第24節 ザスパ草津戦（札幌�
 芳賀博信 - FBref.com (英語)
 芳賀博信 - Transfermarkt.comによる選手データ (英語)
 芳賀博信 - J.League Data Siteによる選手データ
-コンサドーレ札幌公式サイトのプロフィール - ウェイバックマシン（2012年5月9日アーカイブ分）",,,
+コンサドーレ札幌公式サイトのプロフィール - ウェイバックマシン（2012年5月9日アーカイブ分）",yes,A|U16,
 6378,本橋 卓巳,Takumi MOTOHASHI,pre2014_p1,本橋卓巳,yes,U15|U16|U20,negation_or_candidate_language_present,"1997年 U-15日本代表
 1998年 U-16日本代表
-2001年 U-20日本代表候補",,,
+2001年 U-20日本代表候補",,U15|U16,
 6096,三田 光,Hikaru MITA,pre2014_p1,三田光,yes,U23|other,negation_or_candidate_language_present,"三田 光（みた ひかる、1981年8月1日 - ）は、東京都杉並区出身（世田谷区育ち）の元プロサッカー選手。ポジションはディフェンダー（センターバック、サイドバック）及びミッドフィールダー（ボランチ）。
 
 
@@ -199,31 +199,31 @@ FC岐阜の選手一覧
 プロフィール (2007年版) - ウェイバックマシン（2007年11月29日アーカイブ分） - アルビレックス新潟
 プロフィール (2008年版) - ウェイバックマシン（2008年12月22日アーカイブ分） - 湘南ベルマーレ
 プロフィール (2010年版) - ウェイバックマシン（2010年12月25日アーカイブ分） - 徳島ヴォルティス
-プロフィール (2012年版) - ウェイバックマシン（2012年12月28日アーカイブ分） - FC岐阜",,,
+プロフィール (2012年版) - ウェイバックマシン（2012年12月28日アーカイブ分） - FC岐阜",,U21|other,
 6533,鈴木 良和,Yoshikazu SUZUKI,pre2014_p1,鈴木良和,yes,U15|U16|U17,negation_or_candidate_language_present,"1997年U-15日本代表候補
-1998年U-16日本代表（AFC U-17選手権代表）",,,
+1998年U-16日本代表（AFC U-17選手権代表）",,U16,
 5240,茂原 岳人,Takehito SHIGEHARA,pre2014_p1,茂原岳人,yes,other,negation_or_candidate_language_present,"2003年 U-22日本代表
 2008年 日本代表候補",,,
 6089,小森田 友明,Tomoaki KOMORIDA,pre2014_p1,小森田友明,yes,U19|U20|other,negation_or_candidate_language_present,"U-19日本代表候補
 U-20日本代表
-U-21日本代表候補",,,
+U-21日本代表候補",,U20,
 6665,尾亦 弘友希,Hiroyuki OMATA,pre2014_p1,尾亦弘友希,yes,U18|U19|U20,negation_or_candidate_language_present,"2001年 U-18日本代表候補
 2002年 U-19日本代表 - Nokia debitel Cup、SBSカップ、AFCユース選手権カタール大会
-2003年 U-20日本代表",,,
+2003年 U-20日本代表",,U19|U20,
 6245,根占 真伍,Shingo NEJIME,pre2014_p1,根占真伍,yes,U15|U16|U17|U18,negation_or_candidate_language_present,"1999年 U-15日本代表
 2000年 U-16日本代表 - AFC U-17選手権2000
 2001年
 U-17日本代表 - 2001 FIFA U-17世界選手権
-U-18日本代表候補",,,
+U-18日本代表候補",,U15|U16|U17,
 2950,村山 祐介,Yusuke MURAYAMA,pre2014_p1,村山祐介,yes,U18|university,negation_or_candidate_language_present,"1999年 U-18日本代表候補
 2002年 全日本大学選抜
-2003年 ユニバーシアード日本代表",,,
-5924,中山 元気,Genki NAKAYAMA,pre2014_p1,中山元気,unclear,U18,negation_or_candidate_language_present,U-18日本代表候補,,,
-5953,野田 恭平,Kyohei NODA,pre2014_p1,野田恭平,unclear,U18,negation_or_candidate_language_present,U-18日本代表候補,,,
+2003年 ユニバーシアード日本代表",,university,
+5924,中山 元気,Genki NAKAYAMA,pre2014_p1,中山元気,unclear,U18,negation_or_candidate_language_present,U-18日本代表候補,no,,
+5953,野田 恭平,Kyohei NODA,pre2014_p1,野田恭平,unclear,U18,negation_or_candidate_language_present,U-18日本代表候補,no,,
 5916,八田 康介,Kosuke YATSUDA,pre2014_p1,八田康介,yes,U18|U19|U20,negation_or_candidate_language_present,"U-18日本代表候補 (1999年)
 U-19日本代表
 2000年 - テルボルグ国際ユース大会
-U-20日本代表候補 (2001年)",,,
+U-20日本代表候補 (2001年)",,U19,
 8072,杉本 恵太,Keita SUGIMOTO,pre2014_p1,杉本恵太,no,,negation_or_candidate_language_present,2007年　日本代表候補,,,
 7181,ディビッドソン 純マーカス,Jun Marques DAVIDSON,pre2014_p1,ディビッドソン純マーカス,unclear,U19,negation_or_candidate_language_present,"ディビッドソン 純 マーカス（ディビッドソン じゅん マーカス、英語: DAVIDSON Jun Marques, 1983年6月7日 - ）は、東京都出身の元サッカー選手、サッカー指導者。ポジションはミッドフィールダー（ディフェンシブハーフ）。
 
@@ -272,12 +272,12 @@ U-20日本代表候補 (2001年)",,,
 2003年6月14日：J2初出場 - J2第17節 vsサンフレッチェ広島 (大宮)
 2004年9月23日：J2初得点 - J2第35節 vsアビスパ福岡 (大宮)
 2005年3月05日：J1初出場 - J1第01節 vsガンバ大阪 (万博)
-2010年4月11日：USSF初出場 - vs ACセントルイス (WakeMed Soccer Park) 
+2010年4月11日：USSF初出場 - vs ACセントルイス (WakeMed Soccer Park)
 2010年9月18日：USSF初得点 - vs クリスタルパレス・ボルチモア (Paul Angelo Russo Stadium)
 2012年3月10日：MLS初出場 - MLS第1節 vsモントリオール・インパクト (BCプレイス)
-2014年4月13日：NASL初出場 - NASL第1節 vsインディ・イレブン (IU Michael A. Carroll Track & Soccer Stadium) 
+2014年4月13日：NASL初出場 - NASL第1節 vsインディ・イレブン (IU Michael A. Carroll Track & Soccer Stadium)
 2015年2月14日：TPL初出場 - 第01節 vsアーミー・ユナイテッドFC (タイ・アーミー・スポーツ・スタジアム)
-2015年8月19日：TPL初得点 - 第21節 vsBECテロ・サーサナFC (Sattahip Navy Stadium) 
+2015年8月19日：TPL初得点 - 第21節 vsBECテロ・サーサナFC (Sattahip Navy Stadium)
 
 
 == 指導歴 ==
@@ -325,10 +325,10 @@ RB大宮アルディージャの選手一覧
 プロフィール - ウェイバックマシン（2014年7月19日アーカイブ分） - カロライナ・レイルホークス（英語）
 プロフィール (2015年) - ウェイバックマシン（2015年2月26日アーカイブ分） - タイ・プレミアリーグ（タイ語）
 プロフィール - シャーロット・インデペンデンス（英語）
-ディビッドソン純マーカス - ESPN FC（英語）",,,
+ディビッドソン純マーカス - ESPN FC（英語）",no,,
 6821,林 祐征,Hiroyuki HAYASHI,pre2014_p1,林祐征,yes,U19|U20,negation_or_candidate_language_present,"2002年 U-19日本代表候補
-2003年 U-20日本代表",,,
-6844,加藤 大志,Daishi KATO,pre2014_p1,加藤大志,unclear,U20|other,negation_or_candidate_language_present,2003年 U-20日本代表候補、U-22日本代表,,,
+2003年 U-20日本代表",,U20,
+6844,加藤 大志,Daishi KATO,pre2014_p1,加藤大志,unclear,U20|other,negation_or_candidate_language_present,2003年 U-20日本代表候補、U-22日本代表,yes,other,
 7881,本田 圭佑,Keisuke HONDA,pre2014_p1,本田圭佑,yes,A|U19|U20|U23|other,negation_or_candidate_language_present,"星稜高校3年時に石川県選抜として、本来のボランチではなく左サイドバックとしてプレーし、ステップなしの強いキックで、いとも簡単にサイドチェンジしていた姿がU-19日本代表監督を務めていた大熊清の目に留まり、2004年に初めて日本代表に選出された。2005年6月に開催されたFIFAワールドユース選手権・オランダ大会にU-20日本代表として招集され、負傷明けの梶山陽平に代わって、グループリーグ初戦のオランダ戦にボランチで先発出場した。しかし試合は前半にオランダが圧倒、後半は日本もペースをつかむ時間帯を得たが本田は途中交代となり、チームも敗れた。この後、チームはベスト16に進出したものの、梶山の復調もあって出場機会はなかった。
 2007年に開催された北京オリンピックアジア予選では左サイドハーフ、左ウイングバック、左サイドバックとして最終予選5試合にフル出場し、五輪出場権獲得に貢献した。2008年8月に開催された北京オリンピックでは3試合に先発出場し、谷口博之らとともに主力として攻撃を牽引したが、グループリーグ3戦全敗で敗退した。
 2006年11月、A代表に初選出されたが出場はなかった。2008年6月22日、2010 FIFAワールドカップ・アジア3次予選のバーレーン戦でA代表デビュー。2009年5月27日、キリンカップのチリ戦で山田直輝からパスを受け、A代表初得点を挙げた。右サイドには中村俊輔が君臨していたため、本田は控えの立場だったが、2010年に入るとレギュラーに定着。
@@ -385,12 +385,12 @@ Aリーグ初出場・初得点 - 2018年10月20日 第1節 vsメルボルン・
 アゼルバイジャン・プレミアリーグ初得点 - 2021年5月3日 第25節 vsケシュラFK（シャマキ・シティ・スタジアム）
 Aリーガ初出場・初得点 - 2021年9月26日 第30節 vsFKバンガ・ガルグジュダイ（スードゥヴァ・スタジアム）
 ブータン・プレミアリーグ初出場 - 2024年8月8日 - 第12節 vsチランFC（チャンリミタン・スタジアム）
-ブータン・プレミアリーグ初得点 - 2024年10月20日 - 第18節 vsティンプー・シティFC（チャンリミタン・スタジアム）",,,
-6604,山城 純也,Junya YAMASHIRO,pre2014_p1,山城純也,unclear,U18,negation_or_candidate_language_present,U-18日本代表候補,,,
+ブータン・プレミアリーグ初得点 - 2024年10月20日 - 第18節 vsティンプー・シティFC（チャンリミタン・スタジアム）",,A|U20|U23|other,
+6604,山城 純也,Junya YAMASHIRO,pre2014_p1,山城純也,unclear,U18,negation_or_candidate_language_present,U-18日本代表候補,no,,
 7373,鈴木 智樹,Tomoki SUZUKI,pre2014_p1,鈴木智樹,yes,U17|U18,negation_or_candidate_language_present,"2000年 ナショナルトレセンU-17
 2001年 U-16日本ユース選抜トレーニングキャンプ
 2002年 ナショナルトレセンU-17・U-17日本代表
-U-18日本代表候補",,,
+U-18日本代表候補",,U17,
 7876,吉田 麻也,Maya YOSHIDA,pre2014_p1,吉田麻也,yes,A|U18|U20|U23|other,negation_or_candidate_language_present,"2008年北京オリンピックU-23日本代表として出場。
 2009年12月21日、若手中心のメンバーで臨む方針だったアジアカップ最終予選に向けたフル代表に初招集された。2010年1月6日、イエメンとの試合でフル代表デビュー。しかしW杯南アフリカ大会の日本代表メンバーには選出されなかった。
 2010年12月24日、AFCアジアカップ2011に臨む日本代表メンバーに選出。2011年1月9日、グループリーグ第1節・ヨルダン戦の後半アディショナルタイムに代表初得点を記録。
@@ -433,23 +433,23 @@ U-24日本代表
 
 
 
-",,,
+",,A|U18|U23|other,
 6197,馬場 憂太,Yuta BABA,pre2014_p1,馬場憂太,yes,U18|U19|U20,negation_or_candidate_language_present,"2001年 U-18日本代表候補
 2002年 U-19日本代表 - SBSカップ 国際ユースサッカー、AFCユース選手権2002
-2003年 U-20日本代表",,,
+2003年 U-20日本代表",,U19|U20,
 6499,多田 大介,Daisuke TADA,pre2014_p1,多田大介,yes,U16|U18|U23|other,negation_or_candidate_language_present,"U-16日本代表
 U-16アジアユース選手権1998
 U-18日本代表候補
 U-22日本代表
-U-23日本代表候補",,,
+U-23日本代表候補",,U16|other,
 6168,松本 昂聡,Takatoshi MATSUMOTO,pre2014_p1,松本昂聡,yes,U18|U19,negation_or_candidate_language_present,"2000年 U-17日本ユース選抜
 2001年 U-18日本代表
 国際ユースサッカーin新潟
 SBSカップ 国際ユースサッカー
-2002年 U-19日本代表候補",,,
+2002年 U-19日本代表候補",,U18,
 6075,清野 智秋,Tomoaki SEINO,pre2014_p1,清野智秋,yes,U18|U19|U20,negation_or_candidate_language_present,"1999年 U-18日本代表
 2000年 U-19日本代表
-2001年 U-20日本代表候補",,,
+2001年 U-20日本代表候補",,U18|U19,
 3071,籾谷 真弘,Masahiro MOMITANI,pre2014_p1,籾谷真弘,yes,U18|U19,negation_or_candidate_language_present,"U-18、U-19日本代表
 U-19日本代表候補メンバー（2000年1月12日）
 西村昭宏日本サッカー協会ナショナルコーチングスタッフ
@@ -705,11 +705,11 @@ FW
 17
 富山第一高
 GK黒河貴矢、DF羽田憲司、MF森崎浩司が不参加。GK藤ヶ谷陽介（コンサドーレ札幌）、浦本賢太郎（大分高）、那須大亮（駒沢大）が追加。",,,
-7678,桑原 剛,Takeshi KUWAHARA,pre2014_p1,桑原剛,unclear,U18,negation_or_candidate_language_present,U-18日本代表候補トレーニングキャンプメンバー,,,
+7678,桑原 剛,Takeshi KUWAHARA,pre2014_p1,桑原剛,unclear,U18,negation_or_candidate_language_present,U-18日本代表候補トレーニングキャンプメンバー,no,,
 6082,杉本 倫治,Michiharu SUGIMOTO,pre2014_p1,杉本倫治,yes,U20|other,negation_or_candidate_language_present,"U-20日本代表候補（2001年）
-U-22日本代表（2003年）",,,
+U-22日本代表（2003年）",,other,
 6827,吉瀬 広志,Hiroshi KICHISE,pre2014_p1,吉瀬広志,unclear,U19,negation_or_candidate_language_present,"2001年 宮城国体福岡県代表
-2002年 U-19日本代表候補",,,
+2002年 U-19日本代表候補",no,,
 8107,古田 泰士,Taiji FURUTA,pre2014_p1,古田泰士,unclear,U18,negation_or_candidate_language_present,"古田 泰士（ふるた たいじ、1982年8月4日 - ）は、奈良県出身の元サッカー選手。ポジションはGK。
 
 
@@ -752,7 +752,7 @@ U-18日本代表候補（1999年）
 古田泰士 - Soccerway.com (英語)
 古田泰士 - FBref.com (英語)
 古田泰士 - Transfermarkt.comによる選手データ (英語)
-古田泰士 - J.League Data Siteによる選手データ",,,
+古田泰士 - J.League Data Siteによる選手データ",no,,
 6620,田村 祐基,Yuki TAMURA,pre2014_p1,田村祐基,unclear,U18,negation_or_candidate_language_present,"田村 祐基（たむら ゆうき、1985年12月31日 - ）は、広島県広島市東区牛田出身の元サッカー選手。ポジションはFW。広島県立吉田高校卒業。
 現在は飲食店店長。
 
@@ -829,7 +829,7 @@ FC岐阜の選手一覧
 田村祐基 - WorldFootball.net (英語)
 田村祐基 - FBref.com (英語)
 田村祐基 - Transfermarkt.comによる選手データ (英語)
-田村祐基 - J.League Data Siteによる選手データ",,,
+田村祐基 - J.League Data Siteによる選手データ",no,,
 9297,柴村 直弥,Naoya SHIBAMURA,pre2014_p1,柴村直弥,yes,U17,negation_or_candidate_language_present,"柴村 直弥（しばむら なおや、1982年9月11日 - ）は、広島県広島市出身のサッカー選手。ポジションはディフェンダー。
 
 
@@ -957,8 +957,8 @@ FM鳥取 GAINARE TOTTORI WEEKLY INFORMATION メインパーソナリティ（200
 柴村直弥ブログ「SHEI日記」
 柴村直弥ブログ「SHEI日記」(旧ブログ) - ウェイバックマシン（2005年4月8日アーカイブ分）（2005年1月-2015年1月）
 柴村直弥 (@shibamuranaoya) - X（旧Twitter）
-柴村直弥 - 個人 - Yahoo!ニュース",,,
-6423,羽畑 公貴,Koki HABATA,pre2014_p1,羽畑公貴,unclear,U16,negation_or_candidate_language_present,U-16日本代表候補,,,
+柴村直弥 - 個人 - Yahoo!ニュース",no,,
+6423,羽畑 公貴,Koki HABATA,pre2014_p1,羽畑公貴,unclear,U16,negation_or_candidate_language_present,U-16日本代表候補,no,,
 6952,久場 政朋,Masatomo KUBA,pre2014_p1,久場政朋,yes,U15|U16|U17|U18,negation_or_candidate_language_present,"久場 政朋（くば まさとも、1984年11月21日 - ）は、神奈川県出身の元サッカー選手。ポジションはミッドフィールダー。
 
 
@@ -1007,7 +1007,7 @@ U-17日本代表・U-18日本代表候補
 久場政朋 - FBref.com (英語)
 久場政朋 - Transfermarkt.comによる選手データ (英語)
 久場政朋 - FIFA主催大会成績 (英語)
-久場政朋 - J.League Data Siteによる選手データ",,,
+久場政朋 - J.League Data Siteによる選手データ",,U16|U17,
 7522,福本 尚純,Naoyoshi FUKUMOTO,pre2014_p1,福本尚純,unclear,U15,negation_or_candidate_language_present,"福本 尚純（ふくもと なおよし、1987年5月10日 - ）は、岡山県玉野市出身の元サッカー選手。ポジションは、MF、DF。
 
 
@@ -1056,25 +1056,25 @@ U-15日本代表候補
 福本尚純 - J.League Data Siteによる選手データ
 福本尚純ブログ FUKUMOTO NAOYOSHI 「PRIDE」 - ウェイバックマシン（2010年4月3日アーカイブ分）
 ファジアーノ岡山FC オフィシャルウェブサイト
-PLAYER'Sリレーインタビュー 第23回 立命館大学・福本尚純選手",,,
+PLAYER'Sリレーインタビュー 第23回 立命館大学・福本尚純選手",no,,
 6694,蒲原 達也,Tatsuya KAMOHARA,pre2014_p1,蒲原達也,yes,U18|U19,negation_or_candidate_language_present,"U-18日本代表
-U-19日本代表候補",,,
-8611,市原 大嗣,Hiroshi ICHIHARA,pre2014_p1,市原大嗣,unclear,U18,negation_or_candidate_language_present,U-18日本代表候補 2005,,,
+U-19日本代表候補",,U18,
+8611,市原 大嗣,Hiroshi ICHIHARA,pre2014_p1,市原大嗣,unclear,U18,negation_or_candidate_language_present,U-18日本代表候補 2005,no,,
 6441,阿部 文一朗,Bunichiro ABE,pre2014_p1,阿部文一朗,yes,U15|U17|U18|U19,negation_or_candidate_language_present,"1999年　U-15日本代表
 2001年　U-16日本ユース選抜
 2002年　U-17日本代表
 2003年　U-18日本代表候補
-2004年　U-19日本代表",,,
+2004年　U-19日本代表",,U15|U17|U19,
 6988,塗師 亮,Ryo NURISHI,pre2014_p1,塗師亮,yes,U15|university,negation_or_candidate_language_present,"2001年 U-15日本代表候補
-2006年 全日本大学選抜",,,
+2006年 全日本大学選抜",,university,
 8888,鶴野 太貴,Taiki TSURUNO,pre2014_p1,鶴野太貴,yes,U16|other,negation_or_candidate_language_present,"U-14日本代表
-U-16日本代表候補",,,
+U-16日本代表候補",,other,
 9241,ヴィンセント ケイン（高木 ケイン）,Kayne VINCENT,pre2014_p1,ヴィンセント・ケイン,yes,A|U20|other,negation_or_candidate_language_present,"U-13ニュージーランド代表候補
 U-20ニュージーランド代表
 
 
 
-国際Aマッチ 1試合（2014年）",,,
+国際Aマッチ 1試合（2014年）",no,,
 9156,石原 卓,Taku ISHIHARA,pre2014_p1,石原卓,yes,U20|university,negation_or_candidate_language_present,"石原 卓（いしはら たく、1988年10月3日 - ）は、愛知県出身の元プロサッカー選手、現在はアマチュアとしてプレー。ポジションはミッドフィールダー（MF）。
 
 
@@ -1133,19 +1133,19 @@ U-20日本代表候補
 石原卓 - FBref.com (英語)
 石原卓 - Transfermarkt.comによる選手データ (英語)
 石原卓 - UEFA (英語)
-石原卓 - J.League Data Siteによる選手データ",,,
+石原卓 - J.League Data Siteによる選手データ",,university,
 9638,吉原 正人,Masato YOSHIHARA,pre2014_p1,吉原正人,yes,U15|U17|U18|U19,negation_or_candidate_language_present,"2006年 U-15日本代表
 フランコ・ガッリーニ国際大会
 2008年 U-17日本代表
 2009年 U-18日本代表
-2009年 U-19日本代表候補",,,
+2009年 U-19日本代表候補",,U15|U17|U18,
 8365,中田 健太郎,Kentaro NAKATA,pre2014_p1,中田健太郎,yes,U15|U16|U17|U18|U19|U20|other,negation_or_candidate_language_present,"U-14日本代表
 U-15日本代表
 U-16日本代表
 U-17日本代表
 U-18日本代表
 U-19日本代表
-U-20日本代表候補",,,
+U-20日本代表候補",,U15|U16|U17|U18|U19|other,
 10316,石黒 智久,Tomohisa ISHIGURO,pre2014_p1,石黒智久,no,,negation_or_candidate_language_present,"石黒 智久（いしぐろ ともひさ、1981年4月27日 - ）は、富山県射水市（旧新湊市）出身 のサッカー選手。ポジションはFW。
 
 
