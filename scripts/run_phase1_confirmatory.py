@@ -157,6 +157,35 @@ def university_or(fit: FittedLogit) -> float:
     return float(table[table["term"].str.contains("university")]["odds_ratio"].iloc[0])
 
 
+def university_or_ci(fit: FittedLogit) -> tuple[float, float, float]:
+    """(OR, ci_low, ci_high) for the university term."""
+    table = odds_ratio_table(fit)
+    row = table[table["term"].str.contains("university")].iloc[0]
+    return float(row["odds_ratio"]), float(row["ci_low"]), float(row["ci_high"])
+
+
+def subsample_composition(df: pd.DataFrame, outcome: str) -> list[str]:
+    """Per-pathway n, outcome count and birth-year centre for a subsample.
+
+    A point estimate alone invites the "it is only 3% of the sample" argument,
+    which the source-selected subsamples do not support: they are chosen by
+    classifier confidence, not at random, so their composition has to be on the
+    page next to the estimate (external review 2026-07-25, Q1).
+    """
+    rows = ["| 経路 | n | アウトカム=1 | 率 | 出生年 中央値 |", "|---|---|---|---|---|"]
+    for pathway in ("j_club_academy", "high_school", "university"):
+        sub = df[df["pathway_category"] == pathway]
+        if sub.empty:
+            rows.append(f"| {pathway} | 0 | — | — | — |")
+            continue
+        events = int(pd.to_numeric(sub[outcome]).sum())
+        birth = pd.to_numeric(sub["birth_year"], errors="coerce").median()
+        rows.append(
+            f"| {pathway} | {len(sub)} | {events} | {events / len(sub):.1%} | {birth:.0f} |"
+        )
+    return rows
+
+
 def main() -> None:
     args = parse_args()
     outcomes = pd.read_csv(args.outcomes, dtype=str)
@@ -272,34 +301,70 @@ def main() -> None:
         sens_rows.append(f"- 出生年≥{floor} (n={fit.n}): university OR {university_or(fit):.2f}")
     lines += sens_rows + [""]
 
-    lines += ["### 5.2 pathway_category_source による分類誤り感度", ""]
+    lines += [
+        "### 5.2 pathway_category_source 別の推定（測定困難性による効果異質性の診断）",
+        "",
+        "**これは分類器の精度検証ではない**（外部レビュー 2026-07-25 Q1）。`human_reviewed` は",
+        "分類器の確信度で選択された部分母集団であり、全標本からの無作為抽出ではないため、",
+        "その OR は主 OR の再現性検証ではなく**別の条件付き estimand** である。乖離が生じた場合、",
+        "(a) 難例で真の関連が弱い、(b) 人手ラベルにも誤りが残る、(c) 経路・出生年・選手特性の",
+        "構成差、(d) 小標本による不精確さ、が混在し、点推定だけでは識別できない。",
+        "",
+        "選択規則: `human_reviewed` = 分類器が needs_review と判定しレビューキューに載った行",
+        "（reviewed 列が空欄＝現ラベル確認済みも含む）。`auto_high_confidence` = 一度も",
+        "レビューに載らなかった行。",
+        "",
+    ]
     reviewed = base[base["pathway_category_source"] == "human_reviewed"]
     auto_only = clustered[clustered["pathway_category_source"] == "auto_high_confidence"]
     fit_reviewed = fit_logit(reviewed, F_PRIMARY, "J1到達・human_reviewedのみ（通常SE）")
     fit_auto = fit_logit(
         auto_only, F_PRIMARY, "J1到達・auto_high_confidenceのみ", "final_institution"
     )
-    # The reviewed-vs-auto comparison is only informative if it is read off the
-    # numbers rather than asserted: before the 2026-07-20 classifier correction the
-    # two subsamples agreed, after it they do not. State which one happened.
-    or_reviewed = university_or(fit_reviewed)
-    or_primary = university_or(m_primary)
-    agrees = abs(np.log(or_reviewed) - np.log(or_primary)) < np.log(1.5)
+    or_reviewed, lo_reviewed, hi_reviewed = university_or_ci(fit_reviewed)
+    or_auto, lo_auto, hi_auto = university_or_ci(fit_auto)
+    or_primary, lo_primary, hi_primary = university_or_ci(m_primary)
     lines += [
-        f"- human_reviewed のみ (n={fit_reviewed.n}): "
-        f"university OR {or_reviewed:.2f}"
-        f"（基準 {or_primary:.2f}。n が小さく点推定のみ参考値——"
-        "human_reviewed は分類器が要レビューと判定した難例の集合。"
-        + (
-            "基準と同方向・同程度であり、分類誤りが主結果を駆動していないことの弱い傍証）"
-            if agrees
-            else "**基準から乖離しており**、難例に限れば経路差は小さい。"
-            "曝露測定の残余不確実性を示す所見として解釈すること）"
-        ),
-        f"- auto_high_confidence のみ (n={fit_auto.n}): "
-        f"university OR {university_or(fit_auto):.2f}",
+        "| 部分標本 | n | university OR [95% CI] |",
+        "|---|---|---|",
+        f"| 主分析（基準） | {m_primary.n} | {or_primary:.2f} [{lo_primary:.2f}, {hi_primary:.2f}] |",
+        f"| human_reviewed のみ | {fit_reviewed.n} | "
+        f"{or_reviewed:.2f} [{lo_reviewed:.2f}, {hi_reviewed:.2f}] |",
+        f"| auto_high_confidence のみ | {fit_auto.n} | "
+        f"{or_auto:.2f} [{lo_auto:.2f}, {hi_auto:.2f}] |",
+        "",
+        "human_reviewed 部分標本の構成:",
         "",
     ]
+    lines += subsample_composition(reviewed, "reached_j1")
+    lines += ["", "auto_high_confidence 部分標本の構成:", ""]
+    lines += subsample_composition(auto_only, "reached_j1")
+    # Read the comparison off the numbers rather than asserting it, and let the
+    # interval decide, not the point estimate: a subsample this small can differ
+    # by a factor of two while remaining entirely consistent with the base.
+    point_differs = abs(np.log(or_reviewed) - np.log(or_primary)) >= np.log(1.5)
+    interval_excludes_base = not (lo_reviewed <= or_primary <= hi_reviewed)
+    if not point_differs:
+        verdict = (
+            "**判定**: human_reviewed と基準は同方向・同程度。測定困難性に伴う効果異質性の"
+            "積極的な証拠はない。"
+        )
+    elif not interval_excludes_base:
+        verdict = (
+            "**判定**: 点推定は基準から離れているが、**95% CI が基準値を含んでおり、この部分"
+            "標本では基準との差を識別できない**。したがって本節は「難例では関連が弱い」ことの"
+            "証拠にはならず、**曝露測定に関する不確実性が残ることを示すに留まる**。"
+            "難例が標本に占める比率は補助情報であって妥当性の主根拠にはしない"
+            "（難例の誤分類が基準カテゴリや特定 era に集中した場合の影響を件数比は"
+            "保証しないため）。上の構成表の経路別アウトカム率も併せて解釈すること。"
+        )
+    else:
+        verdict = (
+            "**判定**: human_reviewed は基準から乖離し、95% CI も基準値を含まない。"
+            "全標本の主推定を直接反証する比較ではないが、**測定困難性に関連した効果異質性と"
+            "残存誤分類を区別できない**ことを示す所見として扱う。"
+        )
+    lines += ["", verdict, ""]
 
     lines += [
         "### 5.3 代表歴「該当なし」偽陰性 2.2% の確率的バイアス分析",
