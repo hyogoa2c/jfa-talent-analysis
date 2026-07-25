@@ -82,6 +82,18 @@ def test_apply_review_overrides_blank_reviewed_value_means_confirmed_as_is():
     assert resolved["1"] == ("university", "human_reviewed")
 
 
+def test_apply_review_overrides_later_queue_wins_for_duplicate_player():
+    """build_player_pathway_outcomes concatenates several review queues; the
+    youth-vs-university corrigendum queue is applied last and must win."""
+    resolved = apply_review_overrides(
+        [labeled_row("1", "university")],
+        [review_row("1", "high_school"), review_row("1", "j_club_academy")],
+        value_column="pathway_category",
+        reviewed_value_column="reviewed_pathway_category",
+    )
+    assert resolved["1"] == ("j_club_academy", "human_reviewed")
+
+
 def test_apply_review_overrides_high_confidence_row_never_reviewed():
     resolved = apply_review_overrides(
         [labeled_row("1", "university")],

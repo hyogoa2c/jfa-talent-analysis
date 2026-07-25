@@ -107,7 +107,7 @@ def read_queue_entries(input_dir: Path) -> list[dict]:
         path = input_dir / filename
         if not path.exists() or path.stat().st_size == 0:
             continue
-        with path.open(encoding="utf-8", newline="") as file:
+        with path.open(encoding="utf-8-sig", newline="") as file:
             for row in csv.DictReader(file):
                 key = (row["season_year"], row["team_name"], row["player_name"])
                 entry = entries.setdefault(

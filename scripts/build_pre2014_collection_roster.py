@@ -41,15 +41,15 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    with args.existing_universe.open(encoding="utf-8", newline="") as file:
+    with args.existing_universe.open(encoding="utf-8-sig", newline="") as file:
         known_ids = {row["source_player_id"] for row in csv.DictReader(file)}
-    with args.players.open(encoding="utf-8", newline="") as file:
+    with args.players.open(encoding="utf-8-sig", newline="") as file:
         universe = {row["source_player_id"]: row for row in csv.DictReader(file)}
 
     careers: dict[str, dict] = defaultdict(
         lambda: {"appearances": 0, "minutes": 0, "seasons": [], "teams": []}
     )
-    with args.career_table.open(encoding="utf-8", newline="") as file:
+    with args.career_table.open(encoding="utf-8-sig", newline="") as file:
         for row in csv.DictReader(file):
             career = careers[row["source_player_id"]]
             career["appearances"] += int(row["appearances"])

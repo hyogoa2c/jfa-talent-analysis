@@ -119,7 +119,7 @@ def parse_season(value: str) -> int | None:
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
-    with path.open(encoding="utf-8", newline="") as file:
+    with path.open(encoding="utf-8-sig", newline="") as file:
         return list(csv.DictReader(file))
 
 

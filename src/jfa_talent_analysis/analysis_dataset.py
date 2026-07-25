@@ -105,6 +105,9 @@ def apply_review_overrides(
     docs/pathway_national_team_review_instructions_2026-07-05.md's rule),
     "auto_high_confidence" (never needed review), or "identity_not_confirmed"
     (value_column was blank because identity_check wasn't "confirmed").
+
+    Callers may concatenate several review queues into review_queue_rows; if a
+    player appears in more than one, the last occurrence wins.
     """
     reviewed_by_id = {row["source_player_id"]: row for row in review_queue_rows}
     resolved: dict[str, tuple[str, str]] = {}

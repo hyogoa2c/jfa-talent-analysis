@@ -2,9 +2,23 @@ from pathlib import Path
 
 from jfa_talent_analysis.pipeline import (
     leagues_for_season,
+    read_csv,
     summarize_season_dataset,
     write_csv,
 )
+
+
+def test_read_csv_strips_utf8_bom(tmp_path: Path):
+    """Manually reviewed CSVs come back from Excel with a BOM; the first
+    column name must not pick up \\ufeff or every id join silently misses."""
+    path = tmp_path / "bom.csv"
+    path.write_text(
+        "source_player_id,reviewed_pathway_category\n1,j_club_academy\n",
+        encoding="utf-8-sig",
+    )
+    rows = read_csv(path)
+    assert list(rows[0].keys()) == ["source_player_id", "reviewed_pathway_category"]
+    assert rows[0]["source_player_id"] == "1"
 
 
 def test_leagues_for_season_excludes_j3_before_2014():

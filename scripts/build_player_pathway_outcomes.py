@@ -14,6 +14,15 @@ from jfa_talent_analysis.analysis_dataset import (
 
 TIERS = ("a", "b", "c")
 
+# The youth-vs-university queue resolves the university<->j_club_academy cases the
+# hardened classifier (commit 76ba3c4 + the university-competition guard) deliberately
+# routes to review instead of auto-flipping; see docs/measurement_equivalence_phase1b_
+# 2026-07-20.md. It is disjoint from the original queue but is applied last regardless.
+PATHWAY_REVIEW_QUEUE_DEFAULTS = (
+    Path("data/manual/pathway_review_queue.csv"),
+    Path("data/manual/phase1_pathway_youth_vs_university_review_queue.csv"),
+)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -37,7 +46,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--pathway-review-queue",
         type=Path,
-        default=Path("data/manual/pathway_review_queue.csv"),
+        action="append",
+        dest="pathway_review_queues",
+        help=(
+            "Human review of the pathway classifier's needs_review rows. Repeatable; "
+            "queues are applied in the order given, so a later queue wins for a player "
+            "reviewed in more than one. Defaults to PATHWAY_REVIEW_QUEUE_DEFAULTS."
+        ),
     )
     parser.add_argument(
         "--national-team-review-queue",
@@ -81,7 +96,9 @@ def main() -> None:
     player_summaries = collapse_player_season_features(read_csv(args.season_features))
 
     pathway_labeled = read_all_tiers(args.pathway_national_team_dir, "pathway_tier_{tier}_labeled.csv")
-    pathway_review_queue = read_csv(args.pathway_review_queue)
+    pathway_review_queue: list[dict[str, str]] = []
+    for queue_path in args.pathway_review_queues or PATHWAY_REVIEW_QUEUE_DEFAULTS:
+        pathway_review_queue.extend(read_csv(queue_path))
     pathway_resolved = apply_review_overrides(
         pathway_labeled,
         pathway_review_queue,
@@ -183,7 +200,7 @@ def read_all_tiers(directory: Path, pattern: str) -> list[dict[str, str]]:
 
 def read_csv(path: Path) -> list[dict[str, str]]:
     csv.field_size_limit(10_000_000)
-    with path.open(encoding="utf-8", newline="") as file:
+    with path.open(encoding="utf-8-sig", newline="") as file:
         return list(csv.DictReader(file))
 
 

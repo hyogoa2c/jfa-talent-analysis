@@ -17,7 +17,7 @@ def main() -> None:
     rows: list[dict[str, str]] = []
     fieldnames: list[str] | None = None
     for path in args.inputs:
-        with path.open(encoding="utf-8", newline="") as file:
+        with path.open(encoding="utf-8-sig", newline="") as file:
             reader = csv.DictReader(file)
             if fieldnames is None:
                 fieldnames = reader.fieldnames or []

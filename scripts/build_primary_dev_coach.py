@@ -56,9 +56,9 @@ def main() -> None:
     args = parse_args()
 
     csv.field_size_limit(10_000_000)
-    with args.exposures.open(encoding="utf-8", newline="") as file:
+    with args.exposures.open(encoding="utf-8-sig", newline="") as file:
         exposures = list(csv.DictReader(file))
-    with args.outcomes.open(encoding="utf-8", newline="") as file:
+    with args.outcomes.open(encoding="utf-8-sig", newline="") as file:
         pathway_by_player = {
             row["source_player_id"]: row["pathway_category"] for row in csv.DictReader(file)
         }

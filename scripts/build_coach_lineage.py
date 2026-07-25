@@ -73,9 +73,9 @@ def load_verified_extracts(
     research; for the handful where the cache holds a wrong page but the
     correct title is known, fetch the correct page now."""
     csv.field_size_limit(10_000_000)
-    with extracts_path.open(encoding="utf-8", newline="") as file:
+    with extracts_path.open(encoding="utf-8-sig", newline="") as file:
         cache = {row["coach_name"]: row for row in csv.DictReader(file)}
-    with attributes_path.open(encoding="utf-8", newline="") as file:
+    with attributes_path.open(encoding="utf-8-sig", newline="") as file:
         attributes = list(csv.DictReader(file))
 
     verified: dict[str, str] = {}
@@ -100,7 +100,7 @@ def load_verified_extracts(
 def main() -> None:
     args = parse_args()
 
-    with args.tenures.open(encoding="utf-8", newline="") as file:
+    with args.tenures.open(encoding="utf-8-sig", newline="") as file:
         tenure_rows = [
             row
             for row in csv.DictReader(file)
