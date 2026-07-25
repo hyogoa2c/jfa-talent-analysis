@@ -126,6 +126,32 @@ def apply_review_overrides(
     return resolved
 
 
+def usable_wikipedia_j1_debuts(
+    rows: list[dict[str, str]], observation_end_season: int
+) -> tuple[dict[str, str], int]:
+    """Wikipedia J1 debut years that may be used to backfill reached_j1.
+
+    Two exclusions. `in_window_mismatch` rows disagreed with observed data
+    inside the SFPR01 window, so the extractor is not trusted for them. And a
+    debut after `observation_end_season` is not an outcome this study window can
+    observe -- Wikipedia keeps being updated, so without the bound a later
+    re-run silently gains newer debuts and moves the canonical numbers.
+
+    Returns (usable debuts by player id, number dropped as out of window).
+    """
+    usable: dict[str, str] = {}
+    out_of_window = 0
+    for row in rows:
+        year = row["j1_debut_year"]
+        if not year or row["validation"] == "in_window_mismatch":
+            continue
+        if year.isdigit() and int(year) > observation_end_season:
+            out_of_window += 1
+            continue
+        usable[row["source_player_id"]] = year
+    return usable, out_of_window
+
+
 def resolve_reached_j1(
     summary: dict[str, str], wikipedia_j1_debut_year: str
 ) -> tuple[str, str, str]:

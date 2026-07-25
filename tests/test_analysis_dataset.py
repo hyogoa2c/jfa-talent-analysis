@@ -4,6 +4,7 @@ from jfa_talent_analysis.analysis_dataset import (
     collapse_player_season_features,
     resolve_moved_overseas_final,
     resolve_reached_j1,
+    usable_wikipedia_j1_debuts,
 )
 
 
@@ -80,6 +81,44 @@ def test_apply_review_overrides_blank_reviewed_value_means_confirmed_as_is():
         reviewed_value_column="reviewed_pathway_category",
     )
     assert resolved["1"] == ("university", "human_reviewed")
+
+
+def debut_row(player_id: str, year: str, validation: str = "in_window_match") -> dict[str, str]:
+    return {
+        "source_player_id": player_id,
+        "j1_debut_year": year,
+        "validation": validation,
+    }
+
+
+def test_usable_wikipedia_j1_debuts_drops_debuts_after_the_window():
+    """Wikipedia keeps being updated, so an unbounded debut year makes the
+    dataset change on every re-run. A 2026 debut is not observable in a study
+    that ends in 2025."""
+    usable, out_of_window = usable_wikipedia_j1_debuts(
+        [debut_row("1", "2020"), debut_row("2", "2026")], observation_end_season=2025
+    )
+    assert usable == {"1": "2020"}
+    assert out_of_window == 1
+
+
+def test_usable_wikipedia_j1_debuts_keeps_the_final_window_season():
+    usable, out_of_window = usable_wikipedia_j1_debuts(
+        [debut_row("1", "2025")], observation_end_season=2025
+    )
+    assert usable == {"1": "2025"}
+    assert out_of_window == 0
+
+
+def test_usable_wikipedia_j1_debuts_excludes_mismatches_without_counting_them():
+    """A mismatch is extractor noise, not an out-of-window outcome; keeping the
+    two reasons separate keeps the reported count meaningful."""
+    usable, out_of_window = usable_wikipedia_j1_debuts(
+        [debut_row("1", "2020", "in_window_mismatch"), debut_row("2", "")],
+        observation_end_season=2025,
+    )
+    assert usable == {}
+    assert out_of_window == 0
 
 
 def test_apply_review_overrides_later_queue_wins_for_duplicate_player():

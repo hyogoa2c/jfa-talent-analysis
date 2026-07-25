@@ -10,6 +10,7 @@ from jfa_talent_analysis.analysis_dataset import (
     apply_review_overrides,
     build_player_pathway_outcomes,
     collapse_player_season_features,
+    usable_wikipedia_j1_debuts,
 )
 
 TIERS = ("a", "b", "c")
@@ -83,6 +84,16 @@ def parse_args() -> argparse.Namespace:
         help="Human review of the overseas classifier's needs_review rows; optional.",
     )
     parser.add_argument(
+        "--observation-end-season",
+        type=int,
+        default=2025,
+        help=(
+            "Last season the study can observe. Wikipedia J1 debuts after this are "
+            "dropped: they are outside the window, and leaving them in would make the "
+            "dataset change every time Wikipedia gains a newer debut."
+        ),
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=Path("data/processed/player_pathway_outcomes.csv"),
@@ -135,11 +146,22 @@ def main() -> None:
     # 2026-07-07.md items 1-2). Only in_window_match-validated bases are usable
     # for backfill: rows whose extracted year fell in the SFPR01 window and
     # DISAGREED with observed data are excluded as extractor noise.
+    #
+    # A debut after the observation window is not an outcome this study can
+    # observe, and Wikipedia keeps getting updated: without the upper bound,
+    # re-running this pipeline later silently pulls in newer debuts and changes
+    # the canonical numbers. Bound it so the dataset is reproducible.
     wikipedia_j1_debut_by_id: dict[str, str] = {}
+    out_of_window = 0
     if args.j1_debut_evidence.exists():
-        for row in read_csv(args.j1_debut_evidence):
-            if row["j1_debut_year"] and row["validation"] != "in_window_mismatch":
-                wikipedia_j1_debut_by_id[row["source_player_id"]] = row["j1_debut_year"]
+        wikipedia_j1_debut_by_id, out_of_window = usable_wikipedia_j1_debuts(
+            read_csv(args.j1_debut_evidence), args.observation_end_season
+        )
+    if out_of_window:
+        print(
+            f"excluded {out_of_window} Wikipedia J1 debut(s) after "
+            f"{args.observation_end_season} (outside the observation window)"
+        )
 
     overseas_wiki_by_id: dict[str, tuple[str, str]] = {}
     if args.overseas_wiki_labels.exists():
