@@ -1,0 +1,51 @@
+source_player_id,name_ja,stratum,gold_pathway_category,gold_final_institution,evidence_url,evidence_note,determination,researched_at
+3000,児玉 新,A_auto_high_conf,j_club_academy,ガンバ大阪ユース,https://web.gekisaka.jp/player/?33670-9140-jp=,ゲキサカ選手ページに「選手歴=G大阪ユース-G大阪-...」と記載。ユースからの昇格。,confirmed,2026-07-19
+6789,片桐 淳至,A_auto_high_conf,high_school,岐阜工業高校,https://king-gear.com/articles/577,岐阜工業高校(1999-2002)在学、2001年全国高校選手権得点王。高校卒業後2002年に名古屋グランパスエイトへ入団。,confirmed,2026-07-19
+3146,村松 潤,A_auto_high_conf,j_club_academy,清水エスパルスユース,https://www.fansaka.info/player/J324A0/,静岡FC→清水エスパルスJrユース→清水エスパルスユースを経て2001年にトップ昇格、とデータベースに記載。,confirmed,2026-07-19
+5953,野田 恭平,A_auto_high_conf,high_school,日本大学高校,http://archive3.fc-gifu.com/news/post-30.html,FC岐阜公式入団発表に経歴「日大高→東京ヴェルディ1969→沖縄かりゆしFC→FC琉球」と記載。高校在学中の強化指定選手登録を経てヴェルディ入団。,confirmed,2026-07-19
+7749,岸田 裕樹,A_auto_high_conf,university,関西学院大学,https://www.fansaka.info/player/J31670/,関西学院高→関西学院大学(2000-2003)を経て卒業後2005年にYKK AP(JFL)でプロキャリア開始、後にヴィッセル神戸。,confirmed,2026-07-19
+9150,筑城 和人,A_auto_high_conf,university,駒澤大学,https://www.fansaka.info/player/J348E2/,清水商業高校を経て駒澤大学に進学、大学卒業後2007年に名古屋グランパスでプロキャリア開始、とデータベースに記載。,confirmed,2026-07-19
+6285,犬塚 友輔,A_auto_high_conf,university,静岡産業大学,https://www.ssu.ac.jp/club/football/ob_og/m-team/ob_og-58405/,静岡産業大学サッカー部公式OBページに2006年卒業、卒業後ジュビロ磐田等でプロ、と記載。,confirmed,2026-07-19
+7876,吉田 麻也,A_needs_review,j_club_academy,名古屋グランパスエイトユース,https://maya-yoshida.com/profiles,選手本人公式サイトのプロフィールに2001-2003 U-15、2004-2006 U-18、2007年トップ昇格と記載。高校(豊田高校)は非提携の通学先で育成自体はグランパスユース。,confirmed,2026-07-19
+6245,根占 真伍,A_needs_review,j_club_academy,東京ヴェルディユース,https://picchinoyusya.club/nejime-shingo/,ジュニアユースからヴェルディユース昇格、高3で2種登録、高校卒業後2003年に東京ヴェルディとプロ契約と記載。,confirmed,2026-07-19
+3242,大和田 真史,A_needs_review,university,明治大学,https://www.soccer-king.jp/player/article/414835.html,「翼SS-鹿島アントラーズJrユース-鹿島アントラーズユース-明治大-水戸ホーリーホック」と経歴記載。ユース昇格でなく大学経由でプロ入り。,confirmed,2026-07-19
+6081,秦 賢二,A_unknown_label,high_school,広島皆実高校,https://hiroshimanchu.com/news/%E3%83%A1%E3%83%B3%E3%83%90%E3%83%BC%E7%B4%B9%E4%BB%8B%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC%E9%81%B8%E6%89%8B%E3%83%BB%E7%A7%A6%E8%B3%A2%E4%BA%8C%E3%81%95%E3%82%93/,広島皆実高校卒業後2000年に名古屋グランパスエイト入団、と沖縄広島県人会サイトに記載。,confirmed,2026-07-19
+9162,盛礼良 レオナルド（ レオナルド）,A_unknown_label,undeterminable,,https://web.gekisaka.jp/player/?33153-20998-jp=&code=leonardo,経歴「青森山田高-JAPANサッカーカレッジ-東京V-...」。プロ入り直前の所属はJAPANサッカーカレッジ(専門学校)であり、指定カテゴリ(university/high_school/j_club_academy/jfa_academy/grassroots_club)のいずれにも該当しないため判定不能。,undeterminable,2026-07-19
+4461,原 竜太,A_no_confirmed_article,high_school,市立船橋高校,https://picchinoyusya.club/hara-ryuta/,横浜フリューゲルスジュニアユース(中学)を経て市立船橋高校へ進学。1999年全国高校選手権優勝の活躍で名古屋グランパスエイトからオファーを受け2000年入団。,confirmed,2026-07-19
+8624,田中 淳,A_no_confirmed_article,undeterminable,,,ザスパ草津所属(2006-2011)のMF田中淳選手について外部ソースで出身校・経歴を確認できず。同姓同名の別人(大学教授、講師)がヒットするのみ。,undeterminable,2026-07-19
+8609,高橋 大輔,A_no_confirmed_article,university,福岡大学,https://www.cerezo.jp/news/2013-07-24-3/,セレッソ大阪公式引退発表記事に「柳川高校('99)→福岡大学('02)→大分トリニータ('06)→セレッソ大阪」と経歴記載。,confirmed,2026-07-19
+6782,伊藤 仁,B_auto_high_conf,high_school,武南高校,http://www.fansaka.info/player/J33570,データベースに「武南高、セレッソ大阪、水戸ホーリーホック」と経歴記載。高校卒業後2002年セレッソ大阪入団。,confirmed,2026-07-19
+7709,木藤 健太,B_auto_high_conf,university,近畿大学,https://avispaflag.com/player-date.html?player_id=0156,アビスパ福岡ファンサイトのデータに「国見高校/近畿大学」出身と記載。大学卒業後2004年アビスパ福岡入団。,confirmed,2026-07-19
+8126,秋田 政輝,B_auto_high_conf,university,筑波大学,https://www.fansaka.info/player/J329P1/,データベースに「市立船橋高-筑波大-水戸ホーリーホック」と経歴記載。,confirmed,2026-07-19
+7667,三浦 旭人,B_auto_high_conf,university,順天堂大学,https://www.fansaka.info/player/J378B1/,"横浜F・マリノスJrユース/ユースを経て順天堂大学(2007・2009年リーグ戦出場)在籍、大学卒業後ガイナーレ鳥取入団。",confirmed,2026-07-19
+2984,數馬 正浩,B_auto_high_conf,j_club_academy,横浜F・マリノスユース,https://www.f-marinos.com/team/academy/graduate,マリノス公式アカデミー出身者リストの「ユース出身のJリーガー」1982年生まれ欄に「數馬正浩 横浜FM-仙台」と記載。高校卒業後2001年トップ昇格。,confirmed,2026-07-19
+6823,石田 雅人,B_auto_high_conf,high_school,奈良育英高校,https://www.fansaka.info/player/J334H3/,データベースに「東市FC、都南中、奈良育英高を経て横浜FC」と記載。高校卒業後2002年横浜FC入団。,confirmed,2026-07-19
+5990,松裏 英明,B_needs_review,undeterminable,,,ジュビロ磐田ユース時代を経て「ウルグアイ留学」を経由し2001年ヴァンフォーレ甲府加入、という記述が複数見られるが外部ソースでの詳細裏付けが取れず、ウルグアイでの所属実態(学校か クラブか)も不明のため指定カテゴリに当てはめ不能。,undeterminable,2026-07-19
+8107,古田 泰士,B_unknown_label,university,大阪体育大学,https://www.vortis.jp/news/7136/,徳島ヴォルティス公式加入発表記事に「奈良県立耳成高校」「大阪体育大学」と経歴記載。大学卒業後2005年徳島ヴォルティス加入。,confirmed,2026-07-19
+9677,山内 祐一,B_unknown_label,university,福岡大学,https://www.fansaka.info/player/J34AQ1/,データベースに「京陵中学校-大津高校-福岡大学」と記載。大学卒業後2007年ロアッソ熊本入団。,confirmed,2026-07-19
+5919,杉本 圭,B_no_confirmed_article,j_club_academy,湘南ベルマーレユース,https://www.bellmare.co.jp/academy/pro,ベルマーレ公式「アカデミー出身のプロ選手」1982/1983年生カテゴリに「杉本圭【ジュニアユース・ユース出身】」と記載。2000年トップ昇格。,confirmed,2026-07-19
+6811,前田 和也,B_no_confirmed_article,high_school,佐野日大高校,https://sanofootball.com/?page_id=7578,佐野フットボールアカデミー公式スタッフ紹介ページに「佐野西中学校から佐野日大高校へ進学」「高校卒業後FC東京」と経歴記載。,confirmed,2026-07-19
+8505,中野 裕太,B_no_confirmed_article,undeterminable,,,知多SCからサンフレッチェ広島ユースを経て2008年横浜FC入団、との記述が複数見られるが、いずれもWikipedia由来とみられ独立した外部ソースでの裏付けが取れず判定不能。,undeterminable,2026-07-19
+6367,髙橋 健史,C_auto_high_conf,undeterminable,,,ガンバ大阪ユース(中学から)-立命館大学(総理大臣杯優勝)-徳島ヴォルティスという経歴の記述が複数見られるが、いずれもWikipedia由来とみられ独立した外部ソースでの裏付けが取れず判定不能。立命館大学公式サイトの2006年総理大臣杯優勝記事も選手名までは確認できず。,undeterminable,2026-07-19
+11144,田中 パウロ淳一（田中 淳一）,C_auto_high_conf,high_school,大阪桐蔭高校,https://kerimichi.com/tanaka-paulo-junichi/,米田SC-兵庫FC-サルパFC Jrユースを経て大阪桐蔭高校サッカー部へ進学、高校卒業後2012年川崎フロンターレ入団と記載。,confirmed,2026-07-19
+6850,千葉 真也,C_auto_high_conf,high_school,仙台育英高校,https://www.fansaka.info/player/J33532/,データベースに「蒲町中-仙台育英高」と経歴記載。高校卒業後2002年アルビレックス新潟でJ2リーグ1試合出場。,confirmed,2026-07-19
+10882,松浦 勇武,C_auto_high_conf,high_school,浜松開誠館高校,https://kaiseikanfc.jp/ob/,浜松開誠館フットボールクラブ公式OBリストに「松浦勇武(3期生) 浜松開誠館中→浜松開誠館高→湘南ベルマーレ→FC琉球」と記載。,confirmed,2026-07-19
+7877,福島 新太,C_auto_high_conf,j_club_academy,名古屋グランパスエイトユース,https://web.gekisaka.jp/player/?33433-8815-jp=,ゲキサカ選手ページに経歴「名古屋U18-名古屋-徳島-ヴェルスパ大分」と記載。U-12からU-18まで一貫して名古屋グランパスの下部組織に所属し2007年トップ昇格。中部大学第一高校は提携通学先。,confirmed,2026-07-19
+11469,三渡洲 舞人,C_auto_high_conf,high_school,流通経済大学付属柏高校,https://www.verdy.co.jp/news/1341,東京ヴェルディ公式加入発表記事に経歴「清水第八SC→サンパウロFC(ブラジル)→清水エスパルスジュニアユース→流通経済大学付属柏高校」と記載。高校卒業後怪我とモデル活動を経て2013年東京ヴェルディ入団。,confirmed,2026-07-19
+7522,福本 尚純,C_needs_review,university,立命館大学,https://www.fansaka.info/player/J375A0/,データベースに「玉野FC-サンフレッチェ広島ユース-立命館大学(2006年出場)-ファジアーノ岡山」と記載。大学経由で2010年ファジアーノ岡山入団。,confirmed,2026-07-19
+9638,吉原 正人,C_needs_review,j_club_academy,アビスパ福岡ユース,https://avispaflag.com/player-date.html?player_id=0242,アビスパ福岡ファンサイトに「出身校:九産大付属九州高校、前所属:アビスパ福岡U-18」と記載。U-12から一貫育成、2010年トップ昇格。高校は提携通学先。,confirmed,2026-07-19
+9156,石原 卓,C_needs_review,high_school,中京大付属中京高校,https://web.gekisaka.jp/news/jleague/detail/?22524-3344-fl,ゲキサカ記事に「名古屋市立天白小学校(八事FC)-名古屋市立天白中学校(名古屋グランパスジュニアユース)-中京大付属中京高校」の経歴で横浜F・マリノス新加入と記載。同年徳島ヴォルティスへ期限付き移籍。大学(中京大学)進学はプロ入り後(2009年)。,confirmed,2026-07-19
+8133,中村 友亮,C_needs_review,high_school,静岡学園高校,https://www.fansaka.info/player/J36A61/,データベースに「静岡学園高」出身、高校卒業後ヴィッセル神戸、と記載。,confirmed,2026-07-19
+6209,山田 祥史,C_unknown_label,j_club_academy,アビスパ福岡ユース,https://www.fansaka.info/player/J31B40/,データベースに「アビスパ福岡U-18、アビスパ福岡、大塚製薬」と経歴記載。ユースからトップ昇格。,confirmed,2026-07-19
+8611,市原 大嗣,C_unknown_label,high_school,大津高校,https://web.gekisaka.jp/player/?33809-9323-jp,ゲキサカ選手ページに「経歴=大津高-大分-鳥栖-...」と記載。高校卒業後大分トリニータ入団。,confirmed,2026-07-19
+8461,松浦 敦史,C_unknown_label,university,阪南大学,https://www.hannan-u.ac.jp/club/mrrf43000000z4fm.html,阪南大学公式サイトのJリーガー輩出実績リストNo.18に「松浦敦史 ヴォルティス徳島」と記載(大学卒業後加入チームのみ記載する方針のページ)。,confirmed,2026-07-19
+9051,栗山 裕貴,C_unknown_label,high_school,ルーテル学院高等学校,https://fansaka.info/player/J389F0/,データベースに「矢部ジュニアSC-ルーテル学院中学校-ルーテル学院高等学校」と経歴記載。高校卒業後サガン鳥栖入団。,confirmed,2026-07-19
+9670,河野 健一,C_unknown_label,university,日本文理大学,https://www.fansaka.info/player/J329F1/,データベースに「赤目中学校-津工業高等学校-日本文理大学」と経歴記載。大学卒業後ロアッソ熊本入団。,confirmed,2026-07-19
+6429,田中 大輔,C_no_confirmed_article,high_school,滋賀県立野洲高等学校,https://highschool-rank.net/00002573_00000215.htm,野洲高校出身サッカー選手リストに「1983年1月6日生まれ。元サッカー選手（清水エスパルス→徳島ヴォルティス）」と記載。生年月日・所属クラブがロスターと一致。,confirmed,2026-07-19
+6023,高橋 宏幸,C_no_confirmed_article,high_school,流通経済大学付属柏高校,https://fansaka.info/player/J33561/,データベースに「流通経済大付属柏高-読売日本サッカークラブ・レスチ-東京ヴェルディ1969」と経歴記載。,confirmed,2026-07-19
+6903,中村 豪,C_no_confirmed_article,j_club_academy,ジュビロ磐田ユース,https://www.fansaka.info/player/J36BT0/,データベースに「白鳥JSC-ジョカトーレ関-ジュビロ磐田ユース-ジュビロ磐田」と経歴記載。ユースからトップ昇格(磐田東高校は提携通学先)。,confirmed,2026-07-19
+10907,加部 未蘭,C_no_confirmed_article,high_school,山梨学院大学附属高校,https://www.fansaka.info/player/J426H0/,データベースに「サンデーSC-FC東京U-15むさし-山梨学院大附属高-ヴァンフォーレ甲府」と経歴記載。高校卒業後2011年甲府入団。プロ入り後の2013年に福岡大進学は最初のプロ契約より後。,confirmed,2026-07-19
+6087,加藤 寿一,C_no_confirmed_article,high_school,如水館高校,https://avispaflag.com/player-date.html?player_id=0136,アビスパ福岡ファンサイトに「如水館高校出身で高校卒業後にアビスパ福岡に入団」「2000年から2003年在籍」と記載。生年月日(1981/05/28)がロスターと一致。,confirmed,2026-07-19
+10978,田中 俊一,C_no_confirmed_article,university,大阪教育大学,https://ameblo.jp/kss-press/entry-10746402838.html,関西学生サッカーPRESSの記事に「田中俊一選手は大阪教育大学(大教大)で活躍し、同校の背番号10」「国立大の星」と記載。大学からロアッソ熊本入団内定。,confirmed,2026-07-19
+6414,石橋 直希,X_topup,undeterminable,,https://www.fansaka.info/player/J315E0/,データベースに「浦和レッズJrユース-クラブアルマグロ(アルゼンチン)-横浜FC-サガン鳥栖-アローズ北陸」と経歴記載。ジュニアユース後にアルゼンチンのクラブに所属しており、最初のJクラブ入団(横浜FC)直前の所属が海外クラブのため指定カテゴリに当てはめ不能。,undeterminable,2026-07-19
+3071,籾谷 真弘,X_topup,j_club_academy,セレッソ大阪ユース,https://www.jfa.jp/social_action_programme/yumesen/pdf/momitani_masahiro.pdf,日本サッカー協会公式「夢先生プロフィール」に「2000年にセレッソ大阪U-18(18歳以下)からトップチームに昇格。DFとしてプレー」と記載。2002年ザスパ草津(当時群馬県社会人リーグ)へ移籍、2005年J2昇格。,confirmed,2026-07-19

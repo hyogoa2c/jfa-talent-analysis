@@ -106,7 +106,7 @@ def detect_context_column(rows: list[dict[str, str]]) -> str:
 
 def read_birth_dates(path: Path) -> dict[str, str]:
     birth_dates: dict[str, str] = {}
-    with path.open(encoding="utf-8", newline="") as file:
+    with path.open(encoding="utf-8-sig", newline="") as file:
         for row in csv.DictReader(file):
             birth_dates.setdefault(row["source_player_id"], row["birth_date"])
     return birth_dates
@@ -114,7 +114,7 @@ def read_birth_dates(path: Path) -> dict[str, str]:
 
 def read_csv(path: Path) -> list[dict[str, str]]:
     csv.field_size_limit(10_000_000)
-    with path.open(encoding="utf-8", newline="") as file:
+    with path.open(encoding="utf-8-sig", newline="") as file:
         return list(csv.DictReader(file))
 
 

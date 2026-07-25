@@ -279,12 +279,23 @@ def main() -> None:
     fit_auto = fit_logit(
         auto_only, F_PRIMARY, "J1到達・auto_high_confidenceのみ", "final_institution"
     )
+    # The reviewed-vs-auto comparison is only informative if it is read off the
+    # numbers rather than asserted: before the 2026-07-20 classifier correction the
+    # two subsamples agreed, after it they do not. State which one happened.
+    or_reviewed = university_or(fit_reviewed)
+    or_primary = university_or(m_primary)
+    agrees = abs(np.log(or_reviewed) - np.log(or_primary)) < np.log(1.5)
     lines += [
         f"- human_reviewed のみ (n={fit_reviewed.n}): "
-        f"university OR {university_or(fit_reviewed):.2f}"
-        f"（基準 {university_or(m_primary):.2f}。n が小さく点推定のみ参考値——"
-        "human_reviewed は分類器が要レビューと判定した難例の集合であり、"
-        "ここでの一致は分類誤りが主結果を駆動していないことの弱い傍証）",
+        f"university OR {or_reviewed:.2f}"
+        f"（基準 {or_primary:.2f}。n が小さく点推定のみ参考値——"
+        "human_reviewed は分類器が要レビューと判定した難例の集合。"
+        + (
+            "基準と同方向・同程度であり、分類誤りが主結果を駆動していないことの弱い傍証）"
+            if agrees
+            else "**基準から乖離しており**、難例に限れば経路差は小さい。"
+            "曝露測定の残余不確実性を示す所見として解釈すること）"
+        ),
         f"- auto_high_confidence のみ (n={fit_auto.n}): "
         f"university OR {university_or(fit_auto):.2f}",
         "",
@@ -316,7 +327,8 @@ def main() -> None:
         "",
     ]
 
-    lines += ["### 5.4 同定不能 634 名の欠測機構評価と IPW 再推定", ""]
+    unidentified_n = int((df["identified"] == 0).sum())
+    lines += [f"### 5.4 同定不能 {unidentified_n} 名の欠測機構評価と IPW 再推定", ""]
     comp = df.groupby("identified").agg(
         n=("source_player_id", "count"),
         birth_year_mean=("birth_year", "mean"),

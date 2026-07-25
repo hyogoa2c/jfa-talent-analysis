@@ -10,9 +10,19 @@ from jfa_talent_analysis.analysis_dataset import (
     apply_review_overrides,
     build_player_pathway_outcomes,
     collapse_player_season_features,
+    usable_wikipedia_j1_debuts,
 )
 
 TIERS = ("a", "b", "c")
+
+# The youth-vs-university queue resolves the university<->j_club_academy cases the
+# hardened classifier (commit 76ba3c4 + the university-competition guard) deliberately
+# routes to review instead of auto-flipping; see docs/measurement_equivalence_phase1b_
+# 2026-07-20.md. It is disjoint from the original queue but is applied last regardless.
+PATHWAY_REVIEW_QUEUE_DEFAULTS = (
+    Path("data/manual/pathway_review_queue.csv"),
+    Path("data/manual/phase1_pathway_youth_vs_university_review_queue.csv"),
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -37,7 +47,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--pathway-review-queue",
         type=Path,
-        default=Path("data/manual/pathway_review_queue.csv"),
+        action="append",
+        dest="pathway_review_queues",
+        help=(
+            "Human review of the pathway classifier's needs_review rows. Repeatable; "
+            "queues are applied in the order given, so a later queue wins for a player "
+            "reviewed in more than one. Defaults to PATHWAY_REVIEW_QUEUE_DEFAULTS."
+        ),
     )
     parser.add_argument(
         "--national-team-review-queue",
@@ -68,6 +84,16 @@ def parse_args() -> argparse.Namespace:
         help="Human review of the overseas classifier's needs_review rows; optional.",
     )
     parser.add_argument(
+        "--observation-end-season",
+        type=int,
+        default=2025,
+        help=(
+            "Last season the study can observe. Wikipedia J1 debuts after this are "
+            "dropped: they are outside the window, and leaving them in would make the "
+            "dataset change every time Wikipedia gains a newer debut."
+        ),
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=Path("data/processed/player_pathway_outcomes.csv"),
@@ -81,7 +107,9 @@ def main() -> None:
     player_summaries = collapse_player_season_features(read_csv(args.season_features))
 
     pathway_labeled = read_all_tiers(args.pathway_national_team_dir, "pathway_tier_{tier}_labeled.csv")
-    pathway_review_queue = read_csv(args.pathway_review_queue)
+    pathway_review_queue: list[dict[str, str]] = []
+    for queue_path in args.pathway_review_queues or PATHWAY_REVIEW_QUEUE_DEFAULTS:
+        pathway_review_queue.extend(read_csv(queue_path))
     pathway_resolved = apply_review_overrides(
         pathway_labeled,
         pathway_review_queue,
@@ -118,11 +146,22 @@ def main() -> None:
     # 2026-07-07.md items 1-2). Only in_window_match-validated bases are usable
     # for backfill: rows whose extracted year fell in the SFPR01 window and
     # DISAGREED with observed data are excluded as extractor noise.
+    #
+    # A debut after the observation window is not an outcome this study can
+    # observe, and Wikipedia keeps getting updated: without the upper bound,
+    # re-running this pipeline later silently pulls in newer debuts and changes
+    # the canonical numbers. Bound it so the dataset is reproducible.
     wikipedia_j1_debut_by_id: dict[str, str] = {}
+    out_of_window = 0
     if args.j1_debut_evidence.exists():
-        for row in read_csv(args.j1_debut_evidence):
-            if row["j1_debut_year"] and row["validation"] != "in_window_mismatch":
-                wikipedia_j1_debut_by_id[row["source_player_id"]] = row["j1_debut_year"]
+        wikipedia_j1_debut_by_id, out_of_window = usable_wikipedia_j1_debuts(
+            read_csv(args.j1_debut_evidence), args.observation_end_season
+        )
+    if out_of_window:
+        print(
+            f"excluded {out_of_window} Wikipedia J1 debut(s) after "
+            f"{args.observation_end_season} (outside the observation window)"
+        )
 
     overseas_wiki_by_id: dict[str, tuple[str, str]] = {}
     if args.overseas_wiki_labels.exists():
@@ -183,7 +222,7 @@ def read_all_tiers(directory: Path, pattern: str) -> list[dict[str, str]]:
 
 def read_csv(path: Path) -> list[dict[str, str]]:
     csv.field_size_limit(10_000_000)
-    with path.open(encoding="utf-8", newline="") as file:
+    with path.open(encoding="utf-8-sig", newline="") as file:
         return list(csv.DictReader(file))
 
 

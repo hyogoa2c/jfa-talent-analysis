@@ -91,7 +91,7 @@ def dedupe_by_player(rows: list[dict[str, str]]) -> list[dict[str, str]]:
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
-    with path.open(encoding="utf-8", newline="") as file:
+    with path.open(encoding="utf-8-sig", newline="") as file:
         return list(csv.DictReader(file))
 
 

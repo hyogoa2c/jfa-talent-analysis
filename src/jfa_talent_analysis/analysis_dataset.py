@@ -105,6 +105,9 @@ def apply_review_overrides(
     docs/pathway_national_team_review_instructions_2026-07-05.md's rule),
     "auto_high_confidence" (never needed review), or "identity_not_confirmed"
     (value_column was blank because identity_check wasn't "confirmed").
+
+    Callers may concatenate several review queues into review_queue_rows; if a
+    player appears in more than one, the last occurrence wins.
     """
     reviewed_by_id = {row["source_player_id"]: row for row in review_queue_rows}
     resolved: dict[str, tuple[str, str]] = {}
@@ -121,6 +124,32 @@ def apply_review_overrides(
         else:
             resolved[player_id] = ("", "identity_not_confirmed")
     return resolved
+
+
+def usable_wikipedia_j1_debuts(
+    rows: list[dict[str, str]], observation_end_season: int
+) -> tuple[dict[str, str], int]:
+    """Wikipedia J1 debut years that may be used to backfill reached_j1.
+
+    Two exclusions. `in_window_mismatch` rows disagreed with observed data
+    inside the SFPR01 window, so the extractor is not trusted for them. And a
+    debut after `observation_end_season` is not an outcome this study window can
+    observe -- Wikipedia keeps being updated, so without the bound a later
+    re-run silently gains newer debuts and moves the canonical numbers.
+
+    Returns (usable debuts by player id, number dropped as out of window).
+    """
+    usable: dict[str, str] = {}
+    out_of_window = 0
+    for row in rows:
+        year = row["j1_debut_year"]
+        if not year or row["validation"] == "in_window_mismatch":
+            continue
+        if year.isdigit() and int(year) > observation_end_season:
+            out_of_window += 1
+            continue
+        usable[row["source_player_id"]] = year
+    return usable, out_of_window
 
 
 def resolve_reached_j1(

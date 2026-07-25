@@ -1,21 +1,21 @@
-source_player_id,name_ja,name_en,tier,wikipedia_title,any_national_team_selection,national_team_categories,national_team_reason,wikipedia_national_team_context,reviewed_any_national_team_selection,reviewed_categories,reviewer_note
+﻿source_player_id,name_ja,name_en,tier,wikipedia_title,any_national_team_selection,national_team_categories,national_team_reason,wikipedia_national_team_context,reviewed_any_national_team_selection,reviewed_categories,reviewer_note
 2264,服部 公太,Kota HATTORI,pre2014_p2,服部公太,yes,U18|U19|U20|other,negation_or_candidate_language_present,"U-18日本代表候補
 U-19日本代表
 U-20日本代表
 U-21日本代表候補
-U-22日本代表候補",,,
+U-22日本代表候補",,U19|U20,
 2619,高田 保則,Yasunori TAKADA,pre2014_p2,高田保則,yes,U20|other,negation_or_candidate_language_present,"1998年U-21日本代表候補
-1999年U-20日本代表 (FIFAワールドユース選手権準優勝)",,,
+1999年U-20日本代表 (FIFAワールドユース選手権準優勝)",,U20,
 1659,三浦 淳宏,Atsuhiro MIURA,pre2014_p2,三浦淳宏,yes,A,negation_or_candidate_language_present,"1997年、ワールドカップフランス大会アジア地区最終予選の壮行試合を兼ねたJOMO CUP「日本代表」対「Jリーグ外国籍選抜」に出場し日本代表デビューするも、最終予選の代表メンバーからは漏れ、公式戦出場は持ち越しとなった。
 1999年6月6日のキリンカップ・ペルー戦で国際Aマッチ初出場。6月29日に行われたコパ・アメリカ1999のペルー戦で直接フリーキックを決めて代表初ゴールをあげた。
 2000年には、楢﨑正剛、森岡隆三と共にオーバーエイジとしてシドニーオリンピックに出場し、1968年メキシコシティーオリンピック以来32年ぶりに決勝トーナメントに貢献。日本が優勝したAFCアジアカップ2000では大会途中に腰痛捻挫で帰国。しかし主戦場としていた左サイドは代表一の人材過多なポジションで、トップ下からコンバートされた中村や小野がレギュラーを務め、スーパーサブにはJリーグで大ブレイク中に帰化した三都主が加わったこともあり、2002年日韓ワールドカップのメンバーには選ばれなかった。
 2003年よりジーコジャパンに選出され、三都主アレサンドロのサブとして4バックの左SB（サイドバック）でプレーした。2004年アジアカップでは控えながら、ベテランとして藤田俊哉と共に献身的にチームを盛り上げ代表チームを結束させ、優勝に貢献した。
 ドイツW杯・アジア予選でもサブ組ながらチームを盛り上げ、裏からジーコジャパンを献身的に支え続けた。特にチームの雰囲気が悪い中で迎えたアジア最終予選での大一番バーレーン戦前の合宿中に行われた選手間ミーティング（通称「アブダビの夜」）で、「みんな本当にW杯へ行きたいのか。おれは年齢的にも最後だし出たい」と熱く語りチームを結束させたとされる。その結果ワールドカップ出場権獲得につなげたが、ドイツW杯本大会の日本代表メンバーには選出されなかった。結果的に2005年5月22日のキリンカップ・ペルー戦が最後の国際Aマッチ出場となった。",,,
-2249,佐藤 悠介,Yusuke SATO,pre2014_p2,佐藤悠介,unclear,U18,negation_or_candidate_language_present,1995年　U-18日本代表候補,,,
+2249,佐藤 悠介,Yusuke SATO,pre2014_p2,佐藤悠介,unclear,U18,negation_or_candidate_language_present,1995年　U-18日本代表候補,no,,
 2469,柳沢 将之,Masayuki YANAGISAWA,pre2014_p2,柳沢将之,no,,negation_or_candidate_language_present,2001年 - 法政大学 ユニバーシアード（サッカー競技）北京大会日本代表候補,,,
 2117,櫛野 亮,Ryo KUSHINO,pre2014_p2,櫛野亮,yes,U18|U19|U20,negation_or_candidate_language_present,"1997年 U-18日本代表
 1998年 U-19日本代表
-1999年 U-20日本代表候補",,,
+1999年 U-20日本代表候補",,U18|U19,
 1630,桑原 裕義,Hiroyoshi KUWABARA,pre2014_p2,桑原裕義,no,,negation_or_candidate_language_present,"桑原 裕義（くわばら ひろよし、1971年10月2日 - ）は、広島県広島市出身の元サッカー選手。ポジションはMF（守備的MF）。
 
 
@@ -51,11 +51,11 @@ Jリーグ初得点　2005年8月20日 対ガンバ大阪戦 (新潟スタジア
 
 
 == 出典 ==
-  
+
 
 
 == 参考資料 ==
-『桑原裕義アンバサダー 退任のお知らせ』（プレスリリース）ギラヴァンツ北九州、2012年11月19日。http://www.giravanz.jp/news/2012/11/post-116.html。2013年2月4日閲覧。 
+『桑原裕義アンバサダー 退任のお知らせ』（プレスリリース）ギラヴァンツ北九州、2012年11月19日。http://www.giravanz.jp/news/2012/11/post-116.html。2013年2月4日閲覧。
 
 Jリーグ出場記録
 2002年、2003年、2004年、2005年、2010年、2011年
@@ -84,7 +84,7 @@ Jリーグ出場記録
 U-20日本代表
 1997年 FIFAワールドユース選手権マレーシア大会 (ベスト8)
 U-23日本代表候補
-日本代表候補",,,
+日本代表候補",,U19|U20,
 2124,吉原 慎也,Shinya YOSHIHARA,pre2014_p2,吉原慎也,unclear,U18,negation_or_candidate_language_present,"吉原 慎也（よしはら しんや、1978年4月19日 - ）は、茨城県出身の元プロサッカー選手、事業家。現役時のポジションはゴールキーパー。妻は囲碁女流棋士の吉原由香里。
 
 
@@ -166,7 +166,7 @@ J2リーグ：1回（2004年）
 吉原慎也 - Transfermarkt.comによる選手データ (英語)
 吉原慎也 - J.League Data Siteによる選手データ
 川崎フロンターレ『ピックアッププレイヤー』
-川崎フロンターレ OBドリームマッチ 2016",,,
+川崎フロンターレ OBドリームマッチ 2016",no,,
 1313,萩村 滋則,Shigenori HAGIMURA,pre2014_p2,萩村滋則,yes,U20,negation_or_candidate_language_present,"1995年 U-20日本代表 - FIFAワールドユース選手権カタール1995 (ベスト8)
 2000年 日本代表候補",,,
 1650,遠藤 彰弘,Akihiro ENDO,pre2014_p2,遠藤彰弘,yes,U19|U23,negation_or_candidate_language_present,"U-19日本代表（1994年）
@@ -206,7 +206,7 @@ FIFAコンフェデレーションズカップ2003（左大腿屈筋肉離れの
 
 ",,,
 2082,西谷 正也,Masaya NISHITANI,pre2014_p2,西谷正也,no,,negation_or_candidate_language_present,"1995年 U-17世界選手権
-2000年 日本代表候補",,,
+2000年 日本代表候補",yes,U17,
 4281,古賀 誠史,Seiji KOGA,pre2014_p2,古賀誠史,yes,U19|other,negation_or_candidate_language_present,"U-19日本代表
 U-21日本代表
 シドニーオリンピック日本代表候補
@@ -228,7 +228,7 @@ U-18日本代表
 日本代表候補",,,
 2030,川口 卓哉,Takuya KAWAGUCHI,pre2014_p2,川口卓哉,yes,U16|U17|U20,negation_or_candidate_language_present,"1994年 U-16日本代表 (AFC U-17選手権)
 1995年 U-17日本代表 (FIFA U-17世界選手権)
-1997年 U-20日本代表候補",,,
+1997年 U-20日本代表候補",,U16|U17,
 5337,鶴見 智美,Tomoyoshi TSURUMI,pre2014_p2,鶴見智美,yes,U18|U19|U20,negation_or_candidate_language_present,"鶴見 智美（つるみ ともよし、1979年10月12日 - ）は、山梨県甲府市出身の元サッカー選手。現役時代のポジションはミッドフィールダー。
 
 
@@ -283,7 +283,7 @@ Jリーグ初得点：2002年3月21日 - J2第4節 対モンテディオ山形�
 鶴見智美 - WorldFootball.net (英語)
 鶴見智美 - FBref.com (英語)
 鶴見智美 - Transfermarkt.comによる選手データ (英語)
-鶴見智美 - J.League Data Siteによる選手データ",,,
+鶴見智美 - J.League Data Siteによる選手データ",,U19|university,
 2248,福田 健二,Kenji FUKUDA,pre2014_p2,福田健二,yes,U19|U20|other,negation_or_candidate_language_present,"U-19 / U-20日本代表
 1996年 AFCアジアユース（ベスト4）
 1997年 FIFAワールドユース（ベスト8）
@@ -349,7 +349,7 @@ U-21 / U-22日本代表
 U-19日本代表
 AFCユース選手権（1990年）
 U-23日本代表候補
-バルセロナ五輪アジア予選（1992年）",,,
+バルセロナ五輪アジア予選（1992年）",,U19,
 2923,田畑 昭宏,Akihiro TABATA,pre2014_p2,田畑昭宏,unclear,U20,negation_or_candidate_language_present,"田畑 昭宏（たばた あきひろ、1978年5月15日 - ）は、埼玉県坂戸市出身でJリーグ・浦和レッドダイヤモンズ・コンサドーレ札幌等に所属していた元サッカー選手（ディフェンダー・ボランチ）。
 
 
@@ -392,7 +392,7 @@ U-23日本代表候補
 田畑昭宏 - WorldFootball.net (英語)
 田畑昭宏 - FBref.com (英語)
 田畑昭宏 - Transfermarkt.comによる選手データ (英語)
-田畑昭宏 - J.League Data Siteによる選手データ",,,
+田畑昭宏 - J.League Data Siteによる選手データ",no,,
 2840,平松 康平,Kohei HIRAMATSU,pre2014_p2,平松康平,yes,U15|U16|U19,negation_or_candidate_language_present,"1995年　U-15 日本代表
 1996年　U-16 日本代表
 1999年　U-19日本代表
@@ -668,7 +668,7 @@ Facebook",,,
 3403,谷池 洋平,Yohei TANIIKE,pre2014_p2,谷池洋平,yes,U17|U18,negation_or_candidate_language_present,"1993年 U-17日本代表候補
 1995年 U-18日本代表
 1999年 ユニバーシアード日本代表、全日本大学生選抜
-2000年 全日本大学生選抜",,,
+2000年 全日本大学生選抜",,U18|university,
 18,小澤 英明,Hideaki OZAWA,pre2014_p2,小澤英明,yes,A|U19|U23,negation_or_candidate_language_present,"小澤 英明（おざわ ひであき、1974年3月17日 - ）は、茨城県行方市（旧・行方郡北浦町）出身の元プロサッカー選手。ポジションはゴールキーパー（GK）。
 
 
@@ -749,7 +749,7 @@ Arquero Hide.のブログ
 Futbol Sin Fronteras (F.S.F.2010) - Facebook
 プロフィール (2003年版) - ウェイバックマシン（2003年12月30日アーカイブ分） - FC東京
 プロフィール (2009年版) - ウェイバックマシン（2010年1月11日アーカイブ分） - 鹿島アントラーズ
-プロフィール (2012年版) - ウェイバックマシン（2012年10月17日アーカイブ分） - アルビレックス新潟",,,
+プロフィール (2012年版) - ウェイバックマシン（2012年10月17日アーカイブ分） - アルビレックス新潟",,U19|U23,
 5273,小田島 隆幸,Takayuki ODAJIMA,pre2014_p2,小田島隆幸,unclear,U18,negation_or_candidate_language_present,"小田島 隆幸（おだじま たかゆき、1977年9月15日 - ）は、神奈川県茅ヶ崎市出身のサッカー指導者、元サッカー選手。ポジションはDF。
 
 
@@ -798,7 +798,7 @@ Futbol Sin Fronteras (F.S.F.2010) - Facebook
 
 == 外部リンク ==
 小田島隆幸 - Transfermarkt.comによる選手データ (英語)
-小田島隆幸 - J.League Data Siteによる選手データ",,,
+小田島隆幸 - J.League Data Siteによる選手データ",no,,
 971,平 聡,Satoshi TAIRA,pre2014_p2,平聡,yes,U15|U20|other,negation_or_candidate_language_present,"平 聡（たいら さとし、1970年7月16日 - ）は、岩手県花巻市出身の元プロサッカー選手、サッカー指導者。ポジションはフォワード。
 
 
@@ -864,7 +864,7 @@ JFLやJ2時代は移籍組や外国人選手に押され、相次ぐ怪我にも
 平聡 - Transfermarkt.comによる選手データ (英語)
 平聡 - J.League Data Siteによる選手データ
 イラストレーターMinacoのサイト/Museum/偉業へと続く言葉
-岩手サッカー通信 2002.5.19 - ウェイバックマシン（2002年12月12日アーカイブ分）",,,
+岩手サッカー通信 2002.5.19 - ウェイバックマシン（2002年12月12日アーカイブ分）",no,,
 248,向島 建,Tatsuru MUKOJIMA,pre2014_p2,向島建,no,,negation_or_candidate_language_present,"向島 建（むこうじま たつる、1966年1月9日 - ）は、静岡県出身の元サッカー選手である。ポジションはFW。現在は川崎フロンターレの強化部スカウト。
 
 

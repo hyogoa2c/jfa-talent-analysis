@@ -58,7 +58,7 @@ def main() -> None:
 
     for source_batch, filename in SOURCE_FILES:
         path = args.input_dir / filename
-        with path.open(encoding="utf-8", newline="") as file:
+        with path.open(encoding="utf-8-sig", newline="") as file:
             for row in csv.DictReader(file):
                 rows.append(
                     {

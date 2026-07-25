@@ -200,12 +200,109 @@ def test_university_before_pro_entry_stays_high_confidence():
     assert result.confidence == "high"
 
 
-def test_youth_dual_enrollment_school_flags_for_review():
+def test_youth_dual_enrollment_school_is_j_club_academy():
     # 吉澤佑哉: 鹿島アントラーズユース（鹿島高校） — the parenthesized school is the
-    # academy's partner school, so high_school must not win silently.
+    # academy's partner school, so this is j_club_academy (SAP §3 addendum 2026-07-20).
     result = classify_pathway_category(
-        "鹿島アントラーズユース（鹿島高校）から2005年にトップ昇格した。"
+        "鹿島アントラーズユース（鹿島高校）出身。2005年にプロ契約。"
     )
-    assert result.pathway_category == "high_school"
-    assert result.confidence == "needs_review"
+    assert result.pathway_category == "j_club_academy"
     assert result.reason == "youth_dual_enrollment_school"
+
+
+# --- Phase 1b measurement-equivalence fixes (docs/measurement_equivalence_phase1b_2026-07-20.md).
+# Mechanisms A/B/C/D found by the era-stratified gold sets. Each test encodes the mechanism,
+# not the specific player, so they guard against the class of error.
+
+
+def test_university_affiliated_high_school_is_not_university():
+    # Mechanism A: 大学 inside an affiliated-HS name (三渡洲舞人, 野田恭平).
+    r = classify_pathway_category("ユースから流通経済大学付属柏高校へ入学。2005年にプロ入り。")
+    assert r.pathway_category == "high_school"
+    r = classify_pathway_category("日本大学高校在学中に強化指定選手としてプロ登録。")
+    assert r.pathway_category == "high_school"
+
+
+def test_koukousei_age_phrase_does_not_beat_youth():
+    # Mechanism B: 高校生 age bracket must not outrank a 下部組織 signal (福島新太).
+    r = classify_pathway_category(
+        "小学生〜高校生年代ではU-12、U-15、U-18と一貫して名古屋の下部組織に所属。トップチームに昇格。"
+    )
+    assert r.pathway_category == "j_club_academy"
+
+
+def test_youth_to_top_promotion_overrides_high_school():
+    # Mechanism C (SAP §3 addendum): youth + top-team promotion = j_club_academy even
+    # with a co-occurring high school (籾谷真弘, 數馬正浩).
+    r = classify_pathway_category(
+        "高校時代は堺市立工業高校に通いながらセレッソ大阪のユースに所属。2000年にトップチームに昇格。"
+    )
+    assert r.pathway_category == "j_club_academy"
+    assert r.confidence == "high"
+    assert r.reason == "youth_to_top_team_promotion"
+    r = classify_pathway_category("横浜Fマリノスユースからトップチームへ昇格。高校卒業後にデビュー。")
+    assert r.pathway_category == "j_club_academy"
+
+
+def test_high_school_recruit_not_flipped_by_promotion_rule():
+    # A high-school player joins via 入団/加入, never 昇格 — must stay high_school.
+    r = classify_pathway_category("帝京高校から2006年に水戸ホーリーホックへ入団。")
+    assert r.pathway_category == "high_school"
+
+
+def test_declined_university_offer_routes_to_review():
+    # Mechanism D: a declined university offer must not be a silent university label (鎌田大地).
+    r = classify_pathway_category(
+        "帝京高校で得点王。複数の強豪大学から誘いを受けるが、プロ入りを選んだ。"
+    )
+    assert r.confidence == "needs_review"
+    assert r.reason == "possible_declined_university_offer"
+
+
+def test_failed_promotion_does_not_flip_to_academy():
+    # 端山豪: "トップチームに昇格することはかなわなかった" — negated promotion, then
+    # university. Must not become j_club_academy (mechanism F).
+    r = classify_pathway_category(
+        "東京ヴェルディの下部組織出身。トップチームに昇格することはかなわなかった。"
+        "高等学校卒業後は慶應義塾大学へ進学。大学在学中にプロ入り。"
+    )
+    assert r.pathway_category != "j_club_academy"
+
+
+def test_opponent_university_name_is_not_own_university():
+    # 野崎雅也: "宮崎産業経営大学戦" is an opponent, not his university; he is a Urawa
+    # youth product promoted to the top team (mechanism E).
+    r = classify_pathway_category(
+        "浦和レッズユース所属時にトップ昇格が内定。天皇杯の宮崎産業経営大学戦で公式戦初出場。"
+    )
+    assert r.pathway_category == "j_club_academy"
+
+
+def test_university_championship_is_still_university_evidence():
+    # Guard against over-masking: 大学選手権 / 大学サッカー is real university play.
+    r = classify_pathway_category("流通経済大学に進学し、全日本大学サッカー選手権で優勝。")
+    assert r.pathway_category == "university"
+
+
+def test_negated_promotion_su_zu_forms_do_not_flip():
+    # 神山京右/橋本健人 "昇格せず...大学へ", 宇佐美 "昇格はならず...大学に" — classical
+    # ~ず negation forms the first guard missed (mechanism F, extended).
+    r = classify_pathway_category(
+        "横浜FCのアカデミー出身。高校卒業後はトップチームに昇格せず東洋大学に進学。"
+    )
+    assert r.pathway_category != "j_club_academy"
+    r = classify_pathway_category(
+        "セレッソ大阪の下部組織に所属したが、トップ昇格はならず、関西大学に進学した。"
+    )
+    assert r.pathway_category != "j_club_academy"
+
+
+def test_youth_promotion_competing_with_university_routes_to_review():
+    # 矢田旭: "トップチーム昇格が具体化しかけたが" (not a clean negation word) then
+    # university. When university competes, the flip is unreliable -> review, not academy.
+    r = classify_pathway_category(
+        "名古屋グランパスの下部組織で活躍。トップチーム昇格が具体化しかけたが、"
+        "最終的に大学へ進学しゲームメーカーに成長した。"
+    )
+    assert r.confidence == "needs_review"
+    assert r.reason == "youth_promotion_vs_university_ambiguous"

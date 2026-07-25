@@ -55,7 +55,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def load_coach_roster(tenures_path: Path) -> dict[str, dict[str, object]]:
-    with tenures_path.open(encoding="utf-8", newline="") as file:
+    with tenures_path.open(encoding="utf-8-sig", newline="") as file:
         rows = list(csv.DictReader(file))
     roster: dict[str, dict[str, object]] = defaultdict(
         lambda: {"institutions": set(), "years": set()}
@@ -75,7 +75,7 @@ def load_cached_extracts(path: Path) -> dict[str, dict[str, str]]:
     if not path.exists():
         return {}
     csv.field_size_limit(10_000_000)
-    with path.open(encoding="utf-8", newline="") as file:
+    with path.open(encoding="utf-8-sig", newline="") as file:
         return {row["coach_name"]: row for row in csv.DictReader(file)}
 
 

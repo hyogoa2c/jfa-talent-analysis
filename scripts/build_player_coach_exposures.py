@@ -80,11 +80,11 @@ def main() -> None:
     args = parse_args()
 
     csv.field_size_limit(10_000_000)
-    with args.stints.open(encoding="utf-8", newline="") as file:
+    with args.stints.open(encoding="utf-8-sig", newline="") as file:
         stint_rows = list(csv.DictReader(file))
-    with args.tenures.open(encoding="utf-8", newline="") as file:
+    with args.tenures.open(encoding="utf-8-sig", newline="") as file:
         tenure_rows = list(csv.DictReader(file))
-    with args.outcomes.open(encoding="utf-8", newline="") as file:
+    with args.outcomes.open(encoding="utf-8-sig", newline="") as file:
         cohort_by_player = {
             row["source_player_id"]: school_year_cohort(row["birth_date"])
             for row in csv.DictReader(file)

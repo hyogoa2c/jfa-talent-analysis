@@ -67,7 +67,7 @@ def main() -> None:
 
 def read_confirmed_rows(path: Path) -> list[dict[str, str]]:
     csv.field_size_limit(10_000_000)
-    with path.open(encoding="utf-8", newline="") as file:
+    with path.open(encoding="utf-8-sig", newline="") as file:
         return [row for row in csv.DictReader(file) if row["identity_check"] == "confirmed"]
 
 
@@ -75,7 +75,7 @@ def read_existing_ids(path: Path) -> set[str]:
     if not path.exists():
         return set()
     csv.field_size_limit(10_000_000)
-    with path.open(encoding="utf-8", newline="") as file:
+    with path.open(encoding="utf-8-sig", newline="") as file:
         return {row["source_player_id"] for row in csv.DictReader(file)}
 
 

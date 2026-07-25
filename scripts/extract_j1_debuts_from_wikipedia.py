@@ -108,7 +108,7 @@ def validate(extracted_j1_year: int | None, sfpr01_season: str) -> str:
 
 
 def read_sfpr01_first_j1(path: Path) -> dict[str, str]:
-    with path.open(encoding="utf-8", newline="") as file:
+    with path.open(encoding="utf-8-sig", newline="") as file:
         return {
             row["source_player_id"]: row["first_j1_season"]
             for row in csv.DictReader(file)
@@ -117,7 +117,7 @@ def read_sfpr01_first_j1(path: Path) -> dict[str, str]:
 
 def read_csv(path: Path) -> list[dict[str, str]]:
     csv.field_size_limit(10_000_000)
-    with path.open(encoding="utf-8", newline="") as file:
+    with path.open(encoding="utf-8-sig", newline="") as file:
         return list(csv.DictReader(file))
 
 
