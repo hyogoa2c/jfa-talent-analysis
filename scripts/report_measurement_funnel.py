@@ -21,11 +21,12 @@ PATHWAY_QUEUES = (
     Path("data/manual/pre2014_pathway_review_queue.csv"),
     Path("data/manual/pre2014_pathway_review_queue_p2.csv"),
     Path("data/manual/pre2014_pathway_review_queue_supplement.csv"),
+    Path("data/manual/pathway_review_queue_gate_a.csv"),
 )
 # Queues that exist but have not been adjudicated yet. Being listed in a queue
 # is not the same as having been reviewed -- a blank reviewed_* column means
 # "confirmed as-is" only once a human has actually been through the file.
-PENDING_REVIEW_QUEUES = (Path("data/manual/pathway_review_queue_gate_a.csv"),)
+PENDING_REVIEW_QUEUES: tuple[Path, ...] = ()
 
 
 def parse_args() -> argparse.Namespace:
