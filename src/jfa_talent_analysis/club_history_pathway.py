@@ -38,12 +38,40 @@ PRE_HIGH_SCHOOL_RE = re.compile(r"小学校|中学校|少年団|ジュニアユ�
 MIN_PRO_ENTRY_AGE = 16
 
 
+# Plausible age at entry for each stage, year-granular so the bounds are loose.
+# JFA Academy and some club academies intake at U-13, hence the low floor; the
+# upper bounds allow repeated years and late entry.
+ENTRY_AGE_WINDOWS = {
+    "high_school": (14, 19),
+    "university": (17, 24),
+    "j_club_academy": (12, 19),
+    "jfa_academy": (12, 19),
+    "grassroots_club": (6, 19),
+}
+
+
 @dataclass(frozen=True)
 class StintPathway:
     pathway_category: str
     confidence: str
     reason: str
     institution: str
+
+
+def entry_age_plausible(category: str, from_year: str, birth_year: int | None) -> bool | None:
+    """Does the entry year fit the stage's age window? None when uncheckable.
+
+    The club list carries years, so unlike the prose path this can be asserted
+    at all. On the 2014-2025 sample it flags essentially nothing, which is the
+    point: it is a parse-quality signal that works on every row rather than only
+    the handful with a gold label, and era-1's list formatting is the thing we
+    cannot otherwise check at scale.
+    """
+    window = ENTRY_AGE_WINDOWS.get(category)
+    if window is None or birth_year is None or not from_year.isdigit():
+        return None
+    low, high = window
+    return low <= int(from_year) - birth_year <= high
 
 
 def classify_institution(name: str) -> str:
@@ -114,6 +142,11 @@ def derive_pathway(stints: list[dict[str, str]], birth_year: int | None) -> Stin
 
     last = developmental[-1]
     category = classify_institution(last["institution"])
+    plausible = entry_age_plausible(category, last.get("from_year", ""), birth_year)
+    if plausible is False:
+        # The stage and the year disagree about how old the player was, so
+        # either the list was mis-parsed or it is not this player's article.
+        return StintPathway(category, "needs_review", "entry_age_implausible", last["institution"])
     return StintPathway(
         category,
         "high" if cut is not None else "needs_review",

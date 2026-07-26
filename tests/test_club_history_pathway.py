@@ -1,6 +1,7 @@
 from jfa_talent_analysis.club_history_pathway import (
     classify_institution,
     derive_pathway,
+    entry_age_plausible,
     first_pro_index,
 )
 
@@ -83,3 +84,27 @@ def test_unidentifiable_pro_entry_is_routed_to_review():
 
 def test_empty_history_is_no_data():
     assert derive_pathway([], birth_year=1990).confidence == "no_data"
+
+
+def test_entry_age_check_is_unavailable_without_a_year():
+    """School and youth entries carry a year less than half the time, so the
+    check has to report "cannot say" rather than treating absence as a failure."""
+    assert entry_age_plausible("high_school", "", 1990) is None
+    assert entry_age_plausible("high_school", "2006", None) is None
+
+
+def test_entry_age_check_accepts_u13_academy_intake():
+    """JFA Academy and some club academies take players at 12."""
+    assert entry_age_plausible("jfa_academy", "2007", 1995) is True
+
+
+def test_implausible_entry_age_routes_to_review():
+    """A high school entered at 8 means the list was mis-parsed or the article
+    is about someone else; do not hand back a confident label."""
+    result = derive_pathway(
+        [stint(0, "県立サッカー高等学校", "1998"), stint(1, "ヴィッセル神戸", "2010")],
+        birth_year=1990,
+    )
+    assert result.pathway_category == "high_school"
+    assert result.confidence == "needs_review"
+    assert result.reason == "entry_age_implausible"
