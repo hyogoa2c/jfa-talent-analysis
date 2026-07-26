@@ -45,6 +45,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output", type=Path, default=Path("data/manual/pathway_review_queue_composite.csv")
     )
+    parser.add_argument(
+        "--force", action="store_true", help="Overwrite a queue that already holds adjudications."
+    )
     return parser.parse_args()
 
 
@@ -95,6 +98,20 @@ def main() -> None:
 
     # era1 first: its rows are the ones the review flagged as least verified.
     queue.sort(key=lambda row: (row["era"], int(row["source_player_id"])))
+
+    # Once a queue is adjudicated it feeds the pipeline, so the rows it used to
+    # hold no longer appear as needs_review -- regenerating over it would erase
+    # the adjudications that removed them. Refuse rather than overwrite.
+    if args.output.exists():
+        existing = read_csv(args.output)
+        adjudicated = [row for row in existing if row.get("reviewed_pathway_category", "").strip()]
+        if adjudicated and not args.force:
+            raise SystemExit(
+                f"{args.output} already holds {len(adjudicated)} adjudicated rows; "
+                "refusing to overwrite. Pass --force to replace it, or write "
+                "elsewhere with --output."
+            )
+
     with args.output.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=COLUMNS)
         writer.writeheader()
