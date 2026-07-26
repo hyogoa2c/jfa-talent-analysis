@@ -119,3 +119,25 @@ def test_unconfirmed_identity_never_produces_a_label():
         prose_category="university", club_category="university", identity_confirmed=False
     )
     assert (got.category, got.source) == ("", IDENTITY_NOT_CONFIRMED)
+
+
+def test_a_confirmed_unknown_is_stale_once_the_club_list_has_a_label():
+    # "unknown" was a verdict about the evidence then available, and the career
+    # list was out of scope at the time -- the reason reviewers themselves gave.
+    got = resolve(
+        prose_category="unknown",
+        club_category="university",
+        reviewed_category="unknown",
+        in_review_queue=True,
+    )
+    assert (got.category, got.source) == ("", NEEDS_REVIEW)
+
+
+def test_a_confirmed_unknown_stands_when_the_club_list_is_also_silent():
+    got = resolve(
+        prose_category="unknown",
+        club_category="",
+        reviewed_category="unknown",
+        in_review_queue=True,
+    )
+    assert (got.category, got.source) == ("unknown", HUMAN_REVIEWED)

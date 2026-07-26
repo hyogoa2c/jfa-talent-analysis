@@ -75,6 +75,14 @@ def resolve_composite_pathway(
         return CompositeLabel("", IDENTITY_NOT_CONFIRMED, "identity_not_confirmed")
 
     if in_review_queue:
+        if reviewed_category and reviewed_category != "unknown":
+            return CompositeLabel(reviewed_category, HUMAN_REVIEWED, "adjudicated")
+        if reviewed_category == "unknown" and club_category:
+            # "unknown" is not a verdict about the pathway, it is a verdict about
+            # the evidence available at the time -- and the career list was out
+            # of scope then, which is the reason reviewers gave for these rows.
+            # A new source with a label makes the verdict stale, not wrong.
+            return CompositeLabel("", NEEDS_REVIEW, "club_list_answers_confirmed_unknown")
         if reviewed_category:
             return CompositeLabel(reviewed_category, HUMAN_REVIEWED, "adjudicated")
         # A blank reviewed column means "confirmed as-is", and what the reviewer

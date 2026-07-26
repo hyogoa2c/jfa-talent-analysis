@@ -10,6 +10,8 @@ from pathlib import Path
 
 # SAP §6b-3 requires a stated trigger, not a post-hoc read of the table.
 CONFIRMATION_RATE_GAP_TRIGGER_PP = 10.0
+SILENT_WRONG_GAP_TRIGGER_PP = 5.0
+VALIDITY_THRESHOLD = 0.80
 
 TIER_SOURCES = (
     (Path("data/interim/pathway_national_team"), "pathway_tier_{key}", ("a", "b", "c")),
@@ -123,13 +125,17 @@ def main() -> None:
     metrics: dict[str, dict[str, int]] = {}
     for era in ("era1", "era2"):
         ids = [pid for pid, row in eligible.items() if row["era"] == era]
+        sources = [eligible[pid]["pathway_category_source"] for pid in ids]
         metrics[era] = {
-            "auto high-confidence": sum(
-                1 for pid in ids if labeled.get(pid, {}).get("pathway_confidence") == "high"
-            ),
-            "needs review": sum(
-                1 for pid in ids if labeled.get(pid, {}).get("pathway_confidence") == "needs_review"
-            ),
+            # The composite rule's own vocabulary (SAP §1b-3). The prose
+            # classifier's confidence is no longer the label's provenance: it is
+            # one of two inputs, so reporting it here would describe a procedure
+            # the analysis does not use.
+            "両手順が一致（both_agree）": sources.count("both_agree"),
+            "所属クラブ優先（club_list_over_prose）": sources.count("club_list_over_prose"),
+            "所属クラブのみ（club_list_only）": sources.count("club_list_only"),
+            "散文のみ（prose_only）": sources.count("prose_only"),
+            "未決着（needs_review）": sources.count("needs_review"),
             "人手レビュー済み": sum(1 for pid in ids if pid in reviewed_ids),
             "経路確定（unknown 除く）": sum(
                 1
@@ -156,8 +162,8 @@ def main() -> None:
         f"**§6b-3 トリガー判定（経路確定率の era 間差 >{CONFIRMATION_RATE_GAP_TRIGGER_PP:.0f}pp）**: "
         f"実測差 {confirm_gap:+.1f}pp → **{'発火（確認的解釈を停止し要検討）' if fired else '非発火'}**。",
         "",
-        "注: §6b-3 の残りのトリガー（era 別 silent-wrong 率差・主要経路の感度/PPV・"
-        "バイアス分析での符号変化）は gold セットと推定を要するため本レポートの対象外。",
+        "注: 主要経路の感度/PPV と silent-wrong は §8 で判定する（いずれも outcome 非結合）。"
+        "バイアス分析での符号変化のみ Gate B（§6b-6）の対象。",
         "",
     ]
 
@@ -335,54 +341,77 @@ def gold_confusion_matrices(eligible: dict[str, dict[str, str]]) -> list[str]:
         "> **重要**: gold 各 50 名は `unknown_label` / `no_confirmed_article` を意図的に"
         "過剰抽出した層化標本である（各 era で 22/50 がこの 2 層）。**全 50 名を分母にした"
         "一致率は era の精度推定ではない。** 母集団への重み戻しには抽出確率の固定が必要で、"
-        "これは v3 の課題（レビュー Q4 §③）。以下では era 間で比較可能な "
-        "`auto_high_conf` 層のみを判定に用いる。",
+        "これは v5 の課題（レビュー Q4 §③）。",
         "",
-        "### 8.1 層をそろえた比較（`auto_high_conf`・`determination=confirmed` のみ）",
+        "> **経路をプールした一致率は使わない**（外部レビュー `review_results_phase1b_sap_v3.md` "
+        "停止理由 1）。§6b-3 が要求するのは**主要経路ごとの感度・PPV** であり、"
+        "プール率では高頻度の `university` が支配して少数の academy 方向の誤りを覆い隠す。"
+        "評価対象も所属クラブ導出単独ではなく、**最終的な複合ラベル**（SAP §1b-3）とする。",
         "",
-        "| era | 一致 / 検証数 | 一致率 | 95% CI (Wilson) |",
-        "|---|---|---|---|",
+        "### 8.1 最終複合ラベルの経路別妥当性（`determination=confirmed`・主要 3 経路）",
+        "",
+        "| era | 指標 | 経路 | 一致 / 検証数 | 率 | 95% CI (Wilson) | 判定 |",
+        "|---|---|---|---|---|---|---|",
     ]
-    verdicts = []
-    for path, era in GOLD_SETS:
-        hits = total = 0
-        for row in read_csv(path):
-            if "auto_high_conf" not in row["stratum"] or row["determination"] != "confirmed":
-                continue
-            player = eligible.get(row["source_player_id"])
-            if player is None:
-                continue
-            total += 1
-            if player["pathway_category"] == row["gold_pathway_category"]:
-                hits += 1
-        low, high = wilson_interval(hits, total)
-        rate = f"{hits / total:.0%}" if total else "—"
-        lines.append(f"| {era} | {hits} / {total} | {rate} | [{low:.0%}, {high:.0%}] |")
-        verdicts.append((era, hits, total, low))
-    lines += [
-        "",
-        "**§6b-3「いずれかの era で主要経路の感度・PPV <80%」に対する判定**: ",
-    ]
+    per_pathway = per_pathway_validity(eligible)
     undetermined = []
-    for era, _hits, total, low in verdicts:
-        if total < MIN_CELL_FOR_VALIDITY:
-            state = f"検証数 {total} 件で不足 → **判定不能**"
-            undetermined.append(era)
-        elif low < 0.80:
-            state = f"点推定は基準を満たすが CI 下限 {low:.0%} が 80% を下回る → **判定不能**"
-            undetermined.append(era)
-        else:
-            state = f"CI 下限 {low:.0%} も 80% 以上 → 合格"
-        lines.append(f"- {era}: {state}")
+    for era, _label in GOLD_SETS_ERAS:
+        for measure in ("感度", "PPV"):
+            for pathway in MAIN_PATHWAYS:
+                hits, total = per_pathway[(era, measure, pathway)]
+                low, high = wilson_interval(hits, total)
+                rate = f"{hits / total:.0%}" if total else "—"
+                if total < MIN_CELL_FOR_VALIDITY:
+                    state = f"検証数 {total} 件で不足 → **判定不能**"
+                    undetermined.append(f"{era}/{measure}/{pathway}")
+                elif low < VALIDITY_THRESHOLD:
+                    state = f"CI 下限 {low:.0%} < {VALIDITY_THRESHOLD:.0%} → **判定不能**"
+                    undetermined.append(f"{era}/{measure}/{pathway}")
+                else:
+                    state = f"CI 下限 {low:.0%} → 合格"
+                lines.append(
+                    f"| {era} | {measure} | {pathway} | {hits} / {total} | {rate} "
+                    f"| [{low:.0%}, {high:.0%}] | {state} |"
+                )
+    total_cells = len(GOLD_SETS_ERAS) * 2 * len(MAIN_PATHWAYS)
     lines += [
+        "",
+        f"**判定不能のセル: {len(undetermined)} / {total_cells}**"
+        + (f"（{', '.join(undetermined)}）" if undetermined else ""),
         "",
         (
-            f"**判定不能の era: {', '.join(undetermined)}** → この層の検証を増やさない限り "
-            "Gate A は通らない（レビュー Q2 §③「主要セルの検証数が不足なら合格ではなく"
-            "判定不能とする」）。追加 gold の設計はレビュー Q7 を参照。"
+            "**Gate A の gold 妥当性条件は満たされていない。** §6b-3 が要求するのは"
+            "「主要経路の感度・PPV」であって経路をプールした一致率ではない。"
+            "セルあたり 9〜17 件では、一致率 100% でも Wilson 下限は 70〜74% にしかならず、"
+            "下限 80% を超えるには 1 セルおおむね 16 件以上を要する。"
+            "→ **Gate A は判定不能。追加 gold（v5・セル単位割付）まで合格にしない。**"
             if undetermined
-            else "**両 era とも合格。** ただし検証数は小さく、CI 下限で判定している点に留意。"
+            else "**全セルが合格。**"
         ),
+        "",
+        "### 8.1b silent-wrong（Gate A 内で算出・outcome 非結合）",
+        "",
+        "silent-wrong = 人手レビューを経ずに確定した最終ラベルが gold と食い違った件数。"
+        "レビュー Q4 §③ の指摘どおり gold と予測ラベルだけで算出できるため、"
+        "Gate B ではなく Gate A で完結させる。",
+        "",
+        "| era | silent-wrong / 自動確定の検証数 | 率 |",
+        "|---|---|---|",
+    ]
+    silent = silent_wrong(eligible)
+    rates = {}
+    for era, _label in GOLD_SETS_ERAS:
+        wrong, total = silent[era]
+        rates[era] = pct(wrong, total)
+        rate = f"{rates[era]:.1f}%" if total else "—"
+        lines.append(f"| {era} | {wrong} / {total} | {rate} |")
+    gap = rates["era1"] - rates["era2"]
+    fired = abs(gap) > SILENT_WRONG_GAP_TRIGGER_PP
+    lines += [
+        "",
+        f"**§6b-3 トリガー（era 別 silent-wrong 率差 >{SILENT_WRONG_GAP_TRIGGER_PP:.0f}pp）**: "
+        f"実測差 {gap:+.1f}pp → **{'発火' if fired else '非発火'}**。"
+        "ただし分母が小さく、この判定自体も追加 gold で作り直す必要がある。",
         "",
         "### 8.2 混同行列（参考・層化標本のため率は算出しない）",
         "",
@@ -418,6 +447,77 @@ def gold_confusion_matrices(eligible: dict[str, dict[str, str]]) -> list[str]:
         "",
     ]
     return lines
+
+
+GOLD_SETS_ERAS = (("era1", "era1"), ("era2", "era2"))
+
+
+def gold_rows_with_labels(
+    eligible: dict[str, dict[str, str]],
+) -> dict[str, list[tuple[str, dict[str, str]]]]:
+    """Gold rows paired with the final composite label, per era.
+
+    Restricted to confirmed determinations and the three main pathways, since
+    those are the cells §6b-3 states a condition about.
+    """
+    paired: dict[str, list[tuple[str, dict[str, str]]]] = {"era1": [], "era2": []}
+    for path, era in GOLD_SETS:
+        for row in read_csv(path):
+            if row["determination"] != "confirmed":
+                continue
+            if row["gold_pathway_category"] not in MAIN_PATHWAYS:
+                continue
+            player = eligible.get(row["source_player_id"])
+            if player is None or not player["pathway_category"]:
+                continue
+            paired[era].append((player["pathway_category"], row))
+    return paired
+
+
+def per_pathway_validity(
+    eligible: dict[str, dict[str, str]],
+) -> dict[tuple[str, str, str], tuple[int, int]]:
+    """Sensitivity and PPV of the final label, per era and pathway.
+
+    Sensitivity conditions on the gold pathway, PPV on the assigned label. They
+    answer different failure modes -- missing a true academy player versus
+    calling someone an academy player who is not -- and the reference category
+    makes the second one the one that moves the baseline risk.
+    """
+    result: dict[tuple[str, str, str], tuple[int, int]] = {}
+    paired = gold_rows_with_labels(eligible)
+    for era, rows in paired.items():
+        for pathway in MAIN_PATHWAYS:
+            truth = [(label, row) for label, row in rows if row["gold_pathway_category"] == pathway]
+            assigned = [(label, row) for label, row in rows if label == pathway]
+            result[(era, "感度", pathway)] = (
+                sum(1 for label, _ in truth if label == pathway),
+                len(truth),
+            )
+            result[(era, "PPV", pathway)] = (
+                sum(1 for _, row in assigned if row["gold_pathway_category"] == pathway),
+                len(assigned),
+            )
+    return result
+
+
+def silent_wrong(eligible: dict[str, dict[str, str]]) -> dict[str, tuple[int, int]]:
+    """Labels that were wrong without ever being flagged for a human.
+
+    A row a reviewer adjudicated is not silent even if it is wrong: the failure
+    mode this measures is the pipeline being confidently mistaken, which is what
+    an era difference in it would bias.
+    """
+    result: dict[str, tuple[int, int]] = {}
+    for era, rows in gold_rows_with_labels(eligible).items():
+        auto = [
+            (label, row)
+            for label, row in rows
+            if eligible[row["source_player_id"]]["pathway_category_source"] != "human_reviewed"
+        ]
+        wrong = sum(1 for label, row in auto if label != row["gold_pathway_category"])
+        result[era] = (wrong, len(auto))
+    return result
 
 
 def label_lock() -> list[str]:
