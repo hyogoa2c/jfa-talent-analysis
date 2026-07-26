@@ -153,3 +153,21 @@ def derive_pathway(stints: list[dict[str, str]], birth_year: int | None) -> Stin
         "last_stage_before_pro_entry" if cut is not None else "pro_entry_not_identified",
         last["institution"],
     )
+
+
+def derive_pathway_labels(
+    stint_rows: list[dict[str, str]], birth_years: dict[str, int | None]
+) -> dict[str, StintPathway]:
+    """Run the derivation over every player present in the stint table.
+
+    Players with no parsed club list are absent from the result rather than
+    carrying a blank: "we never saw a list" and "the list showed no development
+    stage" are different states, and Gate A reports them separately.
+    """
+    by_player: dict[str, list[dict[str, str]]] = {}
+    for row in stint_rows:
+        by_player.setdefault(row["source_player_id"], []).append(row)
+    return {
+        player_id: derive_pathway(rows, birth_years.get(player_id))
+        for player_id, rows in by_player.items()
+    }
