@@ -27,6 +27,13 @@ PATHWAY_QUEUES = (
     Path("data/manual/pre2014_pathway_review_queue.csv"),
     Path("data/manual/pre2014_pathway_review_queue_p2.csv"),
     Path("data/manual/pre2014_pathway_review_queue_supplement.csv"),
+    # Gate A's own queue (48 rows adjudicated in 310c3b2). It was never added
+    # here, so those adjudications were not reaching the dataset at all.
+    Path("data/manual/pathway_review_queue_gate_a.csv"),
+    # NB: pathway_review_queue_composite.csv is deliberately absent until it is
+    # adjudicated. Listing a queue here makes a blank reviewed column mean
+    # "confirmed as-is", which is only true of a file a human has worked
+    # through -- adding the unadjudicated queue would confirm its own rows.
 )
 NATIONAL_TEAM_QUEUES = (
     Path("data/manual/national_team_review_queue.csv"),
