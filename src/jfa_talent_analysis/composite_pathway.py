@@ -63,6 +63,7 @@ def resolve_composite_pathway(
     club_confidence: str,
     reviewed_category: str = "",
     in_review_queue: bool = False,
+    review_saw_club_list: bool = False,
     identity_confirmed: bool = True,
 ) -> CompositeLabel:
     """Resolve one player's final pathway label and its source.
@@ -75,13 +76,15 @@ def resolve_composite_pathway(
         return CompositeLabel("", IDENTITY_NOT_CONFIRMED, "identity_not_confirmed")
 
     if in_review_queue:
-        if reviewed_category and reviewed_category != "unknown":
-            return CompositeLabel(reviewed_category, HUMAN_REVIEWED, "adjudicated")
-        if reviewed_category == "unknown" and club_category:
+        if reviewed_category == "unknown" and club_category and not review_saw_club_list:
             # "unknown" is not a verdict about the pathway, it is a verdict about
             # the evidence available at the time -- and the career list was out
             # of scope then, which is the reason reviewers gave for these rows.
             # A new source with a label makes the verdict stale, not wrong.
+            #
+            # Once a reviewer has ruled *with* the career list in front of them,
+            # "unknown" is a real finding (a pathway outside the category scheme,
+            # say) and must stick, or the row reopens on every rebuild.
             return CompositeLabel("", NEEDS_REVIEW, "club_list_answers_confirmed_unknown")
         if reviewed_category:
             return CompositeLabel(reviewed_category, HUMAN_REVIEWED, "adjudicated")

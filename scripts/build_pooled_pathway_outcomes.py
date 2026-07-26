@@ -33,6 +33,14 @@ PATHWAY_QUEUES = (
     # Adjudicated 2026-07-27: all 33 rows carry an explicit reviewed value, so
     # none of them relies on the blank-means-confirmed convention.
     Path("data/manual/pathway_review_queue_composite.csv"),
+    Path("data/manual/pathway_review_queue_stale_unknown.csv"),
+)
+# Queues whose reviewers had the parsed career list in front of them. Their
+# verdicts are final even when the verdict is "unknown" -- elsewhere an unknown
+# predates the career list being in scope, so it is stale rather than a finding.
+CLUB_LIST_AWARE_QUEUES = (
+    Path("data/manual/pathway_review_queue_composite.csv"),
+    Path("data/manual/pathway_review_queue_stale_unknown.csv"),
 )
 NATIONAL_TEAM_QUEUES = (
     Path("data/manual/national_team_review_queue.csv"),
@@ -99,8 +107,11 @@ def main() -> None:
     pathway_labeled_rows = read_tiers(
         args.pathway_national_team_dir, "pathway_tier_{key}_labeled.csv", TIERS
     ) + read_tiers(args.pre2014_dir, "priority{key}_pathway_labeled.csv", PRIORITIES)
+    club_list_aware_ids = {
+        row["source_player_id"] for row in concat(CLUB_LIST_AWARE_QUEUES)
+    }
     pathway_resolved = resolve_composite_pathway_labels(
-        pathway_labeled_rows, club_labels, pathway_queue_rows
+        pathway_labeled_rows, club_labels, pathway_queue_rows, club_list_aware_ids
     )
     pathway_overlaps = duplicate_player_ids(pathway_labeled_rows)
 

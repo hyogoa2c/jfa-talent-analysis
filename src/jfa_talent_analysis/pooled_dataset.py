@@ -129,6 +129,7 @@ def resolve_composite_pathway_labels(
     labeled_rows: list[dict[str, str]],
     club_labels: dict[str, StintPathway],
     review_queue_rows: list[dict[str, str]],
+    club_list_aware_ids: set[str] | None = None,
 ) -> dict[str, dict[str, str]]:
     """Apply the SAP §1b-3 composite rule across every labeled player.
 
@@ -137,6 +138,7 @@ def resolve_composite_pathway_labels(
     the very interaction H1b-2 tests for.
     """
     reviewed_by_id = {row["source_player_id"]: row for row in review_queue_rows}
+    club_list_aware = club_list_aware_ids or set()
     resolved: dict[str, dict[str, str]] = {}
 
     for row in labeled_rows:
@@ -152,6 +154,7 @@ def resolve_composite_pathway_labels(
                 review_row.get("reviewed_pathway_category", "").strip() if review_row else ""
             ),
             in_review_queue=review_row is not None,
+            review_saw_club_list=player_id in club_list_aware,
             identity_confirmed=row.get("identity_check", "") == "confirmed",
         )
         resolved[player_id] = {
