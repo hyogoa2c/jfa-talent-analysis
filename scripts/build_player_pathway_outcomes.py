@@ -12,17 +12,21 @@ from jfa_talent_analysis.analysis_dataset import (
     collapse_player_season_features,
     usable_wikipedia_j1_debuts,
 )
+from jfa_talent_analysis.club_history_pathway import derive_pathway_labels
+from jfa_talent_analysis.pooled_dataset import resolve_composite_pathway_labels
+from jfa_talent_analysis.review_queues import (
+    PATHWAY_REVIEW_QUEUES,
+    club_list_aware_ids,
+    read_queue_rows,
+)
 
 TIERS = ("a", "b", "c")
 
-# The youth-vs-university queue resolves the university<->j_club_academy cases the
-# hardened classifier (commit 76ba3c4 + the university-competition guard) deliberately
-# routes to review instead of auto-flipping; see docs/measurement_equivalence_phase1b_
-# 2026-07-20.md. It is disjoint from the original queue but is applied last regardless.
-PATHWAY_REVIEW_QUEUE_DEFAULTS = (
-    Path("data/manual/pathway_review_queue.csv"),
-    Path("data/manual/phase1_pathway_youth_vs_university_review_queue.csv"),
-)
+# SAP §1b-2/§1b-4 apply retroactively to Phase 1, so Phase 1 resolves the exposure
+# through the same composite rule and the same queue list as Phase 1b. Reading a
+# different set of queues here is what left Phase 1 carrying academy labels that
+# Phase 1b had already corrected.
+PATHWAY_REVIEW_QUEUE_DEFAULTS = PATHWAY_REVIEW_QUEUES
 
 
 def parse_args() -> argparse.Namespace:
@@ -54,6 +58,12 @@ def parse_args() -> argparse.Namespace:
             "queues are applied in the order given, so a later queue wins for a player "
             "reviewed in more than one. Defaults to PATHWAY_REVIEW_QUEUE_DEFAULTS."
         ),
+    )
+    parser.add_argument(
+        "--stints",
+        type=Path,
+        default=Path("data/interim/coach_network/player_institution_stints.csv"),
+        help="Parsed 所属クラブ career lists, the second exposure measurement (SAP §1b-3).",
     )
     parser.add_argument(
         "--national-team-review-queue",
@@ -107,15 +117,24 @@ def main() -> None:
     player_summaries = collapse_player_season_features(read_csv(args.season_features))
 
     pathway_labeled = read_all_tiers(args.pathway_national_team_dir, "pathway_tier_{tier}_labeled.csv")
-    pathway_review_queue: list[dict[str, str]] = []
-    for queue_path in args.pathway_review_queues or PATHWAY_REVIEW_QUEUE_DEFAULTS:
-        pathway_review_queue.extend(read_csv(queue_path))
-    pathway_resolved = apply_review_overrides(
-        pathway_labeled,
-        pathway_review_queue,
-        value_column="pathway_category",
-        reviewed_value_column="reviewed_pathway_category",
+    if args.pathway_review_queues:
+        pathway_review_queue = [row for p in args.pathway_review_queues for row in read_csv(p)]
+    else:
+        pathway_review_queue = read_queue_rows()
+
+    birth_years = {
+        player_id: int(summary["birth_date"][:4])
+        for player_id, summary in player_summaries.items()
+        if (summary.get("birth_date") or "")[:4].isdigit()
+    }
+    club_labels = derive_pathway_labels(read_csv(args.stints), birth_years)
+    composite = resolve_composite_pathway_labels(
+        pathway_labeled, club_labels, pathway_review_queue, club_list_aware_ids()
     )
+    pathway_resolved = {
+        player_id: (row["pathway_category"], row["pathway_category_source"])
+        for player_id, row in composite.items()
+    }
 
     nt_labeled = read_all_tiers(
         args.pathway_national_team_dir, "national_team_tier_{tier}_labeled.csv"

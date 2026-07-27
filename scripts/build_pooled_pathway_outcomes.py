@@ -13,6 +13,10 @@ from jfa_talent_analysis.pooled_dataset import (
     merge_label_sources,
     resolve_composite_pathway_labels,
 )
+from jfa_talent_analysis.review_queues import (
+    PATHWAY_REVIEW_QUEUES,
+    club_list_aware_ids,
+)
 
 TIERS = ("a", "b", "c")
 PRIORITIES = ("1", "2")
@@ -21,27 +25,6 @@ PRIORITIES = ("1", "2")
 # the 1999-2013 backfill. Both must be labeled by the SAME classifier version --
 # an era-differential classifier would manufacture exactly the interaction
 # Phase 1b is testing for (SAP §6b).
-PATHWAY_QUEUES = (
-    Path("data/manual/pathway_review_queue.csv"),
-    Path("data/manual/phase1_pathway_youth_vs_university_review_queue.csv"),
-    Path("data/manual/pre2014_pathway_review_queue.csv"),
-    Path("data/manual/pre2014_pathway_review_queue_p2.csv"),
-    Path("data/manual/pre2014_pathway_review_queue_supplement.csv"),
-    # Gate A's own queue (48 rows adjudicated in 310c3b2). It was never added
-    # here, so those adjudications were not reaching the dataset at all.
-    Path("data/manual/pathway_review_queue_gate_a.csv"),
-    # Adjudicated 2026-07-27: all 33 rows carry an explicit reviewed value, so
-    # none of them relies on the blank-means-confirmed convention.
-    Path("data/manual/pathway_review_queue_composite.csv"),
-    Path("data/manual/pathway_review_queue_stale_unknown.csv"),
-)
-# Queues whose reviewers had the parsed career list in front of them. Their
-# verdicts are final even when the verdict is "unknown" -- elsewhere an unknown
-# predates the career list being in scope, so it is stale rather than a finding.
-CLUB_LIST_AWARE_QUEUES = (
-    Path("data/manual/pathway_review_queue_composite.csv"),
-    Path("data/manual/pathway_review_queue_stale_unknown.csv"),
-)
 NATIONAL_TEAM_QUEUES = (
     Path("data/manual/national_team_review_queue.csv"),
     Path("data/manual/pre2014_national_team_review_queue.csv"),
@@ -90,7 +73,7 @@ def main() -> None:
 
     summaries = collapse_career_seasons(read_csv(args.career_seasons))
 
-    pathway_queue_rows = concat(PATHWAY_QUEUES)
+    pathway_queue_rows = concat(PATHWAY_REVIEW_QUEUES)
     nt_queue_rows = concat(NATIONAL_TEAM_QUEUES)
 
     # SAP §1b-3: the club-list derivation is a second measurement of the same
@@ -107,11 +90,8 @@ def main() -> None:
     pathway_labeled_rows = read_tiers(
         args.pathway_national_team_dir, "pathway_tier_{key}_labeled.csv", TIERS
     ) + read_tiers(args.pre2014_dir, "priority{key}_pathway_labeled.csv", PRIORITIES)
-    club_list_aware_ids = {
-        row["source_player_id"] for row in concat(CLUB_LIST_AWARE_QUEUES)
-    }
     pathway_resolved = resolve_composite_pathway_labels(
-        pathway_labeled_rows, club_labels, pathway_queue_rows, club_list_aware_ids
+        pathway_labeled_rows, club_labels, pathway_queue_rows, club_list_aware_ids()
     )
     pathway_overlaps = duplicate_player_ids(pathway_labeled_rows)
 
