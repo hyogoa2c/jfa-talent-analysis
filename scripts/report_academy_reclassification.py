@@ -17,7 +17,12 @@ from collections import Counter
 from pathlib import Path
 
 from jfa_talent_analysis.club_history_pathway import classify_institution, derive_pathway
-from jfa_talent_analysis.j_club_registry import build_clubs, classify_academy
+from jfa_talent_analysis.j_club_registry import (
+    build_clubs,
+    classify_academy,
+    development_window,
+    match_club,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -42,6 +47,23 @@ def parse_args() -> argparse.Namespace:
 def read_csv(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8-sig") as handle:
         return list(csv.DictReader(handle))
+
+
+WHY = {
+    "j_club_boundary": "クラブのJ加盟期間が育成年代の一部としか重なっていない",
+    "non_j_club_academy": "名簿上Jリーグ加盟クラブの下部組織ではない（海外クラブを含む）",
+    "institution_unknown": "所属クラブ欄から最終育成機関を特定できない（判断材料なし）",
+}
+
+
+def format_history(rows: list[dict[str, str]]) -> str:
+    ordered = sorted(rows, key=lambda row: int(row["line_index"]))
+    parts = []
+    for row in ordered:
+        years = "-".join(filter(None, (row.get("from_year", ""), row.get("to_year", ""))))
+        formality = "[2種/特別指定]" if row.get("registration_formality") == "1" else ""
+        parts.append(f"{row['institution']}{f'({years})' if years else ''}{formality}")
+    return " → ".join(parts)
 
 
 def pathway_institution(stints: list[dict[str, str]], birth_year: int | None) -> str:
@@ -99,6 +121,12 @@ def main() -> None:
             counts[label][verdict] += 1
             if verdict != "j_club_academy" and player_id not in seen:
                 seen.add(player_id)
+                club = match_club(institution, clubs) if institution else None
+                if year.isdigit():
+                    low, high = development_window(int(year))
+                    window = f"{low}-{high}"
+                else:
+                    window = ""
                 queue.append(
                     {
                         "source_player_id": player_id,
@@ -107,6 +135,17 @@ def main() -> None:
                         "birth_year": year,
                         "final_institution": institution,
                         "auto_verdict": verdict,
+                        "why_flagged": WHY.get(
+                            verdict.split("(")[0], "経路ラベル自体が誤っている疑い"
+                        ),
+                        "matched_club": club.canonical_name if club else "",
+                        "club_j_seasons": (
+                            f"{club.entry_season}-{club.last_season}"
+                            if club and club.entry_season
+                            else ""
+                        ),
+                        "academy_window": window,
+                        "club_history": format_history(by_player.get(player_id, [])),
                         "reviewed_category": "",
                         "reviewer_note": "",
                     }
