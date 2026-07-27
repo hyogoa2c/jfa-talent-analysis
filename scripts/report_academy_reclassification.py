@@ -193,6 +193,7 @@ def main() -> None:
                         ),
                         "club_history": format_history(by_player.get(player_id, [])),
                         "reviewed_category": "",
+                        "evidence_url": "",
                         "reviewer_note": "",
                     }
                 )
