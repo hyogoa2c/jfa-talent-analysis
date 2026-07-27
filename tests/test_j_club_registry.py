@@ -109,3 +109,10 @@ def test_curated_entry_years_resolve_the_oldest_players(clubs):
     assert classify_academy("鹿島アントラーズユース", 1979, clubs) == "j_club_academy"
     # 京都 joined in 1996, so a 1978-born player genuinely straddles the line.
     assert classify_academy("京都パープルサンガユース", 1978, clubs) == J_CLUB_BOUNDARY
+
+
+def test_recorded_stint_years_beat_the_inferred_window(clubs):
+    # 神戸 joined in 1997 and the inferred window for a 1981-born player starts in
+    # 1996, so the inference alone calls it a boundary. The list says 1997-1999.
+    assert classify_academy("ヴィッセル神戸ユース", 1981, clubs) == J_CLUB_BOUNDARY
+    assert classify_academy("ヴィッセル神戸ユース", 1981, clubs, (1997, 1999)) == "j_club_academy"

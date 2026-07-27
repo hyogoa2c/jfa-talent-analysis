@@ -172,7 +172,12 @@ def development_window(birth_year: int) -> tuple[int, int]:
     return (birth_year + 15, birth_year + 18)
 
 
-def classify_academy(institution: str, birth_year: int | None, clubs: list[Club]) -> str:
+def classify_academy(
+    institution: str,
+    birth_year: int | None,
+    clubs: list[Club],
+    stint_years: tuple[int, int] | None = None,
+) -> str:
     """Refine a j_club_academy label into the SAP §1b-4 categories.
 
     Returns "j_club_academy" only when the club was in the J.League across the
@@ -189,9 +194,16 @@ def classify_academy(institution: str, birth_year: int | None, clubs: list[Club]
     club = match_club(institution, clubs)
     if club is None or club.entry_season is None:
         return NON_J_CLUB_ACADEMY
-    if birth_year is None:
+    if stint_years is not None:
+        # The career list states when the player was actually there, which beats
+        # inferring it from the birth year: 神戸ユース 1997-1999 sits entirely
+        # inside Kobe's J membership even though the inferred window starts a
+        # year earlier and made it look like a boundary case.
+        low, high = stint_years
+    elif birth_year is None:
         return J_CLUB_BOUNDARY
-    low, high = development_window(birth_year)
+    else:
+        low, high = development_window(birth_year)
     # Clip to what the league table can speak about. Without this, a player
     # young enough that their window runs past the last observed season looks
     # like a boundary case for clubs that never left the league, and one old

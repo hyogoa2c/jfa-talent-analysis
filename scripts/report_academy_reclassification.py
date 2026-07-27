@@ -66,6 +66,32 @@ def format_history(rows: list[dict[str, str]]) -> str:
     return " → ".join(parts)
 
 
+def stint_years(stints: list[dict[str, str]], institution: str) -> str:
+    """Years recorded for the stint the label rests on, if the list has any.
+
+    academy_window is inferred from the birth year, so a boundary call made
+    against it is an assumption about when the player was there. Where the list
+    states the years, they are the better evidence; where it does not, the row
+    needs an external check and this column says so.
+    """
+    for row in stints:
+        if row["institution"] == institution:
+            years = "-".join(filter(None, (row.get("from_year", ""), row.get("to_year", ""))))
+            return years or "（記載なし）"
+    return "（記載なし）"
+
+
+def recorded_years(stints: list[dict[str, str]], institution: str) -> tuple[int, int] | None:
+    """The stint's own from/to years, when the career list records them."""
+    for row in stints:
+        if row["institution"] != institution:
+            continue
+        start, end = row.get("from_year", ""), row.get("to_year", "")
+        if start.isdigit():
+            return (int(start), int(end) if end.isdigit() else int(start))
+    return None
+
+
 def pathway_institution(stints: list[dict[str, str]], birth_year: int | None) -> str:
     """The institution the pathway label rests on.
 
@@ -92,6 +118,19 @@ def main() -> None:
     for row in phase1:
         birth.setdefault(row["source_player_id"], (row.get("birth_date") or "")[:4])
 
+    # Names make the rows checkable against club and school sources, which is the
+    # only way to settle the academy years the career list leaves blank.
+    names: dict[str, str] = {}
+    for directory, pattern, keys in (
+        (Path("data/interim/pathway_national_team"), "pathway_tier_{k}_labeled.csv", "abc"),
+        (Path("data/interim/pre2014"), "priority{k}_pathway_labeled.csv", "12"),
+    ):
+        for key in keys:
+            path = directory / pattern.format(k=key)
+            if path.exists():
+                for row in read_csv(path):
+                    names.setdefault(row["source_player_id"], row.get("name_ja", ""))
+
     queue: list[dict[str, str]] = []
     seen: set[str] = set()
     counts: dict[str, Counter[str]] = {"phase1b": Counter(), "phase1": Counter()}
@@ -116,7 +155,10 @@ def main() -> None:
                 verdict = f"pathway_label_error({classify_institution(institution)})"
             else:
                 verdict = classify_academy(
-                    institution, int(year) if year.isdigit() else None, clubs
+                    institution,
+                    int(year) if year.isdigit() else None,
+                    clubs,
+                    recorded_years(by_player.get(player_id, []), institution),
                 )
             counts[label][verdict] += 1
             if verdict != "j_club_academy" and player_id not in seen:
@@ -130,6 +172,7 @@ def main() -> None:
                 queue.append(
                     {
                         "source_player_id": player_id,
+                        "name_ja": names.get(player_id, ""),
                         "phase": label,
                         "era": row.get("era", ""),
                         "birth_year": year,
@@ -145,6 +188,9 @@ def main() -> None:
                             else ""
                         ),
                         "academy_window": window,
+                        "academy_years_in_list": stint_years(
+                            by_player.get(player_id, []), institution
+                        ),
                         "club_history": format_history(by_player.get(player_id, [])),
                         "reviewed_category": "",
                         "reviewer_note": "",
