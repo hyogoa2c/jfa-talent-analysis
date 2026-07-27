@@ -112,9 +112,19 @@ def build_clubs(
     return clubs
 
 
+# Career-list lines sometimes carry a date fragment before the club name:
+# "同年8月  S.A.I市原サッカークラブ", "- 2019年 鹿児島ユナイテッドFC U-18",
+# "シーズン途中 - 2025年6月  愛媛FC U-18". Left in place they defeat the match and
+# put real J academies in the non-J bucket.
+LEADING_DATE_RE = re.compile(
+    r"^(?:[-‐–—]\s*)?(?:シーズン途中\s*[-‐–—]?\s*)?(?:同年)?\s*"
+    r"(?:\d{4}\s*年)?\s*(?:\d{1,2}\s*月)?\s*[-‐–—]?\s*"
+)
+
+
 def strip_youth_affixes(institution: str) -> str:
     """Reduce "ガンバ大阪ユース" to "ガンバ大阪" so it can match the roster."""
-    name = institution.strip()
+    name = LEADING_DATE_RE.sub("", institution.strip()).strip()
     # Parenthesised trailing detail: "柏レイソルU-18（千葉県立柏中央高等学校…" -- the
     # concatenated-institution artifact recorded in SAP §13-2.
     name = re.split(r"[（(]", name, maxsplit=1)[0].strip()
@@ -151,12 +161,15 @@ OBSERVATION_END_SEASON = 2025
 
 
 def development_window(birth_year: int) -> tuple[int, int]:
-    """Seasons the player would plausibly have been in a U-18 side.
+    """Seasons the player was in a U-18 side, on the standard school calendar.
 
-    Wide by one year on each side: intake and graduation are not uniform, and
-    the point is to decide club affiliation, not to date the enrolment.
+    The bounds are deliberately tight rather than padded. The test asks whether
+    the club was in the J.League *throughout* the academy years, so padding the
+    window by a year at each end does not add safety -- it adds two seasons the
+    player probably was not there, and any club that joined the league within
+    them gets called a boundary case for no reason.
     """
-    return (birth_year + 14, birth_year + 19)
+    return (birth_year + 15, birth_year + 18)
 
 
 def classify_academy(institution: str, birth_year: int | None, clubs: list[Club]) -> str:
@@ -184,7 +197,11 @@ def classify_academy(institution: str, birth_year: int | None, clubs: list[Club]
     # like a boundary case for clubs that never left the league, and one old
     # enough that it starts before 1999 looks like one for clubs that never
     # joined late -- both artifacts of the observation window, not the club.
-    low = max(low, FIRST_OBSERVED_SEASON)
+    # Clip only what the league table is actually silent about. A curated
+    # j_entry_year *is* knowledge of the pre-1999 years, so clipping it would
+    # turn founding members into boundary cases for the oldest players.
+    if club.j_entry_year is None:
+        low = max(low, FIRST_OBSERVED_SEASON)
     high = min(high, OBSERVATION_END_SEASON)
     if high < low:
         return J_CLUB_BOUNDARY

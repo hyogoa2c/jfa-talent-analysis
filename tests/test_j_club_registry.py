@@ -93,3 +93,19 @@ def test_club_is_not_stripped_as_a_youth_affix(clubs):
     # 奈良クラブ and 三菱養和サッカークラブ carry it as part of the name.
     assert strip_youth_affixes("奈良クラブユース") == "奈良クラブ"
     assert strip_youth_affixes("三菱養和サッカークラブユース") == "三菱養和サッカークラブ"
+
+
+def test_leading_date_fragments_do_not_defeat_the_match(clubs):
+    # Career lines carry these before the club name; left in, a real J academy
+    # lands in the non-J bucket.
+    assert match_club("シーズン途中 - 2025年6月  愛媛FC U-18", clubs).canonical_name == "愛媛FC"
+    assert match_club("- 2019年 鹿児島ユナイテッドFC U-18", clubs).canonical_name == "鹿児島ユナイテッドFC"
+
+
+def test_curated_entry_years_resolve_the_oldest_players(clubs):
+    # G大阪 joined in 1993, so a 1979-born player's whole window is covered even
+    # though the league table only starts in 1999.
+    assert classify_academy("ガンバ大阪ユース", 1979, clubs) == "j_club_academy"
+    assert classify_academy("鹿島アントラーズユース", 1979, clubs) == "j_club_academy"
+    # 京都 joined in 1996, so a 1978-born player genuinely straddles the line.
+    assert classify_academy("京都パープルサンガユース", 1978, clubs) == J_CLUB_BOUNDARY

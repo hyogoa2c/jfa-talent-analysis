@@ -16,7 +16,7 @@ import csv
 from collections import Counter
 from pathlib import Path
 
-from jfa_talent_analysis.club_history_pathway import classify_institution
+from jfa_talent_analysis.club_history_pathway import classify_institution, derive_pathway
 from jfa_talent_analysis.j_club_registry import build_clubs, classify_academy
 
 
@@ -44,12 +44,15 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
-def final_institution(stints: list[dict[str, str]]) -> str:
-    """The last development stint's institution, which is what gets classified."""
-    youth = [s for s in stints if s.get("youth_flag") == "1" and s.get("registration_formality") != "1"]
-    if not youth:
-        return ""
-    return max(youth, key=lambda s: int(s["line_index"]))["institution"]
+def pathway_institution(stints: list[dict[str, str]], birth_year: int | None) -> str:
+    """The institution the pathway label rests on.
+
+    Not the last youth-flagged stint: that ignores the professional-entry cut, so
+    for the academy -> pro -> university players it returns the university and
+    every one of them looks like a mislabel. The derivation already identifies
+    the institution it based the label on, and that is what has to be classified.
+    """
+    return derive_pathway(stints, birth_year).institution
 
 
 def main() -> None:
@@ -78,8 +81,10 @@ def main() -> None:
             if era_key and row.get("eligible_confirmatory") != "1":
                 continue
             player_id = row["source_player_id"]
-            institution = final_institution(by_player.get(player_id, []))
             year = birth.get(player_id, "")
+            institution = pathway_institution(
+                by_player.get(player_id, []), int(year) if year.isdigit() else None
+            )
             if not institution:
                 verdict = "institution_unknown"
             elif classify_institution(institution) not in ("j_club_academy", "jfa_academy", ""):
