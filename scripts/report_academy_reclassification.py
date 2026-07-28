@@ -39,6 +39,9 @@ def parse_args() -> argparse.Namespace:
         default=Path("data/interim/coach_network/player_institution_stints.csv"),
     )
     parser.add_argument(
+        "--force", action="store_true", help="Overwrite a queue that already holds adjudications."
+    )
+    parser.add_argument(
         "--infobox-youth", type=Path, default=Path("data/interim/infobox_youth.csv")
     )
     parser.add_argument(
@@ -221,6 +224,20 @@ def main() -> None:
         print(f"== {label}: j_club_academy ラベル {total} 名")
         for verdict, n in counter.most_common():
             print(f"   {verdict:22s} {n:4d} ({n / total:.1%})")
+
+    # Regenerating over an adjudicated queue silently discards the judgements,
+    # which is how the composite queue was lost once already.
+    if args.output.exists():
+        adjudicated = [
+            row
+            for row in read_csv(args.output)
+            if any(row.get(col, "").strip() for col in ("reviewed_category", "reviewer_note"))
+        ]
+        if adjudicated and not args.force:
+            raise SystemExit(
+                f"{args.output} already holds {len(adjudicated)} adjudicated rows; "
+                "refusing to overwrite. Pass --force to replace it."
+            )
 
     queue.sort(key=lambda r: (r["phase"], r["auto_verdict"], int(r["source_player_id"])))
     with args.output.open("w", encoding="utf-8", newline="") as handle:
