@@ -39,6 +39,9 @@ def parse_args() -> argparse.Namespace:
         default=Path("data/interim/coach_network/player_institution_stints.csv"),
     )
     parser.add_argument(
+        "--infobox-youth", type=Path, default=Path("data/interim/infobox_youth.csv")
+    )
+    parser.add_argument(
         "--output", type=Path, default=Path("data/manual/academy_reclassification_queue.csv")
     )
     return parser.parse_args()
@@ -131,6 +134,13 @@ def main() -> None:
                 for row in read_csv(path):
                     names.setdefault(row["source_player_id"], row.get("name_ja", ""))
 
+    # Infobox youth fields, where they have been fetched. Evidence for the human
+    # call on boundary rows -- never a label (see fetch_infobox_youth.py).
+    infobox: dict[str, list[dict[str, str]]] = {}
+    if args.infobox_youth.exists():
+        for row in read_csv(args.infobox_youth):
+            infobox.setdefault(row["source_player_id"], []).append(row)
+
     queue: list[dict[str, str]] = []
     seen: set[str] = set()
     counts: dict[str, Counter[str]] = {"phase1b": Counter(), "phase1": Counter()}
@@ -192,6 +202,11 @@ def main() -> None:
                             by_player.get(player_id, []), institution
                         ),
                         "club_history": format_history(by_player.get(player_id, [])),
+                        "infobox_youth": " / ".join(
+                            f"{e['youth_club']}({e['youth_years'] or '年なし'})"
+                            for e in infobox.get(player_id, [])
+                            if e["youth_club"]
+                        ),
                         "reviewed_category": "",
                         "evidence_url": "",
                         "reviewer_note": "",
