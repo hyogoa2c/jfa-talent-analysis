@@ -5,8 +5,10 @@ import csv
 from collections import Counter
 from pathlib import Path
 
+from jfa_talent_analysis.academy_reclassification import load_reviewed, reclassify
 from jfa_talent_analysis.analysis_dataset import apply_review_overrides
 from jfa_talent_analysis.club_history_pathway import derive_pathway_labels
+from jfa_talent_analysis.j_club_registry import build_clubs
 from jfa_talent_analysis.pooled_dataset import (
     POOLED_OUTCOMES_COLUMNS,
     collapse_career_seasons,
@@ -94,6 +96,26 @@ def main() -> None:
         pathway_labeled_rows, club_labels, pathway_queue_rows, club_list_aware_ids()
     )
     pathway_overlaps = duplicate_player_ids(pathway_labeled_rows)
+
+    # SAP §1b-4: a j_club_academy label only survives if the club was in the
+    # J.League while the player was in its academy.
+    clubs = build_clubs()
+    reviewed = load_reviewed()
+    stint_rows: dict[str, list[dict[str, str]]] = {}
+    for row in read_csv(args.stints):
+        stint_rows.setdefault(row["source_player_id"], []).append(row)
+    for player_id, resolved in pathway_resolved.items():
+        category, reason = reclassify(
+            player_id,
+            resolved["pathway_category"],
+            stint_rows.get(player_id, []),
+            birth_years.get(player_id),
+            clubs,
+            reviewed,
+        )
+        if category != resolved["pathway_category"]:
+            resolved["pathway_composite_reason"] = f"{resolved['pathway_composite_reason']}+{reason}"
+        resolved["pathway_category"] = category
 
     nt_labeled_2014 = read_tiers(
         args.pathway_national_team_dir, "national_team_tier_{key}_labeled.csv", TIERS

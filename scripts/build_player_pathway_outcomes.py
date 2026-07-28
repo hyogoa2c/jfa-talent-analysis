@@ -5,6 +5,7 @@ import csv
 from collections import Counter
 from pathlib import Path
 
+from jfa_talent_analysis.academy_reclassification import load_reviewed, reclassify
 from jfa_talent_analysis.analysis_dataset import (
     PLAYER_PATHWAY_OUTCOMES_COLUMNS,
     apply_review_overrides,
@@ -13,6 +14,7 @@ from jfa_talent_analysis.analysis_dataset import (
     usable_wikipedia_j1_debuts,
 )
 from jfa_talent_analysis.club_history_pathway import derive_pathway_labels
+from jfa_talent_analysis.j_club_registry import build_clubs
 from jfa_talent_analysis.pooled_dataset import resolve_composite_pathway_labels
 from jfa_talent_analysis.review_queues import (
     PATHWAY_REVIEW_QUEUES,
@@ -131,10 +133,22 @@ def main() -> None:
     composite = resolve_composite_pathway_labels(
         pathway_labeled, club_labels, pathway_review_queue, club_list_aware_ids()
     )
-    pathway_resolved = {
-        player_id: (row["pathway_category"], row["pathway_category_source"])
-        for player_id, row in composite.items()
-    }
+    clubs = build_clubs()
+    reviewed = load_reviewed()
+    stint_rows: dict[str, list[dict[str, str]]] = {}
+    for row in read_csv(args.stints):
+        stint_rows.setdefault(row["source_player_id"], []).append(row)
+    pathway_resolved = {}
+    for player_id, row in composite.items():
+        category, _ = reclassify(
+            player_id,
+            row["pathway_category"],
+            stint_rows.get(player_id, []),
+            birth_years.get(player_id),
+            clubs,
+            reviewed,
+        )
+        pathway_resolved[player_id] = (category, row["pathway_category_source"])
 
     nt_labeled = read_all_tiers(
         args.pathway_national_team_dir, "national_team_tier_{tier}_labeled.csv"

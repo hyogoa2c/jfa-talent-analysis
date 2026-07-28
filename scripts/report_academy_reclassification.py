@@ -16,6 +16,7 @@ import csv
 from collections import Counter
 from pathlib import Path
 
+from jfa_talent_analysis.academy_reclassification import recorded_years
 from jfa_talent_analysis.club_history_pathway import classify_institution, derive_pathway
 from jfa_talent_analysis.j_club_registry import (
     build_clubs,
@@ -37,6 +38,12 @@ def parse_args() -> argparse.Namespace:
         "--stints",
         type=Path,
         default=Path("data/interim/coach_network/player_institution_stints.csv"),
+    )
+    parser.add_argument(
+        "--decisions",
+        type=Path,
+        default=Path("data/manual/academy_reclassification_decisions.csv"),
+        help="Append-only record of every adjudication, kept as the worklist shrinks.",
     )
     parser.add_argument(
         "--force", action="store_true", help="Overwrite a queue that already holds adjudications."
@@ -87,17 +94,6 @@ def stint_years(stints: list[dict[str, str]], institution: str) -> str:
     return "（記載なし）"
 
 
-def recorded_years(stints: list[dict[str, str]], institution: str) -> tuple[int, int] | None:
-    """The stint's own from/to years, when the career list records them."""
-    for row in stints:
-        if row["institution"] != institution:
-            continue
-        start, end = row.get("from_year", ""), row.get("to_year", "")
-        if start.isdigit():
-            return (int(start), int(end) if end.isdigit() else int(start))
-    return None
-
-
 def pathway_institution(stints: list[dict[str, str]], birth_year: int | None) -> str:
     """The institution the pathway label rests on.
 
@@ -107,6 +103,34 @@ def pathway_institution(stints: list[dict[str, str]], birth_year: int | None) ->
     the institution it based the label on, and that is what has to be classified.
     """
     return derive_pathway(stints, birth_year).institution
+
+
+DECISION_COLUMNS = [
+    "source_player_id",
+    "name_ja",
+    "phase",
+    "era",
+    "final_institution",
+    "auto_verdict",
+    "reviewed_category",
+    "evidence_url",
+    "reviewer_note",
+]
+
+
+def write_decisions(path: Path, queue: list[dict[str, str]], dropped: list[dict[str, str]]) -> None:
+    """Every adjudication ever made, whether or not the row still needs checking."""
+    existing = {row["source_player_id"]: row for row in read_csv(path)} if path.exists() else {}
+    for row in [*dropped, *queue]:
+        if not row.get("reviewed_category", "").strip():
+            continue
+        existing[row["source_player_id"]] = {key: row.get(key, "") for key in DECISION_COLUMNS}
+    rows = sorted(existing.values(), key=lambda r: int(r["source_player_id"]))
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=DECISION_COLUMNS)
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f"  判定記録: {path} ({len(rows)} 行)")
 
 
 def main() -> None:
@@ -225,19 +249,30 @@ def main() -> None:
         for verdict, n in counter.most_common():
             print(f"   {verdict:22s} {n:4d} ({n / total:.1%})")
 
-    # Regenerating over an adjudicated queue silently discards the judgements,
-    # which is how the composite queue was lost once already.
+    # The queue is a snapshot of one label state, so it has to be regenerated as
+    # labels move -- but regenerating must not discard the judgements, which is
+    # how the composite queue was lost once. Carry them forward by player id.
+    carried = 0
     if args.output.exists():
-        adjudicated = [
-            row
+        previous = {
+            row["source_player_id"]: row
             for row in read_csv(args.output)
             if any(row.get(col, "").strip() for col in ("reviewed_category", "reviewer_note"))
-        ]
-        if adjudicated and not args.force:
-            raise SystemExit(
-                f"{args.output} already holds {len(adjudicated)} adjudicated rows; "
-                "refusing to overwrite. Pass --force to replace it."
-            )
+        }
+        for row in queue:
+            old = previous.pop(row["source_player_id"], None)
+            if old:
+                carried += 1
+                for column in ("reviewed_category", "evidence_url", "reviewer_note"):
+                    row[column] = old.get(column, "")
+        if previous:
+            # A judged row stops appearing once its label moves -- it is no
+            # longer an academy row to check. That is correct for the worklist
+            # and wrong for the record, so decisions are also written to an
+            # append-only log which the queue never shrinks.
+            print(f"  ラベルが移り worklist から外れた判定: {sorted(previous)}")
+        write_decisions(args.decisions, queue, list(previous.values()))
+    print(f"  引き継いだ判定: {carried} 行")
 
     queue.sort(key=lambda r: (r["phase"], r["auto_verdict"], int(r["source_player_id"])))
     with args.output.open("w", encoding="utf-8", newline="") as handle:
