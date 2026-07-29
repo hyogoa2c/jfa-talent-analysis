@@ -316,10 +316,11 @@ def main() -> None:
         "",
     ]
     reviewed = base[base["pathway_category_source"] == "human_reviewed"]
-    auto_only = clustered[clustered["pathway_category_source"] == "auto_high_confidence"]
+    AUTO_SOURCES = ("both_agree", "club_list_over_prose", "club_list_only", "prose_only")
+    auto_only = clustered[clustered["pathway_category_source"].isin(AUTO_SOURCES)]
     fit_reviewed = fit_logit(reviewed, F_PRIMARY, "J1到達・human_reviewedのみ（通常SE）")
     fit_auto = fit_logit(
-        auto_only, F_PRIMARY, "J1到達・auto_high_confidenceのみ", "final_institution"
+        auto_only, F_PRIMARY, "J1到達・auto（人手を経ていない行）のみ", "final_institution"
     )
     or_reviewed, lo_reviewed, hi_reviewed = university_or_ci(fit_reviewed)
     or_auto, lo_auto, hi_auto = university_or_ci(fit_auto)
@@ -330,14 +331,23 @@ def main() -> None:
         f"| 主分析（基準） | {m_primary.n} | {or_primary:.2f} [{lo_primary:.2f}, {hi_primary:.2f}] |",
         f"| human_reviewed のみ | {fit_reviewed.n} | "
         f"{or_reviewed:.2f} [{lo_reviewed:.2f}, {hi_reviewed:.2f}] |",
-        f"| auto_high_confidence のみ | {fit_auto.n} | "
+        f"| auto（人手を経ていない行）のみ | {fit_auto.n} | "
         f"{or_auto:.2f} [{lo_auto:.2f}, {hi_auto:.2f}] |",
         "",
         "human_reviewed 部分標本の構成:",
         "",
     ]
     lines += subsample_composition(reviewed, "reached_j1")
-    lines += ["", "auto_high_confidence 部分標本の構成:", ""]
+    lines += ["", "| source | n | university OR [95% CI] |", "|---|---|---|"]
+    for source in AUTO_SOURCES:
+        subset = clustered[clustered["pathway_category_source"] == source]
+        if subset["pathway_category"].nunique() < 2 or len(subset) < 50:
+            lines.append(f"| `{source}` | {len(subset)} | 推定せず（層が小さい） |")
+            continue
+        fit_source = fit_logit(subset, F_PRIMARY, f"J1到達・{source}", "final_institution")
+        odds, low, high = university_or_ci(fit_source)
+        lines.append(f"| `{source}` | {fit_source.n} | {odds:.2f} [{low:.2f}, {high:.2f}] |")
+    lines += ["", "auto 部分標本の構成:", ""]
     lines += subsample_composition(auto_only, "reached_j1")
     # Read the comparison off the numbers rather than asserting it, and let the
     # interval decide, not the point estimate: a subsample this small can differ
