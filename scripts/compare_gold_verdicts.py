@@ -120,8 +120,14 @@ def main() -> None:
                 "b_determination": right["determination"],
                 "agree_category": "1" if agree else "0",
                 "both_confirmed": "1" if both_confirmed else "0",
-                "a_weak_evidence": weak_reason(left["evidence_url"]),
-                "b_weak_evidence": weak_reason(right["evidence_url"]),
+                # Only a `confirmed` row makes a claim its evidence has to carry;
+                # an indeterminate row with no URL is the protocol working.
+                "a_weak_evidence": weak_reason(left["evidence_url"])
+                if left["determination"] == "confirmed"
+                else "",
+                "b_weak_evidence": weak_reason(right["evidence_url"])
+                if right["determination"] == "confirmed"
+                else "",
                 "a_evidence_url": left["evidence_url"],
                 "b_evidence_url": right["evidence_url"],
                 "a_quote": left["evidence_quote"],
@@ -147,8 +153,11 @@ def main() -> None:
             reason = "weak_evidence"
         else:
             continue
+        # The adjudicator sees the evidence, not the stratum: knowing a row was
+        # drawn because the two measurement sources disagreed is itself a hint.
+        blinded = {k: v for k, v in row.items() if k not in ("stratum", "era")}
         worklist.append(
-            {**row, "review_reason": reason, "adjudicated_category": "", "adjudicator_note": ""}
+            {**blinded, "review_reason": reason, "adjudicated_category": "", "adjudicator_note": ""}
         )
 
     args.worklist.parent.mkdir(parents=True, exist_ok=True)
@@ -189,6 +198,23 @@ def main() -> None:
             f"| {name} | {counts.get('confirmed', 0)} | {counts.get('indeterminate', 0)} "
             f"| {counts.get('unreachable', 0)} |"
         )
+
+    both_out = [
+        r
+        for r in rows
+        if r["a_determination"] != "confirmed" and r["b_determination"] != "confirmed"
+    ]
+    one_out = [
+        r
+        for r in rows
+        if (r["a_determination"] == "confirmed") != (r["b_determination"] == "confirmed")
+    ]
+    lines += [
+        "",
+        f"**設計に効くのは「両者とも確定できなかった」率** = {len(both_out)}/{len(rows)} = "
+        f"**{len(both_out) / len(rows):.1%}**。片方だけが確定した {len(one_out)} 件は裁定で",
+        "決着しうるので、判定不能として設計に入れるのは過大評価になる（裁定結果で確定する）。",
+    ]
 
     lines += [
         "",
