@@ -1,6 +1,9 @@
+from pathlib import Path
+
 import pytest
 
 from jfa_talent_analysis.j_club_registry import (
+    CAREER_SEASONS_PATH,
     J_CLUB_BOUNDARY,
     NON_J_CLUB_ACADEMY,
     Club,
@@ -10,10 +13,15 @@ from jfa_talent_analysis.j_club_registry import (
     strip_youth_affixes,
 )
 
+# The real career table is a build artefact and gitignored, so the unit tests run
+# against a committed extract holding only the clubs they name. Without it these
+# tests pass locally and error in CI, which is how they sat red for four commits.
+SAMPLE_CAREER = Path("tests/fixtures/career_seasons_sample.csv")
+
 
 @pytest.fixture(scope="module")
 def clubs():
-    return build_clubs()
+    return build_clubs(career_path=SAMPLE_CAREER)
 
 
 @pytest.mark.parametrize(
@@ -30,10 +38,14 @@ def test_youth_affixes_are_stripped(institution, expected):
     assert strip_youth_affixes(institution) == expected
 
 
-def test_registry_covers_every_club_in_the_league_table(clubs):
-    # A club with no appearances means an alias is wrong, which would silently
-    # turn its academy graduates into non-J.
-    assert [club.canonical_name for club in clubs if club.first_season is None] == []
+@pytest.mark.skipif(
+    not CAREER_SEASONS_PATH.exists(), reason="career table is a gitignored build artefact"
+)
+def test_registry_covers_every_club_in_the_league_table():
+    # Data integrity, not a unit test: a club with no appearances means an alias
+    # is wrong, which would silently turn its academy graduates into non-J. Runs
+    # only where the real table has been built.
+    assert [club.canonical_name for club in build_clubs() if club.first_season is None] == []
 
 
 def test_longest_alias_wins_so_similar_names_do_not_collide(clubs):
