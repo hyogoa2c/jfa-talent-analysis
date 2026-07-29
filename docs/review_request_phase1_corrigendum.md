@@ -6,7 +6,7 @@
 
 **依頼の核心**: Phase 1 の曝露測定バグを修正した結果、**中心的結果は不変かつ強化された一方で、
 「測定の残余不確実性」に関する所見が新たに出た**。この所見は Phase 1b（時代間の交互作用）の
-設計に直接効く可能性がある。Phase 1b の SAP は v2 で固定済み（外部レビュー反映済み）だが、
+設計に直接効く可能性がある。Phase 1b の SAP は v2 で外部レビュー反映済みだが、
 **固定は今回の corrigendum が確定する前**である。この順序の問題をどう扱うべきかを含め、
 **Phase 1b に着手する前に**設計への助言をいただきたい。
 
@@ -20,7 +20,7 @@
 
 - **Phase 1**（SAP 固定・確認的分析完了）: 2014–2025 年に J1/J2/J3 リーグ戦出場が観測された
   日本人選手 4,037 名（主分析 3,270 名）。
-- **Phase 1b**（SAP v2 固定済み・**未着手**）: 2005 年 JFA 三位一体計画を挟む出生コホート間で
+- **Phase 1b**（SAP v2・**未着手**）: 2005 年 JFA 三位一体計画を挟む出生コホート間で
   経路–成果の関連が変化したかを検証。**確認的検定は 1 本のみ**——
   `pathway × era` 交互作用の共同両側尤度比検定（era1 = born 1981–89 / era2 = born 1990–99、
   主アウトカム = 25 歳までの J1 到達）。データ基盤（1999–2013 バックフィル、新規 448 名の
@@ -198,7 +198,7 @@ SAP §6b-6 は「era 別誤分類率を想定した確率的バイアス分析�
 
 ### Q5. Phase 1b SAP の再固定は必要か
 
-Phase 1b SAP v2 は外部レビュー反映済みで固定されているが、固定は corrigendum 確定**前**である。
+Phase 1b SAP v2 は外部レビューを反映済みだが、それは corrigendum 確定**前**である。
 本依頼への回答を受けて §6b/§8 を改訂する場合、
 
 - 「固定した SAP を、まだ実行していない分析について改訂する」ことの手続き的な正しさをどう担保するか
@@ -294,7 +294,7 @@ Q4・Q6 の答えによっては、Phase 1b（あるいはプール解析）の�
 |---|---|
 | `docs/results_canonical.md` | **結果の正本**。冒頭に corrigendum 節 |
 | `docs/research_plan_phase1.md` | Phase 1 SAP（固定済み） |
-| `docs/research_plan_phase1b.md` | **Phase 1b SAP v2（固定済み・本依頼の主対象）** |
+| `docs/research_plan_phase1b.md` | **Phase 1b SAP v2（本依頼の主対象）** |
 | `docs/measurement_equivalence_phase1b_2026-07-20.md` | 測定同等性検証の全記録（6 機序・held-out 検証） |
 | `docs/review_results.md` / `docs/review_results_phase1b.md` | 過去 2 回の外部レビュー回答 |
 | `reports/generated/phase1_confirmatory_report.md` | 補正後の確認的分析レポート全文 |

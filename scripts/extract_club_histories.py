@@ -39,6 +39,17 @@ def parse_args() -> argparse.Namespace:
         "--extracts-dir", type=Path, default=Path("data/interim/wikipedia_full_extracts")
     )
     parser.add_argument(
+        "--extracts",
+        type=Path,
+        action="append",
+        help=(
+            "An explicit full-extract CSV, repeatable. Use for collections that do not "
+            "follow the tier_{a,b,c} layout — notably the 1999-2013 backfill, whose "
+            "club lists have to be parsed at the same coverage as the 2014-2025 tiers "
+            "or the two eras end up measured differently (Phase 1b SAP §6b)."
+        ),
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=Path("data/interim/coach_network/player_institution_stints.csv"),
@@ -52,8 +63,9 @@ def main() -> None:
     players_total = 0
     players_with_stints = 0
 
-    for tier in TIERS:
-        for record in read_csv(args.extracts_dir / f"tier_{tier}.csv"):
+    sources = args.extracts or [args.extracts_dir / f"tier_{tier}.csv" for tier in TIERS]
+    for source in sources:
+        for record in read_csv(source):
             players_total += 1
             stints = parse_club_history(record["full_extract"])
             if stints:

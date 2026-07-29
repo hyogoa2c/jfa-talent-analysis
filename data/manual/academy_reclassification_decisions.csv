@@ -1,0 +1,14 @@
+source_player_id,name_ja,phase,era,final_institution,auto_verdict,reviewed_category,evidence_url,reviewer_note
+1403,小針 清允,phase1,,読売日本SCユース,j_club_boundary,j_club_academy,,読売日本SCユース1993-1995。ヴェルディのJ加盟1993で全期間がJ期間内。
+1446,明神 智和,phase1,,柏レイソルユース,j_club_boundary,non_j_club_academy,,柏レイソルユース1993-1995。柏のJ加盟1995で3年中2年はJFL期。主たる育成期間はJ加盟前。
+2582,平井 直人,phase1,,京都パープルサンガユース,j_club_boundary,non_j_club_academy,,京都パープルサンガ1994-1996。J加盟1996で3年中2年はJ加盟前。
+2963,富澤 清太郎,phase1b,era1,読売日本SCユース（現・ヴェルディユース）（東京実業高等学校,pathway_label_error(high_school),j_club_academy,,機関名がユース名と提携高校名の連結（SAP§13-2）。読売日本SCユース在籍中の東京実業高校通学でSAP§1b-1の並行所属＝アカデミー。
+3242,大和田 真史,phase1b,era1,明治大学体育会サッカー部,pathway_label_error(university),university,,鹿島ユース→明治大学→水戸2004。大学がプロ入り直前。散文・所属クラブ欄・goldとも university で、過去の人手レビューのみが academy としていた誤り。
+8780,酒井 宏樹,phase1b,era2,柏レイソルU-18（千葉県立柏中央高等学校→ウィザス高等学校（現・第一学院高等学校））,pathway_label_error(high_school),j_club_academy,,同じく連結（柏レイソルU-18＋柏中央高→ウィザス高）。SAP§1b-1の並行所属＝アカデミー。
+19166,宮内 寛斗,phase1b,era2,Y.S.C.C.横浜U-18,j_club_boundary,j_club_academy,,Y.S.C.C.横浜U-18 2013-2015。J参入2014で3年中2年がJ期間内＝主たる育成期間はJ。
+23147,上田 航平,phase1b,era2,横浜スポーツ&カルチャークラブU-18,j_club_boundary,j_club_academy,,Y.S.C.C.横浜U-18 2014-2016。YSCCのJ3参入2014で全期間がJ期間内。
+23175,金子 大晟,phase1b,era2,横浜スポーツ&カルチャークラブU-18,j_club_boundary,j_club_academy,,Y.S.C.C.横浜U-18 2014-2016。同上。
+31505,野嶽 寛也,phase1,,鹿児島ユナイテッドFC U-18,j_club_boundary,j_club_academy,https://ja.wikipedia.org/wiki/鹿児島ユナイテッドFC,インフォボックスにユース在籍年の記載がないため推定育成年代で判定。2015-2018のうち2016-2018の3/4がJ期間内＝主たる育成期間はJ。クラブ設立2013年（ヴォルカ鹿児島とFC KAGOSHIMAの統合）で、該当期間の下部組織は本クラブのものであることを確認（ユーザー判定）。
+32743,石ヶ森 荘真,phase1,,ヴァンラーレ八戸FC U-18,j_club_boundary,non_j_club_academy,,ヴァンラーレ八戸U-18 2017-2019。J参入2019で3年中2年はJ加盟前。
+55406,関口 智也,phase1,,奈良クラブユース,j_club_boundary,j_club_academy,,奈良クラブ2023-。奈良クラブのJ3参入2023で在籍開始と一致。
+60242,川井 大地,phase1,,奈良クラブユース,j_club_boundary,j_club_academy,,奈良クラブユース2022-2024。J参入2023で3年中2年がJ期間内＝主たる育成期間はJ。

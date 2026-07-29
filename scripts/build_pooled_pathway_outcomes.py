@@ -5,11 +5,19 @@ import csv
 from collections import Counter
 from pathlib import Path
 
+from jfa_talent_analysis.academy_reclassification import load_reviewed, reclassify
 from jfa_talent_analysis.analysis_dataset import apply_review_overrides
+from jfa_talent_analysis.club_history_pathway import derive_pathway_labels
+from jfa_talent_analysis.j_club_registry import build_clubs
 from jfa_talent_analysis.pooled_dataset import (
     POOLED_OUTCOMES_COLUMNS,
     collapse_career_seasons,
     merge_label_sources,
+    resolve_composite_pathway_labels,
+)
+from jfa_talent_analysis.review_queues import (
+    PATHWAY_REVIEW_QUEUES,
+    club_list_aware_ids,
 )
 
 TIERS = ("a", "b", "c")
@@ -19,13 +27,6 @@ PRIORITIES = ("1", "2")
 # the 1999-2013 backfill. Both must be labeled by the SAME classifier version --
 # an era-differential classifier would manufacture exactly the interaction
 # Phase 1b is testing for (SAP §6b).
-PATHWAY_QUEUES = (
-    Path("data/manual/pathway_review_queue.csv"),
-    Path("data/manual/phase1_pathway_youth_vs_university_review_queue.csv"),
-    Path("data/manual/pre2014_pathway_review_queue.csv"),
-    Path("data/manual/pre2014_pathway_review_queue_p2.csv"),
-    Path("data/manual/pre2014_pathway_review_queue_supplement.csv"),
-)
 NATIONAL_TEAM_QUEUES = (
     Path("data/manual/national_team_review_queue.csv"),
     Path("data/manual/pre2014_national_team_review_queue.csv"),
@@ -56,6 +57,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--pre2014-dir", type=Path, default=Path("data/interim/pre2014"))
     parser.add_argument(
+        "--stints",
+        type=Path,
+        default=Path("data/interim/coach_network/player_institution_stints.csv"),
+        help="Parsed 所属クラブ career lists, the second exposure measurement (SAP §1b-3).",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=Path("data/processed/pooled_player_outcomes_1999_2025.csv"),
@@ -68,23 +75,47 @@ def main() -> None:
 
     summaries = collapse_career_seasons(read_csv(args.career_seasons))
 
-    pathway_queue_rows = concat(PATHWAY_QUEUES)
+    pathway_queue_rows = concat(PATHWAY_REVIEW_QUEUES)
     nt_queue_rows = concat(NATIONAL_TEAM_QUEUES)
 
-    pathway_resolved, pathway_overlaps = merge_label_sources(
-        apply_review_overrides(
-            read_tiers(args.pathway_national_team_dir, "pathway_tier_{key}_labeled.csv", TIERS),
-            pathway_queue_rows,
-            value_column="pathway_category",
-            reviewed_value_column="reviewed_pathway_category",
-        ),
-        apply_review_overrides(
-            read_tiers(args.pre2014_dir, "priority{key}_pathway_labeled.csv", PRIORITIES),
-            pathway_queue_rows,
-            value_column="pathway_category",
-            reviewed_value_column="reviewed_pathway_category",
-        ),
+    # SAP §1b-3: the club-list derivation is a second measurement of the same
+    # exposure, so the label is resolved by the composite rule rather than by
+    # the prose classifier alone. Birth years come from the career table, since
+    # the derivation's age guard needs them to tell a childhood club carrying a
+    # year from an actual professional entry.
+    birth_years = {
+        player_id: int(summary["birth_year"]) if summary["birth_year"] else None
+        for player_id, summary in summaries.items()
+    }
+    club_labels = derive_pathway_labels(read_csv(args.stints), birth_years)
+
+    pathway_labeled_rows = read_tiers(
+        args.pathway_national_team_dir, "pathway_tier_{key}_labeled.csv", TIERS
+    ) + read_tiers(args.pre2014_dir, "priority{key}_pathway_labeled.csv", PRIORITIES)
+    pathway_resolved = resolve_composite_pathway_labels(
+        pathway_labeled_rows, club_labels, pathway_queue_rows, club_list_aware_ids()
     )
+    pathway_overlaps = duplicate_player_ids(pathway_labeled_rows)
+
+    # SAP §1b-4: a j_club_academy label only survives if the club was in the
+    # J.League while the player was in its academy.
+    clubs = build_clubs()
+    reviewed = load_reviewed()
+    stint_rows: dict[str, list[dict[str, str]]] = {}
+    for row in read_csv(args.stints):
+        stint_rows.setdefault(row["source_player_id"], []).append(row)
+    for player_id, resolved in pathway_resolved.items():
+        category, reason = reclassify(
+            player_id,
+            resolved["pathway_category"],
+            stint_rows.get(player_id, []),
+            birth_years.get(player_id),
+            clubs,
+            reviewed,
+        )
+        if category != resolved["pathway_category"]:
+            resolved["pathway_composite_reason"] = f"{resolved['pathway_composite_reason']}+{reason}"
+        resolved["pathway_category"] = category
 
     nt_labeled_2014 = read_tiers(
         args.pathway_national_team_dir, "national_team_tier_{key}_labeled.csv", TIERS
@@ -113,16 +144,22 @@ def main() -> None:
         )
     )
 
+    not_collected = {
+        "pathway_category": "",
+        "pathway_category_source": "not_collected",
+        "pathway_prose_category": "",
+        "pathway_club_list_category": "",
+        "pathway_composite_reason": "not_collected",
+    }
     rows = []
     for player_id, summary in summaries.items():
-        pathway, pathway_source = pathway_resolved.get(player_id, ("", "not_collected"))
+        pathway = pathway_resolved.get(player_id, not_collected)
         selection, nt_source = nt_resolved.get(player_id, ("", "not_collected"))
         categories, _ = nt_categories.get(player_id, ("", ""))
         rows.append(
             {
                 **summary,
-                "pathway_category": pathway,
-                "pathway_category_source": pathway_source,
+                **pathway,
                 "any_national_team_selection": selection,
                 "national_team_categories": categories,
                 "national_team_selection_source": nt_source,
@@ -159,6 +196,17 @@ def report(rows: list[dict[str, str]], pathway_overlaps: list[str], nt_overlaps:
             print(f"    {value}: {count}")
         for value, count in Counter(row["pathway_category_source"] for row in in_era).most_common():
             print(f"    source {value}: {count}")
+
+
+def duplicate_player_ids(rows: list[dict[str, str]]) -> list[str]:
+    """Ids appearing in more than one collection universe.
+
+    The tiers and the pre-2014 priorities are meant to be disjoint (a player is
+    in the backfill only if they never appeared from 2014 on), so an overlap
+    means a collection drifted. Reported rather than silently deduplicated.
+    """
+    counts = Counter(row["source_player_id"] for row in rows)
+    return sorted(player_id for player_id, count in counts.items() if count > 1)
 
 
 def share(numerator: int, denominator: int) -> str:

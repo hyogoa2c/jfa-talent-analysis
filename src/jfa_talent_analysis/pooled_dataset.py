@@ -15,6 +15,9 @@ from __future__ import annotations
 
 from collections import defaultdict
 
+from jfa_talent_analysis.club_history_pathway import StintPathway
+from jfa_talent_analysis.composite_pathway import resolve_composite_pathway
+
 # Era boundaries are the SAP §0 development-age rule: the era containing the
 # year the player turned 15 (birth year + 15).
 ERA_1_BIRTH_YEARS = (1981, 1989)
@@ -41,6 +44,12 @@ POOLED_OUTCOMES_COLUMNS = [
     "eligible_confirmatory",
     "pathway_category",
     "pathway_category_source",
+    # Both inputs to the SAP §1b-3 composite rule are kept alongside its output
+    # so per-source validity can be reported, and so a reviewer can see which
+    # procedure supplied a label without re-running the pipeline.
+    "pathway_prose_category",
+    "pathway_club_list_category",
+    "pathway_composite_reason",
     "any_national_team_selection",
     "national_team_categories",
     "national_team_selection_source",
@@ -114,6 +123,48 @@ def collapse_career_seasons(rows: list[dict[str, str]]) -> dict[str, dict[str, s
             else "0",
         }
     return summaries
+
+
+def resolve_composite_pathway_labels(
+    labeled_rows: list[dict[str, str]],
+    club_labels: dict[str, StintPathway],
+    review_queue_rows: list[dict[str, str]],
+    club_list_aware_ids: set[str] | None = None,
+) -> dict[str, dict[str, str]]:
+    """Apply the SAP §1b-3 composite rule across every labeled player.
+
+    labeled_rows is the concatenation of both collection universes: the rule has
+    to be identical across eras, since an era-differential rule would manufacture
+    the very interaction H1b-2 tests for.
+    """
+    reviewed_by_id = {row["source_player_id"]: row for row in review_queue_rows}
+    club_list_aware = club_list_aware_ids or set()
+    resolved: dict[str, dict[str, str]] = {}
+
+    for row in labeled_rows:
+        player_id = row["source_player_id"]
+        club = club_labels.get(player_id)
+        review_row = reviewed_by_id.get(player_id)
+        label = resolve_composite_pathway(
+            prose_category=row.get("pathway_category", ""),
+            prose_confidence=row.get("pathway_confidence", ""),
+            club_category=club.pathway_category if club else "",
+            club_confidence=club.confidence if club else "",
+            reviewed_category=(
+                review_row.get("reviewed_pathway_category", "").strip() if review_row else ""
+            ),
+            in_review_queue=review_row is not None,
+            review_saw_club_list=player_id in club_list_aware,
+            identity_confirmed=row.get("identity_check", "") == "confirmed",
+        )
+        resolved[player_id] = {
+            "pathway_category": label.category,
+            "pathway_category_source": label.source,
+            "pathway_prose_category": row.get("pathway_category", ""),
+            "pathway_club_list_category": club.pathway_category if club else "",
+            "pathway_composite_reason": label.reason,
+        }
+    return resolved
 
 
 def merge_label_sources(
