@@ -736,6 +736,18 @@ seed=20260718 で確定し、`data/manual/gold_holdout_sample.csv` に層内順�
 **判定不能**（到達できたが真値を確定できない）は繰り上げず `indeterminate` として保存し、
 層別の判定不能率を報告する。
 
+**盲検ワークシート**（v9・`scripts/build_gold_worksheet.py`）: 判定者には
+`data/manual/gold_holdout_worksheet.csv`（SHA-256 `b8bbcb0d121d`・539 行）だけを渡す。
+**観測経路・層名・`draw_order`・`source_player_id` を落とす**——層名は「2 つの測定源が
+食い違った行」であることをそのまま暴露し、`draw_order` は層ごとの塊として現れ、
+`source_player_id` はリポジトリ内のラベルへの結合を可能にするため。
+残すのは人物の同定に要る情報だけ（氏名・生年月日・観測季・トップチーム所属クラブ）。
+行順は層の塊が見えないよう `shuffle-seed=20260729` で並べ替える（**抽出 seed とは別**で、
+抽出には影響しない）。id 対応表は `gold_holdout_worksheet_key.csv`（`5c33572e16b3`）に分離し、
+コーディネーターが保持する。判定手順は `docs/gold_holdout_protocol_2026-07-29.md`
+（真値の定義・非 Wikipedia 根拠と逐語引用の必須・`confirmed`/`indeterminate`/`unreachable` の
+使い分け・盲検条件）。
+
 **`institution_unknown` の範囲**: 全 48 件のうち Phase 1b 適格標本内は 19 件で、これを悉皆にする。
 残り 29 件は Phase 1 のみの選手であり Phase 1b の母集団外（Phase 1 側の限界として §13-3 に記録）。
 
