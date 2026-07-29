@@ -1,40 +1,73 @@
-"""Stratified allocation for the holdout gold (SAP §6b-2b).
+"""Draw and freeze the holdout sample (SAP §6b-2b, v8).
 
-The simulation fixes how many verified players each observed-pathway row needs;
-this fixes which players they are and with what probability, which is what makes
-the resulting confusion matrix weightable back to the population.
+Writes the actual player ids, not just per-stratum counts. The review required
+the target list, the seed, the within-stratum order, the replacement rule and
+the treatment of indeterminate adjudications to be fixed and hashed *before* any
+gold is looked at, so that the sample cannot drift toward convenient cases once
+verification starts.
 
-Two constraints shape it. The review requires over-sampling the strata where
-misclassification actually lives -- the two procedures disagreeing, and any
-direction that moves a player into or out of the reference category -- because a
-proportional sample would spend almost everything on both_agree and estimate the
-directions that matter from single figures. And §6b-2a puts the rows used to
-build the rule into the development sample, so this allocation is a *fresh*
-holdout rather than a top-up of the existing gold.
+Strata come from `gold_strata.py`, which reads the inputs to the composite rule
+rather than its output source -- the v7 strata missed every row in the direction
+that empties the reference category.
 """
 
 from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 from collections import Counter
 from pathlib import Path
 
-MAIN_PATHWAYS = ("j_club_academy", "high_school", "university")
-PER_ROW = 60  # SAP §6b-2c(ii), sensitivity envelope of simulate_gold_requirement.py
+import numpy as np
 
-# Strata that carry the misclassification signal. Taken as a census up to this
-# size: they are small, and estimating a direction-specific rate from a
-# proportional slice of them is what the review objected to.
-CRITICAL = ("disagree_academy", "disagree_other", "club_list_only", "prose_only")
-CRITICAL_CAP = 25
-HUMAN_REVIEWED_QUOTA = 10
+from jfa_talent_analysis.gold_strata import MAIN_PATHWAYS, load_institution_unknown, stratum
+
+CENSUSED = (
+    "academy_out",
+    "academy_in",
+    "institution_unknown",
+    "disagree_other",
+    "club_list_only",
+    "prose_only",
+)
+CENSUS_CAP = 30
+REVIEWED_QUOTA = 10
+BOTH_AGREE_QUOTA = 30  # SAP §6b-2c(ii): 539 total, primary scenario 2.4pp
+
+COLUMNS = [
+    "draw_order",
+    "source_player_id",
+    "era",
+    "observed_pathway",
+    "stratum",
+    "population_size",
+    "sampled",
+    "sampling_probability",
+    "weight",
+    "role",
+]
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--pooled", type=Path, default=Path("data/processed/pooled_player_outcomes_1999_2025.csv")
+    )
+    parser.add_argument(
+        "--reclassification-queue",
+        type=Path,
+        default=Path("data/manual/academy_reclassification_queue.csv"),
+    )
+    parser.add_argument("--seed", type=int, default=20260718)
+    parser.add_argument(
+        "--reserve",
+        type=int,
+        default=10,
+        help="Reserves drawn per stratum, used in fixed order when a target is unusable.",
+    )
+    parser.add_argument(
+        "--sample", type=Path, default=Path("data/manual/gold_holdout_sample.csv")
     )
     parser.add_argument(
         "--output", type=Path, default=Path("reports/generated/gold_allocation.md")
@@ -47,124 +80,135 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
-def stratum(row: dict[str, str]) -> str:
-    """Which sampling stratum a labelled player belongs to.
-
-    Disagreements are split by whether the reference category is involved, since
-    that is the direction the review singled out: an error into or out of
-    j_club_academy moves the baseline every other pathway is measured against.
-    """
-    source = row["pathway_category_source"]
-    if source != "club_list_over_prose":
-        return source
-    if "j_club_academy" in (row["pathway_prose_category"], row["pathway_club_list_category"]):
-        return "disagree_academy"
-    return "disagree_other"
-
-
-def allocate(population: Counter[str]) -> dict[str, int]:
-    """How many to draw from each stratum within one observed-pathway row."""
-    plan: dict[str, int] = {}
-    remaining = PER_ROW
-    for name in CRITICAL:
-        size = population.get(name, 0)
-        take = min(size, CRITICAL_CAP, remaining)
-        if take:
-            plan[name] = take
-            remaining -= take
-    reviewed = min(population.get("human_reviewed", 0), HUMAN_REVIEWED_QUOTA, remaining)
-    if reviewed:
-        plan["human_reviewed"] = reviewed
-        remaining -= reviewed
-    both = min(population.get("both_agree", 0), remaining)
-    if both:
-        plan["both_agree"] = both
-        remaining -= both
-    return plan
+def quota_for(name: str, population: int) -> int:
+    if name in CENSUSED:
+        return min(population, CENSUS_CAP)
+    if name == "human_reviewed_other":
+        return min(population, REVIEWED_QUOTA)
+    if name == "both_agree":
+        return min(population, BOTH_AGREE_QUOTA)
+    return 0
 
 
 def main() -> None:
     args = parse_args()
+    unknown = load_institution_unknown(read_csv(args.reclassification_queue))
     rows = [
         row
         for row in read_csv(args.pooled)
         if row["eligible_confirmatory"] == "1" and row["pathway_category"] in MAIN_PATHWAYS
     ]
 
+    groups: dict[tuple[str, str, str], list[str]] = {}
+    for row in rows:
+        key = (row["era"], row["pathway_category"], stratum(row, unknown))
+        groups.setdefault(key, []).append(row["source_player_id"])
+
+    rng = np.random.default_rng(args.seed)
+    sample_rows: list[dict[str, str]] = []
+    order = 0
+    for key in sorted(groups):
+        era, pathway, name = key
+        # Sort before shuffling so the draw depends only on the seed, not on the
+        # order rows happened to arrive in the input file.
+        members = sorted(groups[key], key=int)
+        take = quota_for(name, len(members))
+        if take == 0:
+            continue
+        permutation = rng.permutation(len(members))
+        probability = take / len(members)
+        for rank, index in enumerate(permutation):
+            if rank >= take + args.reserve:
+                break
+            role = "target" if rank < take else "reserve"
+            order += 1
+            sample_rows.append(
+                {
+                    "draw_order": str(order),
+                    "source_player_id": members[index],
+                    "era": era,
+                    "observed_pathway": pathway,
+                    "stratum": name,
+                    "population_size": str(len(members)),
+                    "sampled": str(take),
+                    "sampling_probability": f"{probability:.6f}",
+                    "weight": f"{1 / probability:.6f}",
+                    "role": role,
+                }
+            )
+
+    with args.sample.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=COLUMNS)
+        writer.writeheader()
+        writer.writerows(sample_rows)
+    digest = hashlib.sha256(args.sample.read_bytes()).hexdigest()
+
+    targets = [r for r in sample_rows if r["role"] == "target"]
+    reserves = [r for r in sample_rows if r["role"] == "reserve"]
+
     lines = [
-        "# holdout gold の層化割付（SAP §6b-2b）",
+        "# holdout gold の抽出（SAP §6b-2b・v8）",
         "",
-        f"生成: `scripts/build_gold_allocation.py` / 1 行あたり {PER_ROW} 件",
+        f"生成: `scripts/build_gold_allocation.py` / seed={args.seed}",
+        f"抽出リスト: `{args.sample}`",
+        f"SHA-256: `{digest}`",
         "",
-        "**アウトカムは参照していない。** 層は曝露ラベルとその由来のみで定義される。",
+        f"**対象 {len(targets)} 件 / 予備 {len(reserves)} 件。**",
         "",
-        "## 設計",
+        "**アウトカムも gold 判定結果も見ずに確定した。** 以降この抽出を変更しない。",
         "",
-        "- 行 = era × 観測経路（6 行）。1 行あたりの必要数は"
-        " `simulate_gold_requirement.py` が決めた **60 件**（感度シナリオまで満たす水準）。",
-        f"- **不一致・club_list_only・prose_only は最大 {CRITICAL_CAP} 件まで悉皆**。"
-        "誤分類が実際に存在する層であり、比例配分すると方向別の率を数件から推定することになる"
-        "（外部レビューが退けた設計）。",
-        "- 不一致は**基準カテゴリが出入りする向き**（`disagree_academy`）を分けて扱う。",
-        f"- `human_reviewed` は最大 {HUMAN_REVIEWED_QUOTA} 件（人手判定そのものの検証）。",
-        "- 残りを `both_agree` から。",
-        "- **抽出確率を層ごとに記録し、解析時にその逆数で母集団構成へ重み戻す。**",
+        "## 抽出規則（事前固定）",
         "",
-        "> **これは既存 gold への上積みではない。** SAP §6b-2a により、規則の形成に用いた行"
-        "（採用判断の 12 例、判定保留 5 行、v5 で判定した 115 行）は**開発標本**であり、"
-        "独立性能評価の分母から除く。本割付は**新規の holdout** である。",
+        f"- 層 = era × 観測経路 × 層（`gold_strata.py`）。重要層は上限 {CENSUS_CAP} 件まで悉皆、",
+        f"  `human_reviewed_other` は {REVIEWED_QUOTA} 件、`both_agree` は {BOTH_AGREE_QUOTA} 件。",
+        f"- 層内は seed={args.seed} の置換で順序を決め、先頭から対象、続く {args.reserve} 件を予備とする。",
+        "- **代替規則**: 対象が検証不能（記事なし・同名別人等で外部ソースに到達できない）と判明した",
+        "  場合のみ、同一層の予備を `draw_order` 順に繰り上げる。**都合のよい対象を選ばない。**",
+        "- **判定不能の扱い**: 外部ソースに到達できたが真値を確定できない場合は、繰り上げず",
+        "  `indeterminate` として保存する（欠測として捨てない）。層別の判定不能率を報告する。",
+        "- 二者独立判定。不一致は合議し、初回判定・最終判定・根拠 URL・判定者を保存する。",
+        "- **outcome・両分類器の出力・最終採用ラベルを見ずに判定する。**",
         "",
-        "## 割付表",
+        "## 層別の内訳",
         "",
-        "| era | 観測経路 | 層 | 母集団 | 抽出数 | 抽出確率 |",
-        "|---|---|---|---|---|---|",
+        "| era | 観測経路 | 層 | 母集団 | 対象 | 抽出確率 | 重み |",
+        "|---|---|---|---|---|---|---|",
     ]
 
-    total = 0
-    for era in ("era1", "era2"):
-        for pathway in MAIN_PATHWAYS:
-            population = Counter(
-                stratum(row)
-                for row in rows
-                if row["era"] == era and row["pathway_category"] == pathway
-            )
-            plan = allocate(population)
-            for name, take in sorted(plan.items(), key=lambda item: -item[1]):
-                size = population[name]
-                total += take
-                lines.append(
-                    f"| {era} | {pathway} | `{name}` | {size} | {take} | {take / size:.1%} |"
-                )
-            row_total = sum(plan.values())
-            lines.append(
-                f"| {era} | {pathway} | **小計** | {sum(population.values())} | "
-                f"**{row_total}** | |"
-            )
-    lines += ["", f"**合計 {total} 件**（新規 holdout）。", ""]
+    for key in sorted(groups):
+        era, pathway, name = key
+        population = len(groups[key])
+        take = quota_for(name, population)
+        if take == 0:
+            continue
+        lines.append(
+            f"| {era} | {pathway} | `{name}` | {population} | {take} | "
+            f"{take / population:.1%} | {population / take:.2f} |"
+        )
 
+    by_stratum = Counter(row["stratum"] for row in targets)
     lines += [
-        "## 収集の要件（SAP §6b-2a）",
         "",
-        "- **outcome・両分類器の出力・最終採用ラベルのいずれも見ずに**、外部ソース",
-        "  （クラブ公式・学校/大学・新聞・選手名鑑）で**二者独立判定**する。",
-        "- 不一致は合議し、初回判定・最終判定・根拠 URL・判定者を保存する。",
-        "- 層別抽出確率を**抽出前に固定して保存**する（本表がその記録）。",
-        "- 検証不能・gold 判定不能も別カテゴリとして保存する（欠測として捨てない）。",
+        f"**合計 {len(targets)} 件。** 層別: "
+        + "、".join(f"`{name}` {count}" for name, count in by_stratum.most_common()),
         "",
         "## 注記",
         "",
-        "- `club_list_only` は適格標本に存在しない（該当行はすべてレビューを経て",
-        "  `human_reviewed` になった）。層としては残すが割付は 0 件。",
-        "- 悉皆にした層は抽出確率 100% なので重み戻しの分散寄与がない。逆に `both_agree` は",
-        "  抽出率が低く、重みが大きい。",
-        "- 収集後、実際の行構成で `simulate_gold_requirement.py` を再実行し、",
-        "  停止規則を満たしたかを確認する（構成比を保つ仮定が崩れるため）。",
+        "- 悉皆層は抽出確率 100%、重み 1.00 で標本誤差を持たない。有限母集団のその層については",
+        "  誤分類率が誤差なく得られる（判定不能分を除く）。",
+        "- `both_agree` は重みが最大で、**必要数を支配しているのはこの層**である",
+        "  （`reports/generated/gold_requirement.md`）。",
+        "- これは既存 gold への上積みではない。規則の形成に用いた行は開発標本であり",
+        "  （SAP §6b-2a）、本標本は独立 holdout である。",
     ]
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print("\n".join(lines[lines.index("| era | 観測経路 | 層 | 母集団 | 抽出数 | 抽出確率 |") :]))
-    print(f"\nwrote={args.output}")
+    print(f"targets={len(targets)} reserves={len(reserves)}")
+    print(f"sha256={digest}")
+    for name, count in by_stratum.most_common():
+        print(f"  {name:22s} {count}")
+    print(f"wrote={args.sample} / {args.output}")
 
 
 if __name__ == "__main__":
