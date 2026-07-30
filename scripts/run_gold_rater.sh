@@ -36,21 +36,31 @@ for batch in $GLOB; do
 
   echo "=== ${name} $(date +%H:%M:%S)"
   raw="${OUT_DIR}/${name}.raw"
+  started=$(date +%s)
+  expected=$(($(wc -l < "$batch") - 1))
   if [ "$RATER" = "a" ]; then
+    engine=claude
     # The prompt goes on stdin: --allowed-tools is variadic and would eat it.
-    printf '%s' "$prompt" | claude -p --model sonnet \
+    printf '%s' "$prompt" | claude -p --model sonnet --output-format json \
       --allowed-tools WebSearch WebFetch > "$raw" 2>&1
   else
+    engine=codex
     # An empty cwd keeps the sandbox from reaching the repository at all.
     work=$(mktemp -d)
-    printf '%s' "$prompt" | codex exec -c tools.web_search=true -m gpt-5.6-sol \
+    printf '%s' "$prompt" | codex exec --json -c tools.web_search=true -m gpt-5.6-sol \
       --skip-git-repo-check -s read-only -C "$work" - > "$raw" 2>&1
     rmdir "$work" 2>/dev/null || true
   fi
 
-  expected=$(($(wc -l < "$batch") - 1))
-  if uv run python scripts/extract_verdict_rows.py "$raw" --output "$out" --expected "$expected"; then
-    rm -f "$raw"
+  # Structured output carries the tokens and the dollar figure; record them
+  # before the raw file is discarded. Cost claims should come from this log,
+  # not from the `minutes_spent` the model writes about itself.
+  uv run python scripts/parse_rater_output.py "$raw" --engine "$engine" \
+    --rater "$RATER" --batch "$name" --rows "$expected" \
+    --wall-seconds "$(( $(date +%s) - started ))" --text-out "${raw}.txt"
+
+  if uv run python scripts/extract_verdict_rows.py "${raw}.txt" --output "$out" --expected "$expected"; then
+    rm -f "$raw" "${raw}.txt"
   else
     echo "  WARN ${name}: 行数が合わない（${raw} を残した）"
     if [ ! -s "$out" ]; then
