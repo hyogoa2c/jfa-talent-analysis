@@ -46,3 +46,4 @@ reports/generated/
 .DS_Store
 .idea/
 .vscode/
+data/manual/gold_holdout/verdicts/*.raw
