@@ -1,0 +1,31 @@
+worksheet_id,name_ja,gold_pathway_category,gold_final_institution,determination,resolution,note
+W001,栗山 裕貴,unknown,,indeterminate,adjudicated_disagreement,ファンサイト単独
+W002,柳川 雅樹,j_club_academy,ヴィッセル神戸ユース,confirmed,both_raters_agree,
+W003,伊藤 翔,high_school,中京大学附属中京高等学校,confirmed,both_raters_agree,
+W004,岩下 敬輔,high_school,鹿児島実業高等学校,confirmed,both_raters_agree,
+W005,北村 知隆,unknown,,indeterminate,adjudicated_weak_evidence,ファンサイト2つ（個人ブログ＋有志DB）。単独根拠にできないため indeterminate。当初 confirmed としたのは勘違い
+W006,久場 政朋,high_school,桐光学園高等学校,confirmed,adjudicated_disagreement,ファンサイト2つbが見落とし
+W007,鈴木 将太,high_school,桐光学園高等学校,confirmed,both_raters_agree,
+W008,金守 智哉,high_school,三重県立四日市中央工業高等学校,confirmed,adjudicated_weak_evidence,AのエビデンスがOB会サッカー部
+W009,阿部 哲也,unknown,,indeterminate,both_raters_agree,
+W010,羽田 憲司,high_school,市立船橋高等学校,confirmed,both_raters_agree,
+W011,城後 寿,high_school,国見高等学校,confirmed,both_raters_agree,
+W012,太田 圭輔,j_club_academy,清水エスパルスユース,confirmed,both_raters_agree,
+W013,中町 公祐,high_school,高崎高等学校,confirmed,both_raters_agree,
+W014,村松 大輔,high_school,藤枝東高等学校,confirmed,both_raters_agree,
+W015,酒本 憲幸,high_school,初芝橋本高等学校,confirmed,both_raters_agree,
+W016,阿部 祐大朗,high_school,桐蔭学園高等学校,confirmed,both_raters_agree,
+W017,樋口 知行,unknown,,indeterminate,both_raters_agree,
+W018,廣瀬 智靖,high_school,前橋育英高等学校,confirmed,both_raters_agree,
+W019,田中 奏一,university,慶應義塾大学,confirmed,adjudicated_agreement_spot_check,両エビデンス確認済み
+W020,石澤 典明,high_school,神戸市立御影工業高等学校,confirmed,both_raters_agree,
+W021,久木野 聡,high_school,日章学園高等学校,confirmed,adjudicated_weak_evidence,ファンサイト2つ
+W022,多田 大介,unknown,,indeterminate,adjudicated_disagreement,ファンサイト単独。公式に出身校記載なし
+W023,澤田 和樹,unknown,,indeterminate,both_raters_agree,
+W024,山中 良二,unknown,,indeterminate,both_raters_agree,
+W025,碇野 壱馬,unknown,,indeterminate,both_raters_agree,
+W026,長谷部 誠,high_school,静岡県立藤枝東高等学校,confirmed,adjudicated_agreement_spot_check,両エビデンス確認済み
+W027,秦 賢二,unknown,,indeterminate,adjudicated_disagreement,ファンサイト単独。公式に出身校記載なし
+W028,下司 隆士,unknown,,indeterminate,adjudicated_disagreement,Wikiミラーのみ
+W029,森安 洋文,other,JAPANサッカーカレッジ,confirmed,both_raters_agree,
+W030,西嶋 弘之,high_school,奈良育英高等学校,confirmed,both_raters_agree,
