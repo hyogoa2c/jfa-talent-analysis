@@ -53,7 +53,14 @@ for batch in $GLOB; do
     rm -f "$raw"
   else
     echo "  WARN ${name}: 行数が合わない（${raw} を残した）"
-    [ -s "$out" ] || rm -f "$out"
+    if [ ! -s "$out" ]; then
+      rm -f "$out"
+      # Zero rows means the engine never answered -- a usage limit, an auth
+      # failure, a network outage. Whatever it is, the next batch will hit it
+      # too, so stop instead of burning the queue into empty files.
+      echo "  ABORT: ${name} が 1 行も返さなかった。残りは実行しない。" >&2
+      exit 2
+    fi
   fi
 done
 
