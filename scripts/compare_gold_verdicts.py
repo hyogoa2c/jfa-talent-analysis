@@ -36,8 +36,10 @@ WEAK_HOSTS = {
     "blog.livedoor.jp": "個人ブログ",
     "fc2.com": "個人ブログ",
     "fansaka.info": "有志運営のデータベース",
+    "soccer-db.net": "有志運営のデータベース",
     "transfermarkt.jp": "利用者編集のデータベース",
     "transfermarkt.com": "利用者編集のデータベース",
+    "unionpedia.org": "Wikipedia 派生",
     "consadeconsa.com": "ファンサイト",
 }
 
@@ -157,7 +159,14 @@ def main() -> None:
         # drawn because the two measurement sources disagreed is itself a hint.
         blinded = {k: v for k, v in row.items() if k not in ("stratum", "era")}
         worklist.append(
-            {**blinded, "review_reason": reason, "adjudicated_category": "", "adjudicator_note": ""}
+            {
+                **blinded,
+                "review_reason": reason,
+                "adjudicated_category": "",
+                "adjudicated_institution": "",
+                "adjudicated_determination": "",
+                "adjudicator_note": "",
+            }
         )
 
     args.worklist.parent.mkdir(parents=True, exist_ok=True)
