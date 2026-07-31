@@ -31,9 +31,17 @@ COLUMNS = [
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--rater-a", type=Path, required=True)
-    parser.add_argument("--rater-b", type=Path, required=True)
-    parser.add_argument("--adjudication", type=Path, required=True)
+    parser.add_argument("--rater-a", type=Path, action="append", default=[])
+    parser.add_argument("--rater-b", type=Path, action="append", default=[])
+    parser.add_argument("--adjudication", type=Path, action="append", default=[])
+    parser.add_argument(
+        "--single",
+        type=Path,
+        action="append",
+        default=[],
+        help="Verdicts from a single-rated layer (SAP §6b-2b-rate); taken as they stand.",
+    )
+    parser.add_argument("--resolved", type=Path, action="append", default=[])
     parser.add_argument("--output", type=Path, required=True)
     return parser.parse_args()
 
@@ -43,13 +51,45 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
+def read_all(paths: list[Path]) -> dict[str, dict[str, str]]:
+    return {row["worksheet_id"]: row for path in paths for row in read_csv(path)}
+
+
 def main() -> None:
     args = parse_args()
-    a = {row["worksheet_id"]: row for row in read_csv(args.rater_a)}
-    b = {row["worksheet_id"]: row for row in read_csv(args.rater_b)}
-    adjudicated = {row["worksheet_id"]: row for row in read_csv(args.adjudication)}
+    a = read_all(args.rater_a)
+    b = read_all(args.rater_b)
+    adjudicated = read_all(args.adjudication)
 
     resolved, unresolved = [], []
+
+    # Rows already resolved in an earlier layer (the pilot) come through as they
+    # are; re-deriving them would mean re-reading verdicts their adjudication has
+    # already settled.
+    for path in args.resolved:
+        resolved.extend({column: row[column] for column in COLUMNS} for row in read_csv(path))
+
+    # A single-rated row has no second verdict to reconcile it with, so it enters
+    # as the rater left it (SAP §6b-2b-rate (3): the row carries that rater's
+    # error, and the reliability subsample is what estimates how often). The
+    # vocabulary already forces `unknown` whenever the determination is not
+    # `confirmed`, so no separate rule is needed for the ones the rater could not
+    # settle. `resolution` keeps which rater it was, so the resolved gold can be
+    # split by rating regime later.
+    for path in args.single:
+        for row in read_csv(path):
+            resolved.append(
+                {
+                    "worksheet_id": row["worksheet_id"],
+                    "name_ja": row["name_ja"],
+                    "gold_pathway_category": row["gold_pathway_category"],
+                    "gold_final_institution": row["gold_final_institution"],
+                    "determination": row["determination"],
+                    "resolution": f"single_{row['rater']}",
+                    "note": row["note"],
+                }
+            )
+
     for worksheet_id in sorted(set(a) & set(b)):
         left, right = a[worksheet_id], b[worksheet_id]
         if worksheet_id in adjudicated:
@@ -88,6 +128,15 @@ def main() -> None:
     if unresolved:
         raise SystemExit(f"裁定されていない不一致が {len(unresolved)} 件: {unresolved}")
 
+    duplicates = [
+        worksheet_id
+        for worksheet_id, count in Counter(row["worksheet_id"] for row in resolved).items()
+        if count > 1
+    ]
+    if duplicates:
+        raise SystemExit(f"worksheet_id が重複している: {duplicates}")
+
+    resolved.sort(key=lambda row: row["worksheet_id"])
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=COLUMNS)

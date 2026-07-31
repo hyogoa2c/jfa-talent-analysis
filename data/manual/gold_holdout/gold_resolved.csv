@@ -1,0 +1,540 @@
+worksheet_id,name_ja,gold_pathway_category,gold_final_institution,determination,resolution,note
+W001,栗山 裕貴,unknown,,indeterminate,adjudicated_disagreement,ファンサイト単独
+W002,柳川 雅樹,j_club_academy,ヴィッセル神戸ユース,confirmed,both_raters_agree,
+W003,伊藤 翔,high_school,中京大学附属中京高等学校,confirmed,both_raters_agree,
+W004,岩下 敬輔,high_school,鹿児島実業高等学校,confirmed,both_raters_agree,
+W005,北村 知隆,unknown,,indeterminate,adjudicated_weak_evidence,ファンサイト2つ（個人ブログ＋有志DB）。単独根拠にできないため indeterminate。当初 confirmed としたのは勘違い
+W006,久場 政朋,high_school,桐光学園高等学校,confirmed,adjudicated_disagreement,ファンサイト2つbが見落とし
+W007,鈴木 将太,high_school,桐光学園高等学校,confirmed,both_raters_agree,
+W008,金守 智哉,high_school,三重県立四日市中央工業高等学校,confirmed,adjudicated_weak_evidence,AのエビデンスがOB会サッカー部
+W009,阿部 哲也,unknown,,indeterminate,both_raters_agree,
+W010,羽田 憲司,high_school,市立船橋高等学校,confirmed,both_raters_agree,
+W011,城後 寿,high_school,国見高等学校,confirmed,both_raters_agree,
+W012,太田 圭輔,j_club_academy,清水エスパルスユース,confirmed,both_raters_agree,
+W013,中町 公祐,high_school,高崎高等学校,confirmed,both_raters_agree,
+W014,村松 大輔,high_school,藤枝東高等学校,confirmed,both_raters_agree,
+W015,酒本 憲幸,high_school,初芝橋本高等学校,confirmed,both_raters_agree,
+W016,阿部 祐大朗,high_school,桐蔭学園高等学校,confirmed,both_raters_agree,
+W017,樋口 知行,unknown,,indeterminate,both_raters_agree,
+W018,廣瀬 智靖,high_school,前橋育英高等学校,confirmed,both_raters_agree,
+W019,田中 奏一,university,慶應義塾大学,confirmed,adjudicated_agreement_spot_check,両エビデンス確認済み
+W020,石澤 典明,high_school,神戸市立御影工業高等学校,confirmed,both_raters_agree,
+W021,久木野 聡,high_school,日章学園高等学校,confirmed,adjudicated_weak_evidence,ファンサイト2つ
+W022,多田 大介,unknown,,indeterminate,adjudicated_disagreement,ファンサイト単独。公式に出身校記載なし
+W023,澤田 和樹,unknown,,indeterminate,both_raters_agree,
+W024,山中 良二,unknown,,indeterminate,both_raters_agree,
+W025,碇野 壱馬,unknown,,indeterminate,both_raters_agree,
+W026,長谷部 誠,high_school,静岡県立藤枝東高等学校,confirmed,adjudicated_agreement_spot_check,両エビデンス確認済み
+W027,秦 賢二,unknown,,indeterminate,adjudicated_disagreement,ファンサイト単独。公式に出身校記載なし
+W028,下司 隆士,unknown,,indeterminate,adjudicated_disagreement,Wikiミラーのみ
+W029,森安 洋文,other,JAPANサッカーカレッジ,confirmed,both_raters_agree,
+W030,西嶋 弘之,high_school,奈良育英高等学校,confirmed,both_raters_agree,
+W031,有光 亮太,high_school,東海大学第五高等学校（現・東海大学付属福岡高等学校）,confirmed,both_raters_agree,
+W032,杉本 太郎,high_school,帝京大学可児高等学校,confirmed,adjudicated_disagreement,bの公式引用を採用
+W033,相澤 貴志,high_school,新潟県立新潟江南高校,confirmed,adjudicated_agreement_spot_check,整合確認
+W034,木村 龍朗,j_club_academy,サンフレッチェ広島F.Cユース,confirmed,adjudicated_disagreement,bの報道本人インタビュー記事を採用
+W035,林 慧,j_club_academy,湘南ベルマーレユース,confirmed,both_raters_agree,
+W036,永井 謙佑,university,福岡大学,confirmed,adjudicated_disagreement,bの公式引用を採用
+W037,藤川 祐司,university,神奈川大学,confirmed,adjudicated_disagreement,aの公式引用を採用
+W038,森脇 良太,j_club_academy,サンフレッチェ広島ユース,confirmed,both_raters_agree,
+W039,蒲原 達也,university,国士舘大学,confirmed,adjudicated_disagreement,bの公式引用を採用
+W040,平林 輝良寛,j_club_academy,名古屋グランパスエイトユース,confirmed,both_raters_agree,
+W041,伊藤 洋輝,j_club_academy,ジュビロ磐田U-18,confirmed,both_raters_agree,
+W042,千田 海人,university,神奈川大学,confirmed,both_raters_agree,
+W043,中村 祐輝,university,国士舘大学,confirmed,both_raters_agree,
+W044,大島 僚太,high_school,静岡学園高等学校,confirmed,both_raters_agree,
+W045,太田 宏介,high_school,麻布大学附属渕野辺高等学校,confirmed,both_raters_agree,
+W046,内野 貴志,university,びわこ成蹊スポーツ大学,confirmed,adjudicated_disagreement,bの公式引用を採用
+W047,長谷川 太一,unknown,,indeterminate,both_raters_agree,
+W048,田辺 和彦,j_club_academy,湘南ベルマーレユース（ベルマーレ平塚ユース）,confirmed,both_raters_agree,
+W049,酒井 高徳,j_club_academy,アルビレックス新潟ユース,confirmed,both_raters_agree,
+W050,神山 竜一,high_school,立正大学淞南高等学校,confirmed,both_raters_agree,
+W051,横竹 翔,j_club_academy,サンフレッチェ広島ユース,confirmed,both_raters_agree,
+W052,櫛引 政敏,high_school,青森山田高等学校,confirmed,both_raters_agree,
+W053,岡本 達也,j_club_academy,ジュビロ磐田ユース,confirmed,both_raters_agree,
+W054,小泉 慶,high_school,流通経済大学付属柏高等学校,confirmed,both_raters_agree,
+W055,津田 知宏,j_club_academy,名古屋グランパスエイト下部組織,confirmed,both_raters_agree,
+W056,権田修一,j_club_academy,FC東京ユース（U-18）,confirmed,both_raters_agree,
+W057,三上陽輔,j_club_academy,コンサドーレ札幌ユース（U-18）,confirmed,both_raters_agree,
+W058,井上丈,j_club_academy,アルビレックス新潟ユース,confirmed,both_raters_agree,
+W059,飯田優二,j_club_academy,水戸ホーリーホックユース,confirmed,both_raters_agree,
+W060,満生充,high_school,大阪桐蔭高等学校,confirmed,adjudicated_disagreement,aの見解を採用bの公式引用で確認 高校➡J➡大学➡Jのケース
+W061,松浦 拓弥,high_school,静岡県立浜名高等学校,confirmed,both_raters_agree,
+W062,林 昇吾,j_club_academy,東京ヴェルディユース,confirmed,both_raters_agree,
+W063,名倉 巧,high_school,國學院大學久我山高等学校,confirmed,both_raters_agree,
+W064,工藤 浩平,j_club_academy,ジェフユナイテッド市原ユース,confirmed,both_raters_agree,
+W065,前田 大然,high_school,山梨学院大学附属高等学校,confirmed,both_raters_agree,
+W066,梅井 大輝,high_school,福井県立丸岡高等学校,confirmed,both_raters_agree,
+W067,飛弾 暁,high_school,三重県立四日市中央工業高校,confirmed,both_raters_agree,
+W068,金 成勇,university,朝鮮大学校,confirmed,adjudicated_disagreement,bの公式引用を採用
+W069,加藤 大志,high_school,桐光学園高等学校,confirmed,both_raters_agree,
+W070,内田 健太,j_club_academy,サンフレッチェ広島ユース,confirmed,both_raters_agree,
+W071,梅鉢貴秀,high_school,関西大学第一高等学校,confirmed,both_raters_agree,
+W072,中村友亮,high_school,静岡学園高等学校,confirmed,adjudicated_agreement_spot_check,整合確認
+W073,田邉草民,high_school,國學院大學久我山高等学校,confirmed,both_raters_agree,
+W074,原裕太郎,j_club_academy,サンフレッチェ広島ユース,confirmed,both_raters_agree,
+W075,小屋松知哉,high_school,京都橘高等学校,confirmed,both_raters_agree,
+W076,松下 年宏,high_school,鹿児島実業高等学校,confirmed,both_raters_agree,
+W077,岩元 颯オリビエ,high_school,鹿児島城西高等学校,confirmed,both_raters_agree,
+W078,渡辺 皓太,j_club_academy,東京ヴェルディユース,confirmed,both_raters_agree,
+W079,齋藤 恭志,other,JAPANサッカーカレッジ,confirmed,adjudicated_disagreement,bの公式引用を採用
+W080,近藤 直也,j_club_academy,柏レイソルユース（柏レイソルU-18）,confirmed,both_raters_agree,
+W081,古川 隆志,unknown,,indeterminate,adjudicated_agreement_spot_check,整合確認
+W082,吉野 峻光,university,国士舘大学,confirmed,both_raters_agree,
+W083,加藤 健人,j_club_academy,ファジアーノ岡山U-18,confirmed,both_raters_agree,
+W084,宮吉 拓実,j_club_academy,京都サンガF.C.U-18,confirmed,both_raters_agree,
+W085,岡本 剛史,j_club_academy,愛媛FCユース,confirmed,adjudicated_disagreement,bの公式引用を採用
+W086,飯田 絋孝,unknown,,indeterminate,both_raters_agree,
+W087,濱田 水輝,j_club_academy,浦和レッズユース,confirmed,both_raters_agree,
+W088,桒田 慎一朗,j_club_academy,サンフレッチェ広島ユース,confirmed,adjudicated_disagreement,bのサッカーキングは報道機関で単独で根拠要件を満たす。当初「非公式情報」としたのはソース評価の誤り
+W089,ファンティーニ 燦,j_club_academy,ACチェゼーナU17,confirmed,adjudicated_disagreement,非Jのクラブ下部組織も j_club_academy とする判定プロンプトの規則に従う。当初 other としたのは規則の誤解。機関名はbのACチェゼーナU17を採用
+W090,川上 典洋,high_school,島根県立大社高等学校,confirmed,both_raters_agree,
+W091,山瀬 功治,high_school,北海高校,confirmed,both_raters_agree,
+W092,下田 光平,high_school,秋田商業高校,confirmed,both_raters_agree,
+W093,北川 滉平,university,桃山学院大学,confirmed,both_raters_agree,
+W094,鍋田 亜人夢,j_club_academy,清水エスパルスユース,confirmed,both_raters_agree,
+W095,山田 満夫,university,仙台大学,confirmed,both_raters_agree,
+W096,長谷川 悠,high_school,流通経済大学付属柏高等学校,confirmed,both_raters_agree,
+W097,今井 昌太,university,びわこ成蹊スポーツ大学,confirmed,adjudicated_disagreement,bの公式引用を採用
+W098,福村 貴幸,high_school,大阪桐蔭高等学校,confirmed,adjudicated_disagreement,bの公式引用を採用
+W099,梁 賢柱,university,早稲田大学,confirmed,adjudicated_agreement_spot_check,整合確認
+W100,山田 晃平,university,大阪経済大学,confirmed,both_raters_agree,
+W101,吉田麻也,j_club_academy,名古屋グランパスエイト ユース(グランパスユース),confirmed,both_raters_agree,
+W102,伊藤涼太郎,high_school,作陽高等学校(現・作陽学園高等学校),confirmed,both_raters_agree,
+W103,矢野貴章,high_school,浜名高等学校,confirmed,both_raters_agree,
+W104,岩舘侑哉,j_club_academy,川崎フロンターレユース(U-18),confirmed,both_raters_agree,
+W105,鎌田大地,high_school,東山高等学校,confirmed,both_raters_agree,
+W106,林 祥太,university,国士舘大学,confirmed,adjudicated_disagreement,bの公式引用を採用
+W107,真瀬 拓海,university,阪南大学,confirmed,both_raters_agree,
+W108,菅沼 実,j_club_academy,柏レイソルユース,confirmed,both_raters_agree,
+W109,植村 慶,university,中央大学,confirmed,both_raters_agree,
+W110,石原 広教,j_club_academy,湘南ベルマーレユース,confirmed,both_raters_agree,
+W111,太田 徹郎,j_club_academy,柏レイソルユース（柏レイソルU-18）,confirmed,both_raters_agree,
+W112,井上 裕大,j_club_academy,大分トリニータU-18,confirmed,adjudicated_disagreement,bの公式引用を採用
+W113,三田 光,high_school,國學院大學久我山高等学校,confirmed,both_raters_agree,
+W114,富樫 佑太,high_school,國學院大學久我山高等学校,confirmed,both_raters_agree,
+W115,佐藤 祥,j_club_academy,ジェフユナイテッド市原・千葉U-18,confirmed,both_raters_agree,
+W116,石川 直宏,j_club_academy,横浜マリノスユース,confirmed,both_raters_agree,
+W117,難波 宏明,university,流通経済大学,confirmed,both_raters_agree,
+W118,猿田 遥己,j_club_academy,柏レイソルU-18,confirmed,adjudicated_disagreement,bの公式引用を採用
+W119,エスクデロ 競飛王（エスクデロ セルヒオ）,j_club_academy,浦和レッズユース,confirmed,adjudicated_agreement_spot_check,整合確認
+W120,三澤 慶一,unknown,,indeterminate,both_raters_agree,
+W121,鈴木 啓太,high_school,東海大学付属翔洋高等学校,confirmed,both_raters_agree,
+W122,阿渡 真也,university,明治大学,confirmed,both_raters_agree,
+W123,長澤 拓哉,university,龍谷大学,confirmed,both_raters_agree,
+W124,大﨑 淳矢,j_club_academy,サンフレッチェ広島ユース,confirmed,both_raters_agree,
+W125,大津 祐樹,high_school,成立学園高等学校,confirmed,both_raters_agree,
+W126,齋藤 学,j_club_academy,横浜Ｆ・マリノスユース,confirmed,adjudicated_disagreement,bの公式引用を採用
+W127,富澤 清太郎,j_club_academy,東京ヴェルディユース,confirmed,adjudicated_agreement_spot_check,整合確認 institutionはbを採用
+W128,斧澤 隼輝,j_club_academy,セレッソ大阪U-18,confirmed,both_raters_agree,
+W129,ファンウェルメスケルケン際,j_club_academy,ヴァンフォーレ甲府U-18,confirmed,both_raters_agree,
+W130,永田 亮太,university,立命館大学,confirmed,adjudicated_disagreement,bの公式引用を採用
+W131,石毛 秀樹,j_club_academy,清水エスパルスユース,confirmed,both_raters_agree,
+W132,大森 晃太郎,j_club_academy,ガンバ大阪ユース,confirmed,both_raters_agree,
+W133,笹垣 拓也,university,国際武道大学,confirmed,adjudicated_disagreement,bの公式引用を採用
+W134,ディビッドソン 純マーカス,other,アメリカングローバルサッカースクール,confirmed,adjudicated_disagreement,bの公式引用を採用
+W135,川島 永嗣,high_school,埼玉県立浦和東高等学校,confirmed,both_raters_agree,
+W136,浅井 俊光,university,静岡産業大学,confirmed,both_raters_agree,
+W137,内藤 友康,high_school,日本大学藤沢高等学校,confirmed,both_raters_agree,
+W138,西山 貴永,j_club_academy,サンフレッチェ広島F.Cユース,confirmed,both_raters_agree,
+W139,山根 永遠,j_club_academy,サンフレッチェ広島ユース,confirmed,both_raters_agree,
+W140,三鬼 海,j_club_academy,名古屋グランパスU-18,confirmed,both_raters_agree,
+W141,工藤 壮人,j_club_academy,柏レイソルユース（U-18）,confirmed,both_raters_agree,
+W142,髙橋 壱晟,high_school,青森山田高等学校,confirmed,both_raters_agree,
+W143,村山 祐介,university,国士舘大学,confirmed,adjudicated_disagreement,bの公式引用を採用
+W144,竹重 安希彦,university,阪南大学,confirmed,both_raters_agree,
+W145,島貫 純,unknown,,indeterminate,adjudicated_disagreement,ソースは報道機関だがbの引用は「同校卒業後に」で高校名を特定しておらず機関を確定できない
+W146,橋村祐太,j_club_academy,横浜FCユース,confirmed,both_raters_agree,
+W147,八田直樹,j_club_academy,ジュビロ磐田ユース,confirmed,adjudicated_agreement_spot_check,整合確認
+W148,都倉賢,j_club_academy,川崎フロンターレU-18,confirmed,both_raters_agree,
+W149,古田寛幸,j_club_academy,コンサドーレ札幌ユースU-18,confirmed,both_raters_agree,
+W150,渡辺広大,high_school,市立船橋高等学校,confirmed,both_raters_agree,
+W151,森 洋介,university,日本文理大学,confirmed,adjudicated_disagreement,bの公式引用を採用
+W152,佐藤 勇人,j_club_academy,ジェフユナイテッド市原ユース,confirmed,both_raters_agree,
+W153,橋垣戸 光一,university,大阪学院大学,confirmed,both_raters_agree,
+W154,山岸 智,j_club_academy,ジェフユナイテッド市原ユース,confirmed,adjudicated_agreement_spot_check,整合確認
+W155,三幸 秀稔,jfa_academy,JFAアカデミー福島,confirmed,adjudicated_disagreement,gold語彙に jfa_academy を追加して採用。JFAアカデミーはクラブ下部組織でも other でもない。学籍の富岡高校ではなくアカデミー側を採る
+W156,井澤惇,j_club_academy,FC東京U-18,confirmed,both_raters_agree,
+W157,柿谷曜一朗,j_club_academy,セレッソ大阪U-18,confirmed,both_raters_agree,
+W158,高橋峻希,j_club_academy,浦和レッズユース,confirmed,both_raters_agree,
+W159,喜山康平,j_club_academy,東京ヴェルディユース,confirmed,both_raters_agree,
+W160,西岡謙太,university,関西大学,confirmed,adjudicated_agreement_spot_check,整合確認
+W161,キローラン 菜入,j_club_academy,東京ヴェルディユース,confirmed,both_raters_agree,
+W162,宗近 慧,university,法政大学,confirmed,both_raters_agree,
+W163,井手口 陽介,j_club_academy,ガンバ大阪ユース,confirmed,both_raters_agree,
+W164,石原 卓,high_school,中京大中京高等学校,confirmed,adjudicated_disagreement,aの見解を採用bの公式引用で確認 高校➡J➡大学➡Jのケース
+W165,青木 亮太,high_school,流通経済大学付属柏高等学校,confirmed,adjudicated_disagreement,bの公式引用を採用
+W166,坂井 洋平,j_club_academy,横浜F・マリノスユース,confirmed,both_raters_agree,
+W167,落合 陸,university,東京国際大学,confirmed,both_raters_agree,
+W168,小山内 貴哉,j_club_academy,コンサドーレ札幌U-18,confirmed,both_raters_agree,
+W169,岡本 知剛,j_club_academy,サンフレッチェ広島ユース,confirmed,both_raters_agree,
+W170,中川 創,j_club_academy,柏レイソルU-18,confirmed,both_raters_agree,
+W171,本田圭佑,high_school,星稜高等学校,confirmed,both_raters_agree,
+W172,鈴木雄斗,j_club_academy,横浜F・マリノスユース,confirmed,both_raters_agree,
+W173,保坂 一成,university,東京学芸大学,confirmed,both_raters_agree,
+W174,鳥養祐矢,j_club_academy,ジェフユナイテッド市原・千葉ユース,confirmed,both_raters_agree,
+W175,安西幸輝,j_club_academy,東京ヴェルディユース,confirmed,both_raters_agree,
+W176,永井 俊太,high_school,船橋市立船橋高等学校,confirmed,adjudicated_agreement_spot_check,整合確認
+W177,遠野 大弥,high_school,藤枝明誠高等学校,confirmed,adjudicated_agreement_spot_check,整合確認
+W178,藤井 航大,university,東京学芸大学,confirmed,adjudicated_agreement_spot_check,整合確認
+W179,岩倉 一弥,unknown,,indeterminate,both_raters_agree,
+W180,須崎 恭平,j_club_academy,ジュビロ磐田ユース,confirmed,adjudicated_disagreement,bの公式引用を採用
+W181,仙石廉,j_club_academy,柏レイソルU-18,confirmed,single_a,2008年新加入内定時の経歴表。柏日体高等学校は同時在籍の学籍でクラブ側を採用。U-12からキャプテンを務めた柏ユース黄金世代の中心選手。
+W182,高橋 壮也,high_school,立正大学淞南高等学校,confirmed,single_b,2013年度在籍
+W183,内薗大貴,unknown,,indeterminate,single_a,東海学園大学→FC刈谷→MSUFC→FC鹿児島→鹿児島ユナイテッドFCという経歴を複数の二次資料(Wikipedia等)で確認し本人特定はできたが、非Wikipedia系の逐語根拠(公式クラブ・報道等)を予算内(検索5回)で確保できず判定不能。テゲバジャーロ公式の引退記事は経歴詳細を含まなかった。
+W184,弦巻健人,unknown,,indeterminate,single_a,J.LEAGUE公式データ(data.j-league.or.jp)で本人特定(生年月日1987/06/29、東京V/水戸/松本の在籍歴が一致)はできたが、ヴェルディユースからトップ昇格を裏付ける非Wikipedia逐語根拠を予算内(検索5回)で確保できず判定不能。
+W185,桑島良汰,university,大阪学院大学,confirmed,single_a,帝京高校卒業後に大阪学院大学へ進学し、その後FC大阪(2015年)でプロ入り。大学がプロ入り直前の育成機関。
+W186,松澤 彰,university,法政大学,confirmed,adjudicated_disagreement,b公式の記録確認
+W187,久保田 和音,high_school,大阪桐蔭高等学校,confirmed,single_b,大阪桐蔭高から鹿島アントラーズへ加入
+W188,秋葉 竜児,high_school,東海大学付属翔洋高等学校,confirmed,single_b,2002年度卒
+W189,児玉 剛,university,関西大学,confirmed,adjudicated_disagreement,b公式の記録確認
+W190,鶴田達也,unknown,,indeterminate,single_a,清水エスパルスユースから2001年にトップ昇格という経歴を複数の二次資料で確認し本人特定(生年月日1982/09/09、甲府・愛媛・富山の在籍歴が一致)はできたが、非Wikipedia逐語根拠を予算内(検索5回)で確保できず判定不能。
+W191,松本 祐樹,university,国士舘大学,confirmed,single_b,2007年から2010年まで在籍
+W192,新井 博人,university,明治学院大学,confirmed,adjudicated_agreement_spot_check,整合性確認
+W193,清水 航平,high_school,東海大学付属第五高等学校,confirmed,single_b,2008年にサンフレッチェ広島へ加入
+W194,佐藤 穣,high_school,前橋育英高等学校,confirmed,single_a,高校卒業後に直接プロ入り
+W195,茂木 秀,high_school,桐光学園高校,confirmed,both_raters_agree,
+W196,原 一樹,university,駒澤大学,confirmed,both_raters_agree,
+W197,井出 遥也,j_club_academy,ジェフユナイテッド市原・千葉U-18,confirmed,single_a,東京都立淵江高在籍は併記のみ、クラブユース側を採用
+W198,乾 達朗,j_club_academy,ジェフユナイテッド市原・千葉ユース,confirmed,single_b,ユース後のリザーブズおよび海外クラブは成人年代チームのため育成機関に含めない
+W199,小島 秀仁,high_school,前橋育英高等学校,confirmed,both_raters_agree,
+W200,西川 周作,j_club_academy,大分トリニータU-18,confirmed,single_a,高校と同時在籍だがクラブ側を採用。記事内に高校名の明記なし
+W201,内間 安路,university,宮崎産業経営大学,confirmed,single_a,2000-2002沖縄県立北中城高校→2003-2006宮崎産業経営大学→2006大分トリニータ特別指定選手として加入、2007年サガン鳥栖入団
+W202,光永 祐也,j_club_academy,アビスパ福岡U-18,confirmed,both_raters_agree,
+W203,星 広太,university,神奈川大学,confirmed,single_b,2015年春に神奈川大学卒業予定と報道
+W204,石橋 直希,unknown,,indeterminate,single_a,横浜FC(2000-2001)在籍前の育成機関について、探索上限内で非Wikipedia根拠を発見できず。生年月日・出身地からWikipedia記載の本人は同定できるが機関確定に至らず
+W205,太田 康介,university,中央大学,confirmed,both_raters_agree,
+W206,伊藤 仁,unknown,,indeterminate,single_b,セレッソ大阪公式で生年月日とセレッソ大阪・水戸ホーリーホック在籍は確認できたが、育成機関を示す許容可能な根拠を検索上限内で確認できなかった
+W207,船川琢之介,high_school,秋田市立秋田商業高等学校,confirmed,single_a,秋田商業高卒業後2015年ブラウブリッツ秋田加入
+W208,西 大伍,j_club_academy,コンサドーレ札幌ユースU-18,confirmed,single_b,コンサドーレ札幌ユースU-18からトップチームへ進んだ
+W209,髙萩 洋次郎,j_club_academy,サンフレッチェ広島ユース,confirmed,single_b,2003年にサンフレッチェ広島ユースからトップチームへ昇格
+W210,杉本倫治,high_school,奈良県立耳成高等学校（現・奈良県立畝傍高等学校）,confirmed,single_a,2000年セレッソ大阪加入
+W211,吉原 正人,unknown,,indeterminate,single_b,非Wikipediaの根拠で育成機関を確定できず
+W212,内田裕斗,j_club_academy,ガンバ大阪ユース,confirmed,single_a,2012年トップ昇格
+W213,奥山 卓廊,unknown,,indeterminate,single_b,本人には到達したが育成機関を裏付ける適格な根拠を確認できず
+W214,永畑 祐樹,high_school,神村学園高等部,confirmed,single_b,神村学園から清水エスパルスへ加入
+W215,白井裕人,university,流通経済大学,confirmed,single_a,流通経済大FC等社会人チームを経た後の直前機関は大学・2011年松本山雅FC加入
+W216,尾崎 雄二,university,桃山学院大学,confirmed,single_b,大学公式のJリーガー輩出実績に2008年のファジアーノ岡山加入者として掲載
+W217,根占真伍,unknown,,indeterminate,single_a,非Wikipediaの単独根拠となる公式・報道ソースが未発見(唯一発見の記事は出典未記載のファンメディア)・探索上限5回に到達
+W218,玉乃 淳,j_club_academy,ヴェルディユース,confirmed,single_b,2002年にヴェルディユースへ復帰後トップチームに昇格
+W219,竹内 彬,university,国士舘大学,confirmed,single_a,向上高等学校を経て国士舘大学へ進学、大学卒業後2006年に名古屋グランパスエイト加入
+W220,坂井 大将,j_club_academy,大分トリニータU-18,confirmed,single_a,大分トリニータU-15(2011頃)からU-18を経て2014年に2種登録、2015年に正式にトップチーム昇格
+W221,イッペイ シノヅカ,j_club_academy,アカデミア・チェルターノバ・モスクワ,confirmed,both_raters_agree,
+W222,伊野波 雅彦,university,阪南大学,confirmed,single_a,鹿児島実業高から阪南大学へ進学、2005年W杯出場後に大学を休学して2006年FC東京加入
+W223,宮崎 幾笑,j_club_academy,アルビレックス新潟U-18,confirmed,both_raters_agree,
+W224,河原 和寿,high_school,埼玉県立大宮東高等学校,confirmed,single_b,クラブ公式では「大宮東高」と表記
+W225,姜 成浩,university,朝鮮大学校,confirmed,single_b,朝鮮大学校から2010年に大分トリニータ加入
+W226,山田 陸,j_club_academy,大宮アルディージャユース,confirmed,single_a,2016年10月23日発表、2017年トップチーム昇格。ジュニアユース・Jr.ユースを経てユース在籍
+W227,小川 大貴,university,明治大学,confirmed,single_b,明治大学から2014年にジュビロ磐田加入
+W228,天野 貴史,j_club_academy,横浜F・マリノスユース,confirmed,single_a,クラブ公式アカデミー出身者一覧のユース出身者欄に掲載。2004年頃ユース在籍(在学校:神奈川県立新栄高校)、2005年トップ昇格
+W229,三島 康平,university,駒澤大学,confirmed,single_a,2010年ヴィッセル神戸加入（大学在籍年は未確認）
+W230,堀米 勇輝,j_club_academy,ヴァンフォーレ甲府ユース,confirmed,single_a,2005～2008年ヴァンフォーレ甲府ジュニアユース経由、2010年4月トップ2種登録
+W231,田中 裕人,university,関西大学,confirmed,single_b,関西大学からジュビロ磐田加入
+W232,藤ヶ谷 陽介,high_school,磐田東高等学校,confirmed,single_b,磐田東高等学校から1999年にコンサドーレ札幌加入
+W233,大橋 良隆,unknown,,indeterminate,single_a,本人は同定済み（生年月日・所属クラブ一致）だがWikipedia以外の一次資料で仙台大学在籍を裏付けられず、検索5回上限に到達
+W234,山本 海人,j_club_academy,清水エスパルスユース,confirmed,single_b,清水エスパルスユース在籍2001～2003年
+W235,吉澤 佑哉,j_club_academy,鹿島アントラーズユース,confirmed,single_a,鹿島ジュニアユースを経て鹿島ユースから2005年トップ昇格
+W236,波夛野 寛,university,天理大学,confirmed,single_a,洛西高校から天理大学へ進学、卒業後MIOびわこ草津等を経て讃岐加入
+W237,阿波加 俊太,j_club_academy,コンサドーレ札幌U-18,confirmed,both_raters_agree,
+W238,笠原 昂史,university,明治大学,confirmed,single_b,大宮公式が笠原昂史を明治大学OBとして記載
+W239,田原 豊,high_school,鹿児島実業高等学校,confirmed,single_a,2001年横浜F・マリノス加入
+W240,藤田 征也,j_club_academy,北海道コンサドーレ札幌ユース(U-18),confirmed,single_a,中学卒業後に高校を経ずクラブユース入団、2006年トップ昇格
+W241,佐々木 祐太,high_school,習志野高等学校,confirmed,single_a,高校卒業後に海外挑戦、大学経由なし
+W242,山田 正道,university,早稲田大学,confirmed,single_b,早稲田大学ア式蹴球部から京都パープルサンガへ加入
+W243,富居 大樹,university,東京国際大学,confirmed,single_b,東京国際大学からザスパクサツ群馬へ加入
+W244,小池 大喜,university,東洋大学,confirmed,single_b,東洋大学からブラウブリッツ秋田へ加入
+W245,鈴木 将也,university,神奈川大学,confirmed,single_b,2010年度に神奈川大学4年
+W246,大塚 翔,university,関西学院大学,confirmed,single_a,富山北Jrユース→富山一高→関西学院大→2018年FC琉球でプロデビュー
+W247,松浦 淳,unknown,,indeterminate,single_a,東京学芸大学卒業という記述はWikipedia系情報源にのみ存在し、J.LeagueデータサイトやOB会サイト等の非Wikipedia根拠に到達できず、5回超の検索でも確認不能
+W248,益山 司,high_school,岐阜工業高等学校,confirmed,both_raters_agree,
+W249,中里 宏司,j_club_academy,湘南ベルマーレユース,confirmed,single_b,公式ページの1982年/1983年生区分に掲載
+W250,長野 聡,university,福岡大学,confirmed,single_b,1982年8月2日生まれ
+W251,野沢 拓也,j_club_academy,鹿島アントラーズユース,confirmed,single_b,鹿島アントラーズユース在籍1997～1999年
+W252,中村 帆高,university,明治大学,confirmed,both_raters_agree,
+W253,嫁阪 翔太,j_club_academy,ガンバ大阪ユース,confirmed,single_a,2014年10月トップ昇格内定、2015年トップ昇格
+W254,増嶋 竜也,high_school,市立船橋高等学校,confirmed,single_a,2001年4月市立船橋高校入学、2004年FC東京入団（高卒ルーキー、背番号5）
+W255,石井 圭太,j_club_academy,横浜FCユース,confirmed,single_b,1995年6月22日生まれ
+W256,中川 寛斗,j_club_academy,柏レイソルユース（柏日体高）,confirmed,single_a,2010年柏レイソルU-18在籍、2013年トップ昇格と同時に湘南ベルマーレへ期限付き移籍
+W257,山之内 優貴,high_school,鹿児島実業高等学校,confirmed,single_a,2013年ギラヴァンツ北九州入団
+W258,中尾 剛,unknown,,indeterminate,single_a,四日市中央工業高校卒業という情報はWikipedia・アグリゲータ（球歴.com等）のみで確認され、公式・報道ソースの根拠を5回の検索内で発見できず判定不能とした
+W259,清水 貴文,university,中京大学,confirmed,both_raters_agree,
+W260,吉満 大介,university,鹿屋体育大学,confirmed,single_a,神村学園高から鹿屋体育大学へ進学し、卒業後2015年に栃木SCへ加入（新卒）
+W261,内田 智也,high_school,三重県立四日市中央工業高等学校,confirmed,single_b,1999年～2002年在籍
+W262,武内 大,university,福岡大学,confirmed,single_b,2014年に福岡大学サッカー部からV・ファーレン長崎の特別指定選手として承認
+W263,近藤 高虎,high_school,新田高等学校,confirmed,single_b,新田高の後に成人年代チームの流通経済大FCおよび流経大ドラゴンズ龍ケ崎を経由
+W264,松尾 佑介,university,仙台大学,confirmed,single_a,浦和レッズユース卒業後、仙台大学（2016-2019、体育学科）在学中に特別指定選手として横浜FCへ加入
+W265,金久保 彩,university,駒澤大学,confirmed,single_a,駒澤大学（2007年入学）卒業後2011年に水戸ホーリーホックへ加入
+W266,川鍋 良祐,university,青山学院大学,confirmed,single_b,青山学院大学の後に栃木SCへ加入
+W267,上原 力也,j_club_academy,ジュビロ磐田U-18,confirmed,single_a,磐田U-18在籍中は磐田東高校に学籍（クラブ側を採用）。2015年に磐田トップチーム加入
+W268,大竹 隆人,university,国士舘大学,confirmed,single_a,三菱養和SCユース（蒲田高校在籍）を経て国士舘大学（2007-2010）へ進学、卒業後2011年にFC町田ゼルビアへ加入
+W269,大塚和征,unknown,,indeterminate,single_a,熊本県小国町出身であることは複数資料で一致するが、育成年代(中学・高校等)の所属機関を示す情報がWikipedia系以外に見つからず、外部検索5回で判定不能
+W270,江﨑 一仁,unknown,,indeterminate,single_b,本人の生年月日と所属クラブに合致する資料には到達したが育成機関を示す非Wikipedia系の許容根拠を検索上限内で確保できず
+W271,石川 大徳,university,流通経済大学,confirmed,single_b,
+W272,荻 晃太,high_school,岐阜県立岐阜工業高等学校,confirmed,both_raters_agree,
+W273,武富孝介,j_club_academy,柏レイソルユース（柏日体高等学校）,confirmed,single_a,柏レイソルU-18ユースと柏日体高等学校の同時在籍のためクラブ側(j_club_academy)を採用
+W274,澤口 雅彦,university,流通経済大学,confirmed,single_b,
+W275,入船和真,unknown,,indeterminate,single_a,鵬翔高校在籍・2005年サンフレッチェ広島とプロ契約という経歴は複数資料で一致するが、いずれもWikipediaおよびそのミラー(pedia.3rd-in.co.jp等)のみで、独立根拠に到達できず
+W276,松本昂聡,unknown,,indeterminate,single_a,京都サンガF.C.公式クラブヒストリー(sanga-fc.jp)2002年ページで登録選手であることは確認したが、ユース昇格という経歴自体を裏付ける非Wikipedia根拠は見つからず
+W277,蔦颯,unknown,,indeterminate,single_a,前橋育英高校→専修大学(プロ入り前に大学進学のためuniversityが該当するはずのケース)という経歴はWikipedia系情報のみで、専修大学体育会サッカー部公式サイト等の独立根拠が見つからず
+W278,丹羽 大輝,j_club_academy,ガンバ大阪ユース,confirmed,single_a,生年月日1986/01/16で本人確認。堺Jrユース→ユースの順で在籍
+W279,小林 亮太,high_school,高崎市立高崎経済大学附属高等学校,confirmed,single_b,資料中の表記は「高崎経済大附属高」
+W280,鎌田 翔雅,j_club_academy,湘南ベルマーレユース,confirmed,single_a,生年月日1989/06/15一致。2008年トップ昇格
+W281,西岡 大輝,university,福岡教育大学,confirmed,single_a,生年月日1988/08/21一致。大学経由でサンフレッチェ広島へ進みその後栃木SCへ期限付き移籍
+W282,横山 卓司,university,新潟医療福祉大学,confirmed,single_b,
+W283,吉田 篤志,high_school,山形市立商業高等学校,confirmed,single_b,資料中の表記は「山形商業高校」
+W284,林 卓人,high_school,金光大阪高等学校,confirmed,both_raters_agree,
+W285,市原 大嗣,unknown,,indeterminate,single_a,検索上限到達。熊本県立大津高校出身との情報は複数見るがWikipedia/weblio由来のみで単独根拠となる一次情報(学校OB会サイト等)に到達できず
+W286,大島 康明,unknown,,indeterminate,single_a,検索上限到達。ヴィッセル神戸ジュニアユース→ユースの経歴はWikipedia由来のみ。セレッソ大阪公式コーチ紹介では生年月日が1981/08/31と記載され台帳の1981/09/01と1日相違があり要注意
+W287,吉田 明生,university,東海大学,confirmed,both_raters_agree,
+W288,持留 新作,j_club_academy,ガンバ大阪ユース,confirmed,single_b,
+W289,吉田 朋恭,university,産業能率大学,confirmed,both_raters_agree,
+W290,森保 翔平,university,法政大学,confirmed,single_a,2014年にカマタマーレ讃岐とプロ契約
+W291,中山 博貴,unknown,,indeterminate,single_b,本人は同定できたが、検索上限内で育成機関を確定できる非Wikipedia根拠に到達できず
+W292,薗田 淳,high_school,常葉学園橘高等学校,confirmed,single_b,
+W293,平石 健太,unknown,,indeterminate,single_b,本人は同定できたが、検索上限内で育成機関を確定できる適格な根拠に到達できず
+W294,森下 俊,j_club_academy,ジュビロ磐田ユース,confirmed,single_a,PR TIMES配信の地域おこし協力隊就任プレスリリース(磐田市関連発表とみられる)。磐田東高校との同時在籍が他資料で伝えられるが、同時在籍規則によりクラブ側を採用
+W295,野田 樹,j_club_academy,ヴィッセル神戸U-18,confirmed,single_b,ヴィッセル神戸U-18在籍：2014～2016年
+W296,清水 慶記,university,流通経済大学,confirmed,single_b,2004年–2007年在籍
+W297,荒野 拓馬,j_club_academy,北海道コンサドーレ札幌U-18,confirmed,both_raters_agree,
+W298,鈴木 順也,unknown,,indeterminate,single_a,桐生第一高校→立正大学→ザスパクサツ群馬(2019)という経路は複数の二次資料(Wikipedia等)で一致するが、5回の検索上限内で非Wikipedia根拠(公式・報道)に到達できず
+W299,大谷 圭志,unknown,,indeterminate,single_a,前橋育英高校卒業後2002年FC東京加入という経路は複数資料で一致するが、5回の検索上限内で非Wikipedia根拠に到達できず
+W300,中村 文昭,unknown,,indeterminate,single_a,水戸商業高校卒業後2000年水戸ホーリーホック加入という経路は複数資料で一致するが、5回の検索上限内で非Wikipedia根拠に到達できず
+W301,北井 佑季,university,近畿大学,confirmed,single_a,桐光学園高校卒業後、近畿大学2年時(2013年)にFC町田ゼルビアへ加入し中退
+W302,住田 貴彦,high_school,鳥取県立境高等学校,confirmed,single_a,2009年大分トリニータ入団、大学経由なし
+W303,原口 元気,j_club_academy,浦和レッズユース,confirmed,single_a,2009年1月30日プロ契約(17歳)
+W304,古川 大悟,j_club_academy,ジェフユナイテッド市原・千葉U-18,confirmed,single_b,2015年–2017年在籍
+W305,廣末 陸,high_school,青森山田高等学校,confirmed,single_b,2014年–2016年在籍
+W306,齋藤 功佑,j_club_academy,横浜FCユース,confirmed,single_a,2016年トップ昇格
+W307,富澤 雅也,university,法政大学,confirmed,single_a,2016年V・ファーレン長崎に新卒加入(法政大学卒業後)
+W308,伊藤 優汰,j_club_academy,京都サンガF.C.U-18,confirmed,single_b,
+W309,藤岡 浩介,high_school,日章学園高等学校,confirmed,both_raters_agree,
+W310,生駒仁,high_school,鹿児島城西高等学校,confirmed,single_a,2018年に高校から横浜F・マリノスへ加入内定
+W311,畠中槙之輔,j_club_academy,東京ヴェルディユース,confirmed,adjudicated_agreement_spot_check,整合性確認
+W312,関 憲太郎,university,明治大学,confirmed,single_b,
+W313,島田 裕介,high_school,西武台高等学校,confirmed,single_b,公式表記は「西武台高」
+W314,長谷部 彩翔,j_club_academy,アルビレックス新潟ユース,confirmed,single_b,2008年トップチーム昇格
+W315,小泉隆斗,university,立正大学,confirmed,adjudicated_disagreement,整合性確認
+W316,池田昌広,unknown,,indeterminate,single_a,Wikipediaには花咲徳栄高→流通経済大学(2000-2003)→湘南ベルマーレ(2005)との記載があるが非Wikipedia根拠が見つからず5回の検索上限に到達
+W317,阿部翔平,university,筑波大学,confirmed,single_a,横浜フリューゲルスジュニアユース(U-15)→市立船橋高(クラブ籍なし)→筑波大学を経て2006年名古屋加入
+W318,大西容平,university,阪南大学,confirmed,single_a,生年月日1982/10/30はJ-League公式データサイト(https://data.j-league.or.jp/SFIX04/?player_id=8168)で一致確認
+W319,松裏 英明,j_club_academy,ジュビロ磐田ユース,confirmed,single_b,2001年ヴァンフォーレ甲府加入時の前所属クラブ
+W320,姜 鉉守,university,桃山学院大学,confirmed,single_b,桃山学院大学の後に京都サンガF.C.へ加入
+W321,本多 剛,university,専修大学,confirmed,single_b,2003年ヴァンフォーレ甲府加入時の前所属クラブ
+W322,藤本 淳吾,university,筑波大学,confirmed,single_b,筑波大学から2006年に清水エスパルス加入
+W323,菊井悠介,university,流通経済大学,confirmed,both_raters_agree,
+W324,平本一樹,j_club_academy,ヴェルディユース,confirmed,both_raters_agree,
+W325,佐藤 隼,unknown,,indeterminate,single_b,公式資料で高校卒業後の大学進学は確認できたが大学名を確定できず
+W326,土井 智之,university,常葉大学,confirmed,single_b,常葉大学卒業後にアルビレックス新潟シンガポールへ加入
+W327,坪内秀介,high_school,前橋育英高等学校,confirmed,single_a,2002年ヴィッセル神戸へ高校から直接加入
+W328,沼田 駿也,university,関西大学,confirmed,single_a,摂津高校卒業後、関西大学に進学。2021/9/10発表の加入内定記事(2022年よりレノファ山口FC加入)に記載
+W329,尾亦 弘友希,j_club_academy,FC東京U-18,confirmed,single_a,東京ガスFC Jrユースからそのまま高校年代でFC東京U-18に進み2002年にトップ昇格。在籍年は不明
+W330,松田 悠佑,unknown,,indeterminate,single_a,複数の二次情報(Wikipedia由来)は「京都産業大学(2010-2013)→FC琉球(2014)」と一致するが、Wikipedia以外の単独で根拠となる情報源(公式・報道等)に到達できず確認不能
+W331,松浦 勇武,high_school,浜松開誠館高等学校,confirmed,single_a,2010年湘南ベルマーレ新体制発表記事に浜松開誠館高校出身と記載、生年月日一致で本人確認
+W332,内田 宅哉,j_club_academy,ＦＣ東京U-18,confirmed,single_b,ＦＣ東京U-18からＦＣ東京トップチームへ昇格
+W333,宮地元貴,university,慶應義塾大学,confirmed,adjudicated_agreement_spot_check,整合性確認
+W334,脇坂 泰斗,university,阪南大学,confirmed,single_a,川崎フロンターレU-18(横浜創学館高校)在籍後、阪南大学を経て2018年に川崎フロンターレ加入。プロ入り直前は大学のためuniversity判定
+W335,井上 聖也,university,甲南大学,confirmed,single_a,生年月日「1999年11月9日(21歳)」の記載で本人確認・出身高校同窓会の公式ページ
+W336,林堂 眞,university,駒澤大学,confirmed,single_a,生年月日1989-11-21で本人確認・移籍歴「清水FC－柏レイソルU-12－ヴィヴァイオ船橋－習志野高－駒澤大」との記載あり
+W337,山田 尚幸,university,びわこ成蹊スポーツ大学,confirmed,both_raters_agree,
+W338,飯田 涼,high_school,成立学園高等学校,confirmed,single_a,クラブ公式新加入発表・生年月日1993年11月5日で本人確認・ジュニアユースのみでクラブ籍なく高校進学のため高校区分
+W339,釘﨑 康臣,unknown,,indeterminate,single_b,東海大学在籍を示す手がかりは得たが要件を満たす非Wikipedia系の根拠を確認できず
+W340,高 宇洋,high_school,船橋市立船橋高等学校,confirmed,single_b,市立船橋高から2017年にガンバ大阪へ加入
+W341,山中 亮輔,j_club_academy,柏レイソルU-18,confirmed,single_b,柏レイソルU-18からトップチームへ昇格
+W342,片岡 洋介,university,国士舘大学,confirmed,single_b,国士舘大学から2005年に大宮アルディージャへ加入
+W343,上園 和明,j_club_academy,ベルマーレ平塚ユース,confirmed,single_b,ベルマーレ平塚ユース在籍後に2000年から水戸ホーリーホック所属
+W344,柴小屋 雄一,high_school,習志野市立習志野高等学校,confirmed,single_b,2001年インターハイに習志野高校の選手として出場
+W345,藤田 泰成,high_school,多々良学園高校（現・高川学園高校）,confirmed,both_raters_agree,
+W346,三渡洲 舞人,high_school,流通経済大学付属柏高校,confirmed,both_raters_agree,
+W347,木村 敦志,j_club_academy,ガンバ大阪ユース,confirmed,single_b,2000年-2002年在籍
+W348,大﨑 玲央,university,桐蔭横浜大学,confirmed,single_b,大学卒業後に米国レイルホークスを経て横浜FC加入
+W349,田上 裕,university,宮崎産業経営大学,confirmed,single_a,本人運営の公式サイト(元Jリーガーのスクール事業)・掲載経歴「2008FC刈谷→2009FC琉球→2010-2013FC KAGOSHIMA→2014-2019鹿児島ユナイテッドFC」が既知経歴と一致し本人確認・同ページに生年月日記載なし
+W350,山田 祥史,unknown,,indeterminate,single_b,本人とアビスパ福岡U-18所属を示す非公式資料には到達したが検索上限内で許容される根拠を確認できず
+W351,大西 孝治,high_school,香川西高等学校,confirmed,single_b,2007年卒業。現・四国学院大学香川西高等学校
+W352,辻 周吾,j_club_academy,ジェフユナイテッド市原・千葉U-18,confirmed,single_b,サガン鳥栖加入直前に在籍
+W353,奥田 達朗,university,愛知学院大学,confirmed,both_raters_agree,
+W354,秋野 央樹,j_club_academy,柏レイソルＵ－１８,confirmed,single_b,
+W355,上形 洋介,university,早稲田大学,confirmed,both_raters_agree,
+W356,阿部 伸行,university,流通経済大学,confirmed,single_a,生年月日1984-04-27で本人確認・FC東京U-18ユース経由後2003年流通経済大学に進学しプロ入り
+W357,小林 陽介,j_club_academy,浦和レッズユース,confirmed,single_b,
+W358,島村 拓弥,j_club_academy,京都サンガF.C.U-18,confirmed,single_b,
+W359,森島 司,high_school,四日市中央工業高等学校,confirmed,single_a,2016年サンフレッチェ広島加入。高校在学中に第92回全国高校選手権でベスト4・優秀選手
+W360,桜井 正人,unknown,,indeterminate,single_a,浜松大学(現常葉大学)進学の情報はあるがWikipedia派生記述以外の一次資料(公式・報道)に到達できず、検索上限超過のため判定不能
+W361,永冨 裕也,unknown,,indeterminate,single_a,中京大学サッカー部総監督として本人と思われる人物を学校公式サイトで確認したが、プロ入り前在学と愛媛FC加入の経路を裏付ける逐語引用に到達できず判定不能
+W362,秋本 倫孝,university,法政大学,confirmed,both_raters_agree,
+W363,髙橋 大悟,high_school,神村学園高等部,confirmed,single_b,
+W364,工藤 祐生,university,東京農業大学,confirmed,single_b,東京農業大学の後に栃木SCへ加入
+W365,小松 駿太,university,順天堂大学,confirmed,single_a,横浜F・マリノスユース在籍後に大学進学を選択し2017年順天堂大学からYS横浜(J3)加入
+W366,木下 高彰,high_school,浜松開誠館高等学校,confirmed,single_a,2011年10月ジュビロ磐田加入内定発表時は浜松開誠館高校3年
+W367,三浦 龍輝,university,明治大学,confirmed,single_a,FC東京U-18→明治大学→柏レイソル→ジュビロ磐田。大学4年時に柏の練習参加からプロ入りした旨も記事に記載
+W368,戸島 章,high_school,成立学園高等学校,confirmed,single_b,公式ページ上の表記は「成立学園高」
+W369,山内 祐一,university,福岡大学,confirmed,single_b,2007年卒業後にロッソ熊本加入
+W370,大橋 尚志,j_club_academy,鹿島アントラーズユース,confirmed,single_b,
+W371,佐藤 大基,high_school,船橋市立船橋高等学校,confirmed,both_raters_agree,
+W372,川田 拳登,j_club_academy,大宮アルディージャユース,confirmed,single_b,
+W373,大友 慧,j_club_academy,鹿島アントラーズユース,confirmed,single_a,JFA夢先生プロフィールPDF
+W374,安井 拓也,j_club_academy,ヴィッセル神戸U-18,confirmed,single_b,2014年～2016年在籍
+W375,松村 亮,j_club_academy,ヴィッセル神戸U-18,confirmed,single_b,
+W376,安藤 淳,university,関西大学,confirmed,single_b,
+W377,西澤 代志也,j_club_academy,浦和レッズユース,confirmed,single_a,2006年ユースからトップ昇格
+W378,田村 友,university,福岡大学,confirmed,single_b,
+W379,石川 慧,high_school,新潟明訓高等学校,confirmed,single_a,2011年高校卒業後ベガルタ仙台加入(高校在籍中の2種登録ではなく卒業後加入)
+W380,島田 譲,university,早稲田大学,confirmed,single_b,
+W381,石黒 智久,university,愛知学院大学,confirmed,single_a,高校得点王(1999年)はsoccer-king.jpでも別途確認済み。富山第一高校→愛知学院大学→YKK AP(JFL)→カターレ富山(プロ)
+W382,竹内 涼,high_school,浜松開誠館高等学校,confirmed,both_raters_agree,
+W383,志知孝明,university,東海学園大学,confirmed,single_a,サンフレッチェ広島公式サイトの経歴欄（時系列の箇条書き）より。FC岐阜U-18（クラブユース）の後に東海学園大学へ進学し、卒業後2015年に松本山雅FCでプロ入り
+W384,北原 毅之,university,拓殖大学,confirmed,single_b,拓殖大学在籍は2009年～2011年
+W385,常盤 聡,university,東京農業大学,confirmed,both_raters_agree,
+W386,森一紘,unknown,,indeterminate,single_a,本人（1981/04/17生、伊丹市出身、ヴィッセル神戸)には到達したが、ヴィッセル神戸ユース(1997-1999)・神戸国際大学附属高校在籍を裏付ける非Wikipedia系（公式・報道）の根拠を5回の検索内で発見できず
+W387,鈴木 伸貴,high_school,埼玉県立大宮東高等学校,confirmed,adjudicated_disagreement,b公式の記録確認
+W388,宮崎大志郎,unknown,,indeterminate,single_a,本人（1983/04/21生、熊本県出身)には到達したが、大津高校(1999-2001)・駒澤大学(2002-2005)在籍を裏付ける非Wikipedia系の根拠を5回の検索内で発見できず
+W389,服部大樹,university,早稲田大学,confirmed,single_a,桐蔭学園高卒業後、早稲田大学を経て2010年にYS横浜加入・2014年プロ契約
+W390,吉本 一謙,j_club_academy,FC東京U-18,confirmed,adjudicated_agreement_spot_check,整合性確認
+W391,佐々木 竜太,high_school,鹿島学園高等学校,confirmed,single_b,JAPANサッカーカレッジは鹿島加入後の在籍
+W392,名古 新太郎,university,順天堂大学,confirmed,both_raters_agree,
+W393,鈴木 良和,unknown,,indeterminate,both_raters_agree,
+W394,大西遼太郎,unknown,,indeterminate,single_a,本人（1997/11/24生、ジュビロ磐田U-18→法政大学→FC岐阜という経歴）には到達したが、FC岐阜・Jリーグ公式選手ページが404で取得不可、非Wikipedia系の根拠を5回の検索内で発見できず
+W395,田村 亮介,j_club_academy,京都サンガF.C. U-18,confirmed,single_a,生年月日1995/5/8で本人確認。奈良YMCASC Jrユース→京都サンガF.C. U-18からトップ昇格
+W396,染矢 一樹,university,奈良産業大学,confirmed,single_b,2009年FC岐阜加入時の前所属
+W397,大谷 昌司,high_school,前橋育英高等学校,confirmed,single_b,自治体広報資料
+W398,上笹貫 剣,university,University of the Pacific（パシフィック大学）,confirmed,single_a,生年月日1999/5/4で本人確認。高校・クラブアカデミー(Pateadores Academy U-19)の後に大学(University of the Pacific)を経て2022年いわてグルージャ盛岡加入。プロ入り直前が大学のため university を採用
+W399,平出 涼,j_club_academy,FC東京U-18,confirmed,single_a,生年月日1991/7/18で本人確認。山梨・フォルトゥナSCジュニアユースからFC東京U-18に進み2009年トップ昇格発表
+W400,神谷 椋士,university,東海学園大学,confirmed,single_b,大学後のFC刈谷は成人年代チーム
+W401,北本 久仁衛,high_school,奈良育英高等学校,confirmed,both_raters_agree,
+W402,登崎 雅貴,university,常葉大学浜松キャンパス,confirmed,single_b,2017年カターレ富山加入
+W403,梶山 幹太,j_club_academy,名古屋グランパスU18,confirmed,single_b,2016年にU18在籍。2017シーズンよりトップチーム昇格。
+W404,新井 瑞希,j_club_academy,浦和レッドダイヤモンズユース,confirmed,single_a,生年月日1997/4/14で本人確認。浦和レッズユース後の海外SVホルン(オーストリア)は成人年代クラブで育成機関に含めず、浦和レッズユースを最終育成機関として採用
+W405,福満 隆貴,other,九州総合スポーツカレッジ,confirmed,both_raters_agree,
+W406,上原 拓郎,university,北海道教育大学岩見沢校,confirmed,single_b,コンサドーレ札幌U-18から北海道教育大学岩見沢校へ進み、2014年に札幌加入。
+W407,中井 昇吾,high_school,滋賀県立野洲高等学校,confirmed,single_b,柏レイソル公式の原文は「野州高校」表記。2003年に柏レイソル加入。
+W408,登里 享平,high_school,香川西高等学校,confirmed,single_b,香川西高校に2006年から2009年まで在籍し、2009年に川崎フロンターレ加入。
+W409,丸岡 悟,university,近畿大学,confirmed,single_b,近畿大学から2020年にヴァンラーレ八戸加入。
+W410,大久保 裕樹,high_school,船橋市立船橋高等学校,confirmed,single_b,2000～2002年在籍
+W411,中島 翔哉,j_club_academy,東京ヴェルディユース,confirmed,single_a,生年月日1994/8/23で本人確認。東京ヴェルディユース(2010-2012)を経て2012年第2種登録、その後プロ契約
+W412,佐藤 昭大,j_club_academy,サンフレッチェ広島ユース,confirmed,single_b,
+W413,綿引 康,university,鹿屋体育大学,confirmed,single_b,2019年度卒
+W414,杉本 竜士,j_club_academy,東京ヴェルディユース,confirmed,single_b,
+W415,野嶽 惇也,university,福岡大学,confirmed,single_b,
+W416,酒井 隆介,university,駒澤大学,confirmed,both_raters_agree,
+W417,土岐田 洸平,university,法政大学,confirmed,single_b,2008年に大宮アルディージャ加入
+W418,金 正也,university,駒澤大学,confirmed,single_a,神戸科学技術高等学校を経て駒澤大学在学中に2010年天皇杯出場、2011年ガンバ大阪入団
+W419,近藤 徹志,high_school,東福岡高等学校,confirmed,both_raters_agree,
+W420,谷尾 昂也,high_school,米子北高等学校,confirmed,single_a,2011年川崎フロンターレ入団
+W421,杉森 考起,j_club_academy,名古屋グランパスU18,confirmed,single_a,U15からU18を経てトップ昇格
+W422,伊東 純也,university,神奈川大学,confirmed,single_a,逗葉高校を経て神奈川大学在学中の2014年9月特別指定選手、2015年甲府加入内定
+W423,田草川 貴,unknown,,indeterminate,single_a,修徳高校出身との情報がファンサイト等に複数あるが単独で成立する根拠(公式/報道等)を探索上限内で発見できず判定不能
+W424,上田 陵弥,university,中央学院大学,confirmed,single_b,大学後に横河武蔵野FCを経てFC琉球
+W425,河野 淳吾,high_school,清水商業高等学校（現 清水桜が丘高等学校）,confirmed,both_raters_agree,
+W426,岩沼 俊介,high_school,前橋育英高等学校,confirmed,single_b,前橋育英高校からコンサドーレ札幌へ加入
+W427,福森 晃斗,high_school,桐光学園高等学校,confirmed,single_b,桐光学園高校から川崎フロンターレへ加入
+W428,佐田聡太郎,high_school,前橋育英高等学校,confirmed,single_a,2002年高校卒業後サンフレッチェ広島加入 その後ザスパ草津へ期限付き移籍
+W429,挽地 祐哉,high_school,鹿児島城西高等学校,confirmed,single_b,2002年から2003年までジュビロ磐田に登録
+W430,田坂 祐介,university,青山学院大学,confirmed,both_raters_agree,
+W431,青木 剛,high_school,前橋育英高等学校,confirmed,both_raters_agree,
+W432,中野雅臣,j_club_academy,東京ヴェルディユース,confirmed,single_a,verdy.co.jp/page/656によればユース在籍は2009〜14年
+W433,馬場 賢治,university,近畿大学,confirmed,single_b,近畿大学から2008年にヴィッセル神戸へ加入
+W434,高野耕平,university,東京学芸大学,confirmed,single_a,鹿島アントラーズユース経由で大学進学後プロ入り
+W435,石田 雅人,high_school,奈良育英高等学校,confirmed,adjudicated_disagreement,b公式の記録確認
+W436,鈴木 惇,j_club_academy,アビスパ福岡U-18,confirmed,single_b,アビスパ福岡U-18在籍時の学籍は福岡高校
+W437,島村毅,university,早稲田大学,confirmed,single_a,早稲田実業高校を経て早稲田大学からプロ入り
+W438,市村篤司,high_school,北海高等学校,confirmed,single_a,北海道恵庭市出身 北海高校からコンサドーレ札幌加入
+W439,吉田 将也,university,東京農業大学,confirmed,single_b,東京農業大学からザスパクサツ群馬へ加入
+W440,小野寺 達也,university,拓殖大学,confirmed,single_b,2009年まで拓殖大学に在籍し2010年に栃木SCへ加入
+W441,佐藤 洸一,university,四日市大学,confirmed,single_a,四日市西高校を経て四日市大学へ進学。大学在学中の2008年にFC岐阜特別指定選手登録。在籍年は明記なし。
+W442,梅木 翼,university,福岡大学,confirmed,single_b,福岡大学からレノファ山口FCへ加入
+W443,服部 康平,university,国士舘大学,confirmed,single_a,国士舘高から国士舘大学へ進学し大学卒業後2014年SC相模原でプロ入り。在籍年は明記なし。
+W444,巻 佑樹,unknown,,indeterminate,single_a,複数の二次情報(Wikipedia/weblio等)は国見高校→駒澤大学と一致して記載するが5回の検索上限内で非Wikipedia根拠(news/official/school)の逐語引用に到達できなかった。
+W445,酒井 貴政,unknown,,indeterminate,single_a,複数の二次情報は高知大学進学(2010年インカレ主将)と一致し2011年中国新聞等の実在報道への言及も見つかったが検索上限内で当該記事本文の逐語引用に到達できなかった。
+W446,田中 隼磨,j_club_academy,横浜F・マリノスユース,confirmed,single_b,高校卒業後の2001年に横浜F・マリノス加入
+W447,喜田 拓也,j_club_academy,横浜F・マリノスユース,confirmed,single_a,ユース在籍時は神奈川県立横浜立野高等学校に同時在籍(クラブ側を採用)。2014年トップ昇格。
+W448,比嘉厚平,j_club_academy,柏レイソルU-18,confirmed,single_a,柏U-18在籍は2006-2008年(Wikipedia情報、手がかりのみ)。高校名は非併記
+W449,菊本侑希,university,中京大学,confirmed,single_a,アビスパ福岡U-18経由も大学進学後にプロ入りのためuniversity。大学2年時にセレクション合格し休学、後に中退(Wikipedia情報)
+W450,中村 充孝,high_school,船橋市立船橋高等学校,confirmed,single_b,市立船橋高校から京都サンガF.C.へ加入
+W451,横山 翔平,high_school,前橋育英高等学校,confirmed,single_b,前橋育英高からザスパクサツ群馬へ加入
+W452,高須洋平,j_club_academy,鹿島アントラーズユース,confirmed,single_a,引用元に生年月日記載なし。同記事の「J2の水戸ホーリーホックを経て、2002年にザスパ草津に入団」がsenior_clubsと一致し本人確認
+W453,山本 康裕,j_club_academy,ジュビロ磐田ユース,confirmed,both_raters_agree,
+W454,菅嶋弘希,j_club_academy,東京ヴェルディユース,confirmed,single_a,同ページに生年月日1995年5月11日の記載あり、本人確認済み
+W455,白石 智之,university,法政大学,confirmed,both_raters_agree,
+W456,山藤 健太,university,平成国際大学,confirmed,single_b,大学後にアルテ高崎とソニー仙台FCを経由
+W457,河野 健一,unknown,,indeterminate,single_b,本人と日本文理大学在籍を示唆する情報には到達したが許容される非Wikipedia系根拠で確定できず
+W458,平松宗,university,国士舘大学,confirmed,single_a,同ページに生年月日1992年11月20日の記載あり、本人確認済み
+W459,藤本 康太,high_school,熊本国府高等学校,confirmed,single_b,
+W460,李 漢宰,high_school,広島朝鮮高級学校,confirmed,single_b,広島県立西高等学校通信課程卒との併記あり
+W461,森﨑 和幸,j_club_academy,サンフレッチェ広島ユース,confirmed,single_b,
+W462,増田 誓志,high_school,鵬翔高等学校,confirmed,single_b,
+W463,上門 知樹,high_school,沖縄県立与勝高等学校,confirmed,single_b,高校卒業後にFC琉球へ加入
+W464,杉田 真彦,university,順天堂大学,confirmed,single_a,静岡西高卒業後、一般入試で順天堂大学に進学。大学卒業後ソニー仙台FC(JFL)を経て2020年藤枝MYFC加入
+W465,野口 遼太,university,大阪産業大学,confirmed,single_a,大阪産業大卒業後、徳島セカンド(アマチュア)を経て讃岐加入
+W466,吉武 剛,high_school,三重県立津工業高等学校,confirmed,single_b,2000年卒業後に横浜FC加入
+W467,渡部 学,unknown,,indeterminate,single_b,本人には到達したが育成機関を確定できる適格な根拠が見つからなかった
+W468,南 秀仁,j_club_academy,東京ヴェルディユース,confirmed,single_a,高校2年時にJリーグデビュー、2012年トップ昇格
+W469,豊田 陽平,high_school,星稜高等学校,confirmed,single_a,2004年に星稜高校から名古屋グランパスエイトへ加入(ユース非経由)
+W470,黄 誠秀,university,朝鮮大学校,confirmed,single_b,2010年にジュビロ磐田加入内定
+W471,秋山 大地,j_club_academy,セレッソ大阪U-18,confirmed,single_a,2013年トップ昇格
+W472,高木 純平,j_club_academy,清水エスパルスユース,confirmed,single_a,1998-2000年在籍 2001年清水エスパルストップ昇格
+W473,西村 弘司,high_school,三重県立四日市中央工業高等学校,confirmed,single_a,2003年京都パープルサンガ加入
+W474,佐藤 寿人,j_club_academy,ジェフユナイテッド市原ユース,confirmed,single_b,1997～1999年在籍後にジェフユナイテッド市原へ昇格
+W475,大谷 秀和,j_club_academy,柏レイソルユース,confirmed,single_a,2003年トップ昇格 高卒ルーキーとして開幕スタメン
+W476,常田 克人,high_school,青森山田高等学校,confirmed,single_b,2016シーズンからベガルタ仙台加入内定
+W477,松原 后,high_school,浜松開誠館高等学校,confirmed,single_a,内定会見当時3年生 2015年清水エスパルス入団
+W478,宮本 拓弥,university,早稲田大学,confirmed,single_a,流通経済大学付属柏高校を経て進学 2016年水戸ホーリーホック加入
+W479,髙江 麗央,high_school,東福岡高等学校,confirmed,single_a,中学はロアッソ熊本下部組織(U-15)。東福岡高校在学中にガンバ大阪内定(2016年発表)、2017年加入。OBリスト表記は「高江」(髙江の異体字)。
+W480,杉本 拓也,university,日本大学,confirmed,single_a,藤枝明誠高等学校を経て日本大学へ進学。2011年9月に日本大学在学中の特別指定選手としてガイナーレ鳥取に登録、2012年正式加入。
+W481,小池 裕太,university,流通経済大学,confirmed,single_a,FCアネーロ宇都宮U-15からアルビレックス新潟ユースを経て流通経済大学へ進学。2016年4月に大学2年生として鹿島アントラーズの特別指定選手に承認。
+W482,永坂 勇人,j_club_academy,北海道コンサドーレU-18,confirmed,single_b,Jリーグ公式登録で生年月日1994/5/22および札幌所属を照合。2013年トップチーム昇格。
+W483,森 俊介,university,関西学院大学,confirmed,single_b,2017年に関西学院大学からアルビレックス新潟へ加入。
+W484,小島 弘已,high_school,四日市中央工業高等学校,confirmed,single_a,発表記事の表記は「小島 弘巳」(弘已の異体字)。生年月日1989/10/27・出身地岐阜県で本人確認。
+W485,堂安 律,j_club_academy,ガンバ大阪ユース,confirmed,single_b,2016年にガンバ大阪ユースからトップチームへ昇格。
+W486,古部 健太,university,立命館大学,confirmed,both_raters_agree,
+W487,吉本 淳,university,静岡産業大学,confirmed,single_a,静岡産業大学サッカー部OBページに記載。2004年にJFL昇格のザスパ草津へ加入。
+W488,大久保 嘉人,high_school,長崎県立国見高等学校,confirmed,single_b,国見高校から2001年にセレッソ大阪へ加入。
+W489,數馬 正浩,j_club_academy,横浜F・マリノスユース,confirmed,single_b,報道資料で1982年生まれ、神奈川県出身、横浜F・マリノスのアカデミーからトップチームへの昇格を照合。生年月日は1982年6月22日。
+W490,今井 智基,university,中央大学,confirmed,single_a,大宮アルディージャユースでトップ昇格できず中央大学へ進学、卒業後に大宮アルディージャでプロ入り
+W491,渋谷 飛翔,high_school,関東第一高等学校,confirmed,single_b,2010年～2013年在籍
+W492,棚橋 雄介,university,阪南大学,confirmed,single_a,東福岡高校を経て阪南大学へ進学、2011年にカターレ富山加入。阪南大学公式サイトのJリーガー輩出実績ページ掲載
+W493,美尾 敦,j_club_academy,湘南ベルマーレユース,confirmed,single_b,
+W494,奥田 裕貴,unknown,,indeterminate,single_a,複数の集約サイトは南大阪SS→ガンバ大阪門真Jrユース→初芝橋本高→明治大→アイゴッソ高知→高知ユナイテッドSC→YS横浜の経路で一致するが、単独典拠となる公式/報道ソースに5回の検索内で到達できず(Jリーグ公式・ガイナーレ鳥取公式・テゲバジャーロ宮崎公式のページは404/403で確認不能)
+W495,斎藤 雅也,unknown,,indeterminate,single_a,複数の集約サイトはFC東京下部組織→明治大学→栃木SC(2008年加入)の経路で一致するが、単独典拠となる非Wikipedia資料に5回の検索内で到達できず。Jリーグ公式データサイトは生年月日(1985/06/08)のみ確認でき出身校の記載なし
+W496,澁谷 雅也,university,国士舘大学,confirmed,single_b,2017年～2020年在籍・FC大阪のプレスリリース転載
+W497,小野田 将人,high_school,柳ヶ浦高等学校,confirmed,single_b,高校卒業後に成人年代のFC今治を経由
+W498,岩上 祐三,university,東海大学,confirmed,single_a,前橋商業高校卒業後に東海大学へ進学、在学中の2011年に特別指定選手としてJリーグデビュー、2012年に正式加入
+W499,小川 諒也,high_school,流通経済大学付属柏高等学校,confirmed,single_b,
+W500,猿田 浩得,university,拓殖大学,confirmed,single_b,2005年に愛媛FC加入
+W501,上村岬,university,筑波大学,confirmed,single_a,磐田ユース(磐田東高校、2007-2009)を経て筑波大学(2010-2013)へ進学、2014年ジュビロ磐田加入
+W502,西口 諒,university,京都産業大学,confirmed,single_b,京都産業大学からAC長野パルセイロへ加入
+W503,青田翔,university,関東学院大学,confirmed,single_a,麻布大渕野辺高から関東学院大学を経て2009年YS横浜加入(J3昇格は2014年)
+W504,中島 裕希,high_school,富山第一高等学校,confirmed,single_b,富山第一高等学校から鹿島アントラーズへ加入
+W505,田中順也,university,順天堂大学,confirmed,single_a,三菱養和SCジュニアユース→三菱養和SCユース(高校年代)を経て順天堂大学へ進学、大学4年時に柏特別指定選手、2010年柏正式加入
+W506,邦本 宜裕,j_club_academy,浦和レッズユース,confirmed,single_b,浦和レッズユース在籍後にアビスパ福岡へ加入
+W507,斉川 雄介,unknown,,indeterminate,single_b,本人と札幌第一高等学校在籍を示すファンサイトには到達したが検索上限内で許容される根拠を確認できず
+W508,樋口 寛規,high_school,滝川第二高等学校,confirmed,single_b,公式サイトの表記は「滝川第二高校」
+W509,吉見 一星,unknown,,indeterminate,single_b,山形県立山形中央高等学校を示す情報は見つかったが単独で根拠にできる資料では確定できず
+W510,濱岡 和久,high_school,鎮西学院高等学校,confirmed,single_b,公式サイトの表記は「長崎鎮西学院高校」
+W511,伊藤 拓真,university,早稲田大学,confirmed,adjudicated_disagreement,b公式の記録確認
+W512,森﨑 浩司,j_club_academy,サンフレッチェ広島ユース,confirmed,single_b,2000年にトップチーム加入
+W513,今井大悟,unknown,,indeterminate,single_a,高校・大学(水島工業高校/福山大学とされる)についてweblio等アグリゲータ以外の単独根拠が見つからず、外部検索上限のため判定不能
+W514,鈴木智樹,j_club_academy,北海道コンサドーレ札幌U-18（コンサドーレユース）,confirmed,single_a,緑陵高校在籍と並行してコンサドーレユースに所属、2003年天皇杯でトップ帯同、2004年トップ昇格
+W515,藤沼 拓夢,j_club_academy,大宮アルディージャユース,confirmed,single_a,大宮ジュニアユース→大宮ユース→2016年大宮トップ昇格。以降は栃木・盛岡・秋田への育成型期限付き移籍を経て復帰
+W516,吉尾 海夏,j_club_academy,横浜F・マリノスユース,confirmed,single_a,高校（神奈川県立新栄高等学校）とユースの同時在籍のため規則によりクラブ側を採用
+W517,川島 大地,university,東海大学,confirmed,both_raters_agree,
+W518,イヨハ 理 ヘンリー,j_club_academy,サンフレッチェ広島ユース,confirmed,single_a,高校（広島県立吉田高等学校）と同時在籍のため規則によりクラブ側を採用。初のプロクラブは広島でその後岐阜へ期限付き移籍
+W519,大谷 真史,university,駒澤大学,confirmed,single_a,大学卒業後モンテネグロ下位クラブ・関東2部アマチュアを経て2020年にいわてグルージャ盛岡でプロ入り
+W520,田中 裕介,high_school,桐光学園高等学校,confirmed,both_raters_agree,
+W521,近藤 貫太,university,慶應義塾大学,confirmed,single_b,公式サイトの表記は「慶応義塾大学」
+W522,前田 悠斗,university,京都産業大学,confirmed,single_b,
+W523,柿木 亮介,university,大阪学院大学,confirmed,single_b,2014シーズンからガイナーレ鳥取加入
+W524,椎名 一馬,university,流通経済大学,confirmed,single_a,高校卒業後流通経済大学を経て2009年ファジアーノ岡山加入（Jデビューは2014年）。引用はページ内キャリア表の抽出テキストで区切り記号なし
+W525,青山 隼,j_club_academy,名古屋グランパスエイトU-18,confirmed,single_a,2006年ユースからただ一人トップ昇格。豊田大谷高校とクラブユース同時在籍
+W526,乾 貴士,high_school,滋賀県立野洲高等学校,confirmed,single_b,
+W527,前山 恭平,university,福岡大学,confirmed,single_b,2010年に当時JFLの秋田へ加入
+W528,久場 光,unknown,,indeterminate,single_a,流通経済大学付属柏高校在籍という情報はあるが、非Wikipediaの単独根拠に到達できず（大学公式ニュースはSSL証明書エラーで内容未確認、選手権優勝メンバー記事にも本人名の記載を発見できず）
+W529,有田 光希,high_school,北越高等学校,confirmed,single_a,アルビレックス新潟ジュニアユース(U-15、クラブ籍)を経て北越高等学校(2007-2009、クラブ籍なし)へ進学。同姓同名で経歴の異なる別選手情報を検索中に発見したため、生年月日・在籍時期・所属クラブ変遷で本人確認済み
+W530,森村 昂太,unknown,,indeterminate,single_a,FC東京U-15→U-18、倉又寿雄監督によりFWへコンバートという情報が複数存在するが、非Wikipediaの単独根拠（報道記事はFC東京の別選手3名を扱う記事で本人の記載なし）に到達できず
+W531,成岡 翔,high_school,静岡県立藤枝東高等学校,confirmed,single_b,2003年ジュビロ磐田入団
+W532,安部 裕葵,high_school,広島県瀬戸内高等学校,confirmed,both_raters_agree,
+W533,金澤 慎,j_club_academy,大宮アルディージャユース,confirmed,single_b,2002年トップチーム昇格
+W534,梶川 諒太,university,関西学院大学,confirmed,single_a,関西学院高等部→関西学院大学(2008年関西学生リーグ新人賞等)→2011年東京ヴェルディに特別指定選手として加入。大学卒業後のプロ入りのためuniversity判定
+W535,栗澤 僚一,university,流通経済大学,confirmed,single_a,習志野高→流通経済大学→FC東京(大学4年時の2004年に特別指定選手)
+W536,山川 デション諒,high_school,沖縄県立前原高等学校,confirmed,single_a,2016年FC琉球加入時点で前原高校在学中(高校2年次にブラジル留学の経歴あり)
+W537,松田 英樹,high_school,岐阜県立各務原高等学校,confirmed,single_b,東海ルーキーリーグU-16公式HPの各務原高校チーム紹介に輩出OBとして掲載。生年月日とモンテディオ山形在籍はJリーグ公式データで本人確認
+W538,一美 和成,high_school,熊本県立大津高等学校,confirmed,single_b,大津高校から2016年にガンバ大阪へ加入
+W539,金山 隼樹,university,立命館大学,confirmed,adjudicated_agreement_spot_check,b公式の記録確認
