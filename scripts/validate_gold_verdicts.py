@@ -13,7 +13,14 @@ import csv
 import sys
 from pathlib import Path
 
-CATEGORIES = {"j_club_academy", "high_school", "university", "other", "unknown"}
+CATEGORIES = {
+    "j_club_academy",
+    "jfa_academy",
+    "high_school",
+    "university",
+    "other",
+    "unknown",
+}
 DETERMINATIONS = {"confirmed", "indeterminate", "unreachable"}
 SOURCE_TYPES = {"official_club", "official_league", "school", "news", "other", ""}
 

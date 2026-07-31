@@ -7,7 +7,7 @@
 
 | 列 | 入れるもの |
 |---|---|
-| `adjudicated_category` | `j_club_academy` / `high_school` / `university` / `other` / `unknown` |
+| `adjudicated_category` | `j_club_academy` / `jfa_academy` / `high_school` / `university` / `other` / `unknown` |
 | `adjudicated_institution` | 機関の正式名称。`unknown` のときは空欄 |
 | `adjudicated_determination` | `confirmed` / `indeterminate` / `unreachable` |
 | `adjudicator_note` | 判断の理由（短くてよい）。**判定者と違う結論にしたときは必須** |
@@ -62,6 +62,26 @@
   点検の割合を上げるか二者判定に戻すかを検討する
 
 ---
+
+## カテゴリの境界規則（2026-07-30・important 層 40 件の裁定で確定）
+
+判定者2名が双方 `confirmed` でカテゴリだけ食い違った 4 件は、すべて**規則の曖昧さ**であって
+調査の失敗ではなかった。以下を規則として固定する（判定プロンプトにも反映済み）。
+
+| 型 | 規則 | 例 |
+|---|---|---|
+| 高校 → J → 大学 → J | 判定するのは**プロ入り直前**の機関。プロ入り後の大学は採らない | W060 満生充・W164 石原卓 → `high_school`（大阪桐蔭・中京大中京） |
+| 海外クラブの下部組織 | クラブ下部組織なので `j_club_academy`。`other` の「海外クラブ」は**成人年代**を指す | W089 ファンティーニ燦 → `j_club_academy`（AC チェゼーナ U17） |
+| JFA アカデミー | クラブの下部組織ではないので `jfa_academy`。学籍の高校ではなくアカデミー側を採る | W155 三幸秀稔 → `jfa_academy`（JFA アカデミー福島） |
+| 校名に「大学」を含む高校 | 機関の**実体**で決める（流通経済大学付属柏高等学校・帝京大学可児高等学校は高校） | W165 青木亮太 → `high_school` |
+
+`jfa_academy` は本番 important 層の裁定時に gold 語彙へ追加した（`validate_gold_verdicts.py`）。
+既収集の 180 行に JFA アカデミーは W155 の 1 件しかなく、遡及の必要はこの 1 行に閉じている。
+
+**ソース評価**: soccer-king.jp・soccerdigestweb.com・footballchannel.jp 等は**報道機関**であり、
+単独で根拠になる（`WEAK_HOSTS` にも入っていない）。「公式サイトでない」ことは弱い根拠の理由に
+ならない。逆に、報道機関でも**引用が機関名を特定していなければ確定しない**
+（W145 島貫純: 「同校卒業後に…」は高校名を含まないため `indeterminate`）。
 
 ## 記入例
 

@@ -10,8 +10,11 @@
 - `gold_final_institution` = 機関の正式名称。在籍年が分かれば `note` に書く。
 - `gold_pathway_category` = 次のいずれか:
   - `j_club_academy` クラブ下部組織（**J 加盟だったかは判定しなくてよい**。三菱養和 SC ユースの
-    ような非 J のクラブ下部組織も `j_club_academy` と書き、機関名を正確に残す）
-  - `high_school` 高校 / `university` 大学 / `other` 専門学校・海外クラブ・成人年代のチーム /
+    ような非 J のクラブ下部組織も、**海外クラブの下部組織**（AC チェゼーナ U17 等）も
+    `j_club_academy` と書き、機関名を正確に残す）
+  - `jfa_academy` JFA アカデミー（JFA が運営する育成機関。クラブの下部組織ではないので
+    `j_club_academy` とは分ける。学籍の高校が併記されていてもアカデミー側を採る）
+  - `high_school` 高校 / `university` 大学 / `other` 専門学校・成人年代のチーム /
     `unknown` 判明しない
 
 **規則（推測しない）**:
