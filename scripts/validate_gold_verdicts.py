@@ -13,16 +13,7 @@ import csv
 import sys
 from pathlib import Path
 
-CATEGORIES = {
-    "j_club_academy",
-    "jfa_academy",
-    "high_school",
-    "university",
-    "other",
-    "unknown",
-}
-DETERMINATIONS = {"confirmed", "indeterminate", "unreachable"}
-SOURCE_TYPES = {"official_club", "official_league", "school", "news", "other", ""}
+from jfa_talent_analysis.gold_vocabulary import CATEGORIES, DETERMINATIONS, SOURCE_TYPES
 
 
 def parse_args() -> argparse.Namespace:
