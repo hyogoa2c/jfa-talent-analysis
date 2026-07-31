@@ -36,6 +36,18 @@ def test_a_university_run_high_school_is_not_a_later_stage():
     )
 
 
+def test_a_school_renamed_after_its_university_is_not_a_later_stage():
+    # W351 大西孝治: 香川西高等学校 is now 四国学院大学香川西高等学校. Blanking the
+    # recorded institution out of the note took the 高 with it and left a bare
+    # 大学 behind, which is how a correct row asked for a second rater.
+    assert not screen_reason(
+        "high_school",
+        "香川西高等学校",
+        "●　本校出身Ｊリーガー　９名　２００７年卒業｜大西孝治｜→徳島ヴォルティス→カマタマーレ讃岐（引退）",
+        "2007年卒業。現・四国学院大学香川西高等学校",
+    )
+
+
 def test_the_recorded_institution_does_not_flag_itself():
     assert not screen_reason(
         "high_school",

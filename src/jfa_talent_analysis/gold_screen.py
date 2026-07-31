@@ -42,9 +42,27 @@ _ABBREVIATED_UNIVERSITY = re.compile(r"(?<=[一-鿿])大(?=$|[)）、。，,\s�
 _CONTEXT = 12
 
 
-def _without_institution(text: str, institution: str) -> str:
-    """The evidence with the recorded institution blanked out."""
-    return text.replace(institution, " ") if institution.strip() else text
+def _institution_spans(text: str, institution: str) -> list[tuple[int, int]]:
+    """Where the recorded institution sits in the evidence.
+
+    The institution is skipped in place rather than blanked out: deleting it
+    takes the following characters with it, and those characters are what say a
+    university is naming a school. 香川西高等学校 recorded as the institution
+    left 「現・四国学院大学 」 behind and the 高 that made it a school name was
+    gone with the deletion, so a correct row asked for a second rater.
+    """
+    if not institution.strip():
+        return []
+    spans = []
+    start = text.find(institution)
+    while start != -1:
+        spans.append((start, start + len(institution)))
+        start = text.find(institution, start + 1)
+    return spans
+
+
+def _inside(spans: list[tuple[int, int]], start: int, end: int) -> bool:
+    return any(left <= start and end <= right for left, right in spans)
 
 
 def _snippet(text: str, start: int, end: int) -> str:
@@ -59,15 +77,20 @@ def screen_reason(category: str, institution: str, quote: str, note: str) -> str
     if category not in SCREENED_CATEGORIES:
         return ""
 
-    text = _without_institution(f"{quote} {note}", institution)
+    text = f"{quote} {note}"
+    spans = _institution_spans(text, institution)
+
     for match in _UNIVERSITY.finditer(text):
+        if _inside(spans, match.start(), match.end()):
+            continue
         tail = text[match.end() : match.end() + AFFILIATED_SCHOOL_WINDOW]
         if "高" in tail:
             continue
         return f"大学への言及: …{_snippet(text, match.start(), match.end())}…"
 
-    match = _ABBREVIATED_UNIVERSITY.search(text)
-    if match:
+    for match in _ABBREVIATED_UNIVERSITY.finditer(text):
+        if _inside(spans, match.start(), match.end()):
+            continue
         return f"大学（略記）への言及: …{_snippet(text, match.start(), match.end())}…"
 
     return ""
