@@ -33,7 +33,7 @@ from jfa_talent_analysis.gold_strata import ACADEMY, MAIN_PATHWAYS
 # Fraction of sampled players whose true pathway cannot be settled even with
 # external sources. They leave the confusion matrix and are reported, rather
 # than being silently treated as agreements.
-INDETERMINATE_RATE = 0.10
+INDETERMINATE_RATE = 0.10  # planning assumption; the pilot measured 16.7% (SAP §6b-2b-ext)
 
 
 @dataclass(frozen=True)
@@ -109,6 +109,7 @@ def weighted_confusion(
     scenario: Scenario,
     rng: np.random.Generator,
     era: str,
+    indeterminate_rate: float = INDETERMINATE_RATE,
 ) -> tuple[dict[str, dict[str, float]], int, int]:
     """P(true | observed) from the drawn sample, weighted back to the population."""
     totals = {o: dict.fromkeys(MAIN_PATHWAYS, 0.0) for o in MAIN_PATHWAYS}
@@ -116,7 +117,7 @@ def weighted_confusion(
     for player, weight in sampled:
         if player.era != era:
             continue
-        if rng.random() < INDETERMINATE_RATE:
+        if rng.random() < indeterminate_rate:
             indeterminate += 1
             continue
         adjudicated += 1
@@ -152,6 +153,7 @@ def simulate_design(
     draws: int = 1000,
     seed: int = 20260718,
     condition_limit: float = 1e4,
+    indeterminate_rate: float = INDETERMINATE_RATE,
 ) -> tuple[dict[str, np.ndarray], Diagnostics]:
     """Corrected DID for both pathways, over replications of the planned design."""
     from jfa_talent_analysis.gold_requirement import exposure_matrix, observed_by_outcome
@@ -182,7 +184,9 @@ def simulate_design(
         era_risks = {}
         skip = False
         for era in ("era1", "era2"):
-            predictive, _, indeterminate = weighted_confusion(sampled, scenario, rng, era)
+            predictive, _, indeterminate = weighted_confusion(
+                sampled, scenario, rng, era, indeterminate_rate
+            )
             diagnostics.indeterminate += indeterminate
             matrix, _ = exposure_matrix(predictive, observed_counts[era])
             if np.linalg.cond(matrix.T) > condition_limit:

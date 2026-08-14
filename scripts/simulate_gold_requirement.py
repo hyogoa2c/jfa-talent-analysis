@@ -79,6 +79,15 @@ RECLASSIFICATION_QUEUE = Path("data/manual/academy_reclassification_queue.csv")
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--draws", type=int, default=600)
+    parser.add_argument(
+        "--indeterminate-rate",
+        type=float,
+        default=None,
+        help=(
+            "Share of drawn rows the raters cannot settle. Defaults to the planning "
+            "assumption (10%); pass the measured rate at the checkpoint (SAP §6b-2b-ext)."
+        ),
+    )
     parser.add_argument("--seed", type=int, default=20260718)
     parser.add_argument(
         "--both-agree-quota",
@@ -257,9 +266,14 @@ def main() -> None:
             for error_name, scenario in ERROR_SCENARIOS.items():
                 if error_name == "none":
                     continue
+                extra = (
+                    {"indeterminate_rate": args.indeterminate_rate}
+                    if args.indeterminate_rate is not None
+                    else {}
+                )
                 results, _ = simulate_design(
                     population, allocation, counts, risks, scenario,
-                    draws=args.draws, seed=args.seed,
+                    draws=args.draws, seed=args.seed, **extra,
                 )
                 widest = max(half_width(values) for values in results.values())
                 if (risk_name, error_name) == PRIMARY:

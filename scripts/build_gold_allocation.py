@@ -1,4 +1,4 @@
-"""Draw and freeze the holdout sample (SAP §6b-2b, v8).
+"""Draw and freeze the holdout sample (SAP §6b-2b, v8; extension rule §6b-2b-ext, v9).
 
 Writes the actual player ids, not just per-stratum counts. The review required
 the target list, the seed, the within-stratum order, the replacement rule and
@@ -9,6 +9,11 @@ verification starts.
 Strata come from `gold_strata.py`, which reads the inputs to the composite rule
 rather than its output source -- the v7 strata missed every row in the direction
 that empties the reference category.
+
+`--both-agree-quota` exists for the extension rule alone. The within-stratum
+permutation does not depend on the quota, so re-running at a higher quota
+reproduces the frozen targets and promotes the reserves in draw order rather
+than drawing a different sample (`tests/test_gold_allocation.py`).
 """
 
 from __future__ import annotations
@@ -34,6 +39,7 @@ CENSUSED = (
 CENSUS_CAP = 30
 REVIEWED_QUOTA = 10
 BOTH_AGREE_QUOTA = 30  # SAP §6b-2c(ii): 539 total, primary scenario 2.4pp
+EXTENSION_CAP = 80  # SAP §6b-2b-ext: 839 total, the first level clearing 3pp when pessimistic
 
 COLUMNS = [
     "draw_order",
@@ -67,12 +73,26 @@ def parse_args() -> argparse.Namespace:
         help="Reserves drawn per stratum, used in fixed order when a target is unusable.",
     )
     parser.add_argument(
-        "--sample", type=Path, default=Path("data/manual/gold_holdout_sample.csv")
+        "--both-agree-quota",
+        type=int,
+        default=BOTH_AGREE_QUOTA,
+        help=(
+            "Per-row draws from both_agree. Only the extension rule (SAP §6b-2b-ext) "
+            "may raise this, and only to 80. Raising it keeps the frozen targets: the "
+            "within-stratum permutation does not depend on the quota, so the extra "
+            "draws are the reserves in draw order and then the rest of the same order."
+        ),
     )
-    parser.add_argument(
-        "--output", type=Path, default=Path("reports/generated/gold_allocation.md")
-    )
-    return parser.parse_args()
+    parser.add_argument("--sample", type=Path, default=Path("data/manual/gold_holdout_sample.csv"))
+    parser.add_argument("--output", type=Path, default=Path("reports/generated/gold_allocation.md"))
+    args = parser.parse_args()
+    if args.both_agree_quota > EXTENSION_CAP:
+        parser.error(
+            f"--both-agree-quota {args.both_agree_quota} exceeds the cap of {EXTENSION_CAP} "
+            "fixed in SAP §6b-2b-ext. Beyond the cap the rule is to stop collecting and "
+            "let Gate B fall to indeterminate, not to draw more."
+        )
+    return args
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -80,13 +100,13 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
-def quota_for(name: str, population: int) -> int:
+def quota_for(name: str, population: int, both_agree_quota: int = BOTH_AGREE_QUOTA) -> int:
     if name in CENSUSED:
         return min(population, CENSUS_CAP)
     if name == "human_reviewed_other":
         return min(population, REVIEWED_QUOTA)
     if name == "both_agree":
-        return min(population, BOTH_AGREE_QUOTA)
+        return min(population, both_agree_quota)
     return 0
 
 
@@ -112,7 +132,7 @@ def main() -> None:
         # Sort before shuffling so the draw depends only on the seed, not on the
         # order rows happened to arrive in the input file.
         members = sorted(groups[key], key=int)
-        take = quota_for(name, len(members))
+        take = quota_for(name, len(members), args.both_agree_quota)
         if take == 0:
             continue
         permutation = rng.permutation(len(members))
@@ -160,7 +180,7 @@ def main() -> None:
         "## 抽出規則（事前固定）",
         "",
         f"- 層 = era × 観測経路 × 層（`gold_strata.py`）。重要層は上限 {CENSUS_CAP} 件まで悉皆、",
-        f"  `human_reviewed_other` は {REVIEWED_QUOTA} 件、`both_agree` は {BOTH_AGREE_QUOTA} 件。",
+        f"  `human_reviewed_other` は {REVIEWED_QUOTA} 件、`both_agree` は {args.both_agree_quota} 件。",
         f"- 層内は seed={args.seed} の置換で順序を決め、先頭から対象、続く {args.reserve} 件を予備とする。",
         "- **代替規則**: 対象が検証不能（記事なし・同名別人等で外部ソースに到達できない）と判明した",
         "  場合のみ、同一層の予備を `draw_order` 順に繰り上げる。**都合のよい対象を選ばない。**",
@@ -178,7 +198,7 @@ def main() -> None:
     for key in sorted(groups):
         era, pathway, name = key
         population = len(groups[key])
-        take = quota_for(name, population)
+        take = quota_for(name, population, args.both_agree_quota)
         if take == 0:
             continue
         lines.append(
