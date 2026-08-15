@@ -232,7 +232,7 @@ v7（停止規則と割付の確定）の 2 回 amendment した。固定点は 
 
 ## 4. 参照文書
 
-- `docs/research_plan_phase1b.md` — **SAP v7**（固定点 v5 = `ba5e367`）
+- `docs/research_plan_phase1b.md` — **SAP v7**（固定点 v5 = `a002cc4`）
 - `reports/generated/gold_requirement.md` — 停止規則のシミュレーション出力
 - `reports/generated/gold_allocation.md` — 層化割付表（抽出確率つき）
 - `reports/generated/measurement_funnel_by_era.md` — Gate A の判定

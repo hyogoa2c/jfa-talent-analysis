@@ -20,11 +20,12 @@
 This is an observational study of professional footballers' developmental pathways, reported
 following STROBE. The analysis plan was written and version-controlled before the outcome data
 were examined, and both the plan and every revision to it are public. We did not register the
-protocol in a public trials registry; instead, the analysis plan, its revision history, and the
-commit that fixed each version are available in the study repository [DOI], so that the sequence of
-decisions can be audited independently. Where a specification changed, the change, its date, its
-justification and whether the outcome had been seen at that point are recorded in a revision table
-within the plan itself.
+protocol in a public trials registry; instead, the analysis plan and its complete revision history
+— recording, for each version, what changed, why, and whether the outcome had been examined at
+that point — are available in the study repository [DOI], so that the sequence of decisions can be
+audited independently. The repository's commit history was rewritten once, after the analysis was
+complete, to remove a personal email address; file contents, commit dates and ordering are
+unchanged, and the operation is documented in the repository.
 
 Two distinctions are used throughout. **Confirmatory** refers to the single pre-specified
 hypothesis test; everything else is descriptive or exploratory and is labelled as such.

@@ -1,7 +1,7 @@
 # Phase 1b SAP v3 追加照会へのレビュー結果
 
 レビュー日: 2026-07-26  
-対象: `docs/review_request_phase1b_sap_v3.md`、SAP v3（`60a324e`）および v4 追記、関連実装・検証記録
+対象: `docs/review_request_phase1b_sap_v3.md`、SAP v3（`deaecef`）および v4 追記、関連実装・検証記録
 
 ## 総合判定
 

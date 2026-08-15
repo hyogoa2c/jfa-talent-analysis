@@ -1,7 +1,7 @@
 # Phase 1b 封印実行の結果（H1b-2 と Gate B・2026-08-14）
 
 `reports/generated/` は gitignore 対象で追跡されないため、実行結果を本文書に版管理して残す。
-実行は `scripts/run_phase1b_confirmatory.py`（コード版 `202cb71`・SAP v14）、
+実行は `scripts/run_phase1b_confirmatory.py`（コード版 `8f374fd`・SAP v14）、
 ブートストラップ 500 回／モンテカルロ 2,000 回・seed 20260718。
 **ロックした 26 ファイルはハッシュ全件一致**（起動条件）。
 
