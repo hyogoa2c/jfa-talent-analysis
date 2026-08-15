@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software or the gold-standard labels, please cite them as below."
+title: "Developmental pathways and career outcomes in Japanese professional football: analysis code, pre-specified analysis plan, and adjudicated gold-standard labels"
+abstract: >-
+  Code, version-controlled analysis plan and manually adjudicated gold-standard
+  labels for a study of pre-professional developmental pathways (club academy,
+  high school, university) and reaching J1 by age 25 among players observed in
+  the Japanese professional leagues, 1999-2025. The deposit includes the
+  539-player independent validation sample with, for every verdict, the source
+  URL and the verbatim quotation the rater relied on; the two pre-specified
+  measurement gates and their judgements; and the sealed confirmatory run.
+  Raw appearance records are not redistributed; collection scripts are provided
+  so that they can be re-derived from the source.
+type: software
+authors:
+  - family-names: Hyogo
+    given-names: Atsushi
+    orcid: "https://orcid.org/0000-0002-9468-5615"
+    affiliation: "Independent Researcher"
+license: MIT
+license-url: "https://github.com/hyogoa2c/jfa-talent-analysis/blob/main/LICENSE"
+repository-code: "https://github.com/hyogoa2c/jfa-talent-analysis"
+keywords:
+  - football
+  - talent development
+  - measurement validation
+  - misclassification
+  - pre-specified analysis
+  - observational study
+  - Japan

@@ -1,0 +1,37 @@
+# Licence for data and documents
+
+Copyright (c) 2026 Atsushi Hyogo
+
+The data files in `data/manual/` and `release/`, and the prose documents in `docs/` and `paper/`,
+are licensed under the **Creative Commons Attribution 4.0 International licence (CC BY 4.0)**:
+https://creativecommons.org/licenses/by/4.0/
+
+You may share and adapt them for any purpose, including commercially, provided you give
+appropriate credit.
+
+## What is covered
+
+The adjudicated gold-standard labels and the per-rater verdicts are this project's own work
+product. Two raters researched publicly available sources against a written protocol, an
+adjudicator resolved their disagreements, and the resulting judgements — the category, the
+institution, the determination and the rationale — were recorded here. These judgements are
+licensed as above.
+
+## What is not covered
+
+**Verbatim quotations from third-party sources.** The evidence files record, for each verdict, the
+source URL and the exact sentence the rater relied on. Those sentences remain the property of their
+original publishers — club official sites, league and federation sites, news outlets, schools, and
+Japanese Wikipedia. They are reproduced here as short quotations for the purpose of verification,
+each attributed to its source by URL, and subordinate to the dataset in which they appear. They are
+not relicensed by this file, and reuse of a quotation on its own is governed by its own source's
+terms.
+
+Quotations drawn from Japanese Wikipedia are additionally subject to CC BY-SA 4.0
+(https://creativecommons.org/licenses/by-sa/4.0/) and should be attributed to Wikipedia when reused
+as text.
+
+**Raw appearance records are not included in this repository at all.** They were obtained from the
+J.League Data Site, whose terms prohibit unauthorised reproduction, and are therefore not
+redistributed. The collection scripts in `scripts/` allow them to be re-derived from the source.
+See `docs/source_audit_jleague_data_site.md` for the full terms audit.

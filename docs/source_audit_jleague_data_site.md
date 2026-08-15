@@ -535,3 +535,59 @@ Schema:
 | `note` | Rationale or source note |
 
 The file is intentionally committed as an empty template. Future manual resolutions should be explicit and reviewable.
+
+## Terms of Use and Redistribution (added 2026-08-15, before deposit)
+
+This audit was written to answer "which pages can support Step 1" and never covered the terms
+question. Every other source audit in this repository checked `robots.txt` and terms of use; this
+one — for the project's most central source — did not. The gap is closed here, because what may be
+redistributed has to be settled before code and data are deposited.
+
+### What was checked
+
+| Check | Result (2026-08-15) |
+|---|---|
+| `https://data.j-league.or.jp/robots.txt` | **HTTP 404 — no robots.txt exists.** No crawler is named, permitted, or excluded. |
+| Terms-of-use or data-use policy on `data.j-league.or.jp` | **None found.** No link to 利用規約 or 著作権 from the data site. |
+| Copyright notice on `data.j-league.or.jp` | `© JAPAN PROFESSIONAL FOOTBALL LEAGUE J.LEAGUE,INC. ALL RIGHTS RESERVED.` |
+| `https://www.jleague.jp/` footer | 「本サイトで使用している文章・画像等の**無断での複製・転載を禁止**します。」 |
+
+The absence of a `robots.txt` is not permission. It means the site publishes no machine-readable
+crawling policy, so the only stated position is the copyright notice and the main site's
+prohibition on unauthorised reproduction and republication.
+
+### What this constrains
+
+**Collection** is not what is at issue. Requests were sequential with a delay, which is the same
+courtesy applied to Wikipedia after the 2026-07-04 rate-limit incident, and no policy forbids it.
+
+**Redistribution is.** Facts themselves — an appearance count, a birth date — do not carry
+copyright, but a compiled database can be protected in Japan as a データベースの著作物
+(Copyright Act art. 12-2) where selection or systematic arrangement is creative, and there is case
+law treating wholesale copying of even a non-creative database as a tort. Combined with an
+explicit "無断での複製・転載を禁止", the prudent position is:
+
+- **Do not redistribute the raw appearance records** (`data/raw/`, `data/interim/`,
+  `data/processed/`). These are already gitignored.
+- **Do publish the collection scripts**, so that anyone can re-derive the same records from the
+  source themselves. Reproducibility is served without republishing the source's data.
+- `source_player_id` is the J.League Data Site's own player ID. Substituting it for a player name
+  is not de-identification and does not change the redistribution question — it swaps one
+  identifier for another drawn from the same database.
+
+**The manually adjudicated gold labels are a separate matter and may be published.** They are this
+project's own work product: two independent raters researched public sources, an adjudicator
+resolved them, and the verdict, the institution, the evidence URL and the verbatim quote were
+recorded here. They are not extracted from the J.League database. Player names are kept in that
+file deliberately — without them a third party cannot check whether a verdict is correct, which is
+the whole point of publishing it.
+
+### Other sources, for one table
+
+| Source | Position | Status |
+|---|---|---|
+| ja.wikipedia.org | CC BY-SA 4.0; `robots.txt` allows generic crawlers on article paths | Used; attribute on reuse |
+| Wikidata | CC0 | Used; no constraint |
+| jfa.jp | `robots.txt` disallows only `MJ12bot` and `Applebot` on one path | Used |
+| transfermarkt | `robots.txt` blanket-disallows `ClaudeBot`, `Claude-SearchBot`, `anthropic-ai` | **Never collected** |
+| fansaka.info | No terms page; `Crawl-delay: 30` | Not used as standalone evidence (protocol v2 weak-source list) |
