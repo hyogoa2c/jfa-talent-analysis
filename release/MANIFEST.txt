@@ -1,0 +1,8 @@
+Deposited files (see docs/source_audit_jleague_data_site.md for why these and not others)
+
+gold_holdout_evidence.csv  sha256=58d56e26705b9833  279507 bytes
+gold_holdout_labels.csv  sha256=df9c6083f0f28a13  87560 bytes
+
+NOT deposited: raw appearance records from the J.League Data Site, and cached
+Wikipedia article text. Both are third-party data; the collection scripts in
+scripts/ re-derive them from the sources.
