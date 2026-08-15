@@ -22,7 +22,7 @@ following STROBE. The analysis plan was written and version-controlled before th
 were examined, and both the plan and every revision to it are public. We did not register the
 protocol in a public trials registry; instead, the analysis plan and its complete revision history
 — recording, for each version, what changed, why, and whether the outcome had been examined at
-that point — are available in the study repository [DOI], so that the sequence of decisions can be
+that point — are available in the study repository (https://doi.org/10.5281/zenodo.21944859), so that the sequence of decisions can be
 audited independently. The repository's commit history was rewritten once, after the analysis was
 complete, to remove a personal email address; file contents, commit dates and ordering are
 unchanged, and the operation is documented in the repository.
@@ -342,7 +342,8 @@ specified, though not for the era comparison itself, which is the quantity teste
 
 **Software and materials.** Analysis in Python (statsmodels, pandas, numpy, scipy). Code, the
 analysis plan with its full revision history, the adjudicated gold labels and the per-rater
-evidence — source URL and verbatim quotation for each verdict — are deposited at [DOI]. Raw
+evidence — source URL and verbatim quotation for each verdict — are deposited at
+https://doi.org/10.5281/zenodo.21944859 (concept DOI, resolving to the latest version). Raw
 appearance records are not redistributed, as the source's terms prohibit reproduction; the
 collection scripts are provided so they can be re-derived.
 
@@ -361,7 +362,8 @@ identify a player immediately. Ethical approval was not required.
 
 ## 未確定・要検討（原稿化の前に潰す）
 
-1. **[DOI]** — Zenodo 寄託後に確定。2 箇所（§2.1・§2.10）。
+1. ~~**[DOI]**~~ → **確定済み**。concept DOI `10.5281/zenodo.21944859`（版に依らず最新へ解決）、
+   v1.0.0 の version DOI は `10.5281/zenodo.21944860`。§2.1・§2.10 に記入済み。
 2. **STROBE 準拠と書くか** — チェックリストを実際に埋めてから決める。埋めずに書かない。
 3. **§2.6 の rater 記述の粒度** — モデル版まで書くか（`claude -p --model sonnet` /
    `codex exec -m gpt-5.6-sol`）。再現性のためには書くべきだが、モデルは更新されるため

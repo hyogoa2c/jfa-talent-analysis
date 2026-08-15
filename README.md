@@ -1,5 +1,11 @@
 # JFA Talent Analysis
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21944859.svg)](https://doi.org/10.5281/zenodo.21944859)
+
+Archived at Zenodo — concept DOI [10.5281/zenodo.21944859](https://doi.org/10.5281/zenodo.21944859)
+(resolves to the latest version). Code is MIT; data and documents CC BY 4.0 (see `LICENSE-DATA`,
+which also states what the licence does not reach).
+
 Research repository for quantitative analysis of Japanese football talent-development pathways, coach networks, and player career outcomes.
 
 ## Research Status (2026-07-18)
