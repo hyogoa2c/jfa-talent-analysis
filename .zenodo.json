@@ -1,0 +1,26 @@
+{
+  "title": "Developmental pathways and career outcomes in Japanese professional football: analysis code, pre-specified analysis plan, and adjudicated gold-standard labels",
+  "upload_type": "software",
+  "description": "<p>Code, version-controlled analysis plan and manually adjudicated gold-standard labels for an observational study of pre-professional developmental pathways (club academy, high school, university) and reaching J1 by age 25 among players observed in the Japanese professional leagues, 1999&ndash;2025.</p><p><strong>What this deposit contains.</strong> The analysis plan and every revision to it, with the commit that fixed each version, so that the sequence of design decisions can be audited independently. The 539-player independent validation sample, drawn by stratified sampling and frozen before any rating began, with &mdash; for every one of the 773 verdicts &mdash; the source URL and the verbatim quotation the rater relied on. The two pre-specified measurement gates and their judgements. The sealed confirmatory run and the pooled estimand.</p><p><strong>What it does not contain.</strong> Raw appearance records from the J.League Data Site, whose terms prohibit unauthorised reproduction, and cached article text. The collection scripts are included so that both can be re-derived from the sources.</p><p><strong>Note on the result.</strong> The single pre-specified confirmatory test was not rejected, and the pre-specified measurement-robustness gate stopped the confirmatory interpretation: the misclassification rates the validation sample actually measured move the estimate past the tolerance fixed before the outcome was examined. The era-difference hypothesis is therefore reported as descriptive. The pathway gap itself is large in both eras.</p><p>Code is licensed MIT; data and documents CC BY 4.0. Verbatim quotations from third-party sources remain with their original publishers and are included as attributed short quotations for verification &mdash; see LICENSE-DATA.</p>",
+  "creators": [
+    {
+      "name": "Hyogo, Atsushi",
+      "orcid": "0000-0002-9468-5615",
+      "affiliation": "Independent Researcher"
+    }
+  ],
+  "license": "MIT",
+  "access_right": "open",
+  "language": "eng",
+  "keywords": [
+    "football",
+    "soccer",
+    "talent development",
+    "measurement validation",
+    "exposure misclassification",
+    "pre-specified analysis",
+    "observational study",
+    "reproducibility",
+    "Japan"
+  ]
+}
